@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Created by sergei on 18/02/2025
@@ -25,13 +25,15 @@ public class AuthorDaoImpl implements AuthorDao{
     public Author getById(Long id) {
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement ps = null;
         ResultSet resultSet = null;
 
         try {
             connection = dataSource.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM author WHERE id=" + id);
+            ps = connection.prepareStatement("SELECT * FROM author WHERE id = ?");
+            ps.setLong(1, id);
+            resultSet = ps.executeQuery();
+
             if (resultSet.next()) {
                 Author author = new Author();
                 author.setId(id);
@@ -41,21 +43,21 @@ public class AuthorDaoImpl implements AuthorDao{
                 return author;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } finally {
             try {
                 if (resultSet != null) {
                     resultSet.close();
                 }
-                if (statement != null) {
-                    statement.close();
+                if (ps != null) {
+                    ps.close();
                 }
                 if (connection != null) {
                     connection.close();
                 }
 
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
 
