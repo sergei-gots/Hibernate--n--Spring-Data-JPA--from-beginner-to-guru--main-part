@@ -1,4 +1,4 @@
-package com.example.springbootbook2;
+package guru.springframework.jdbc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

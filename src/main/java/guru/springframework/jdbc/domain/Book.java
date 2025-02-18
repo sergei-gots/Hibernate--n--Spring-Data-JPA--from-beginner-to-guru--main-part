@@ -1,4 +1,4 @@
-package com.example.springbootbook2.domain;
+package guru.springframework.jdbc.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

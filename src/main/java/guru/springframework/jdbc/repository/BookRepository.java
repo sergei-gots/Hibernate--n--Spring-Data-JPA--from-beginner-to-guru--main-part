@@ -1,6 +1,6 @@
-package com.example.springbootbook2.repository;
+package guru.springframework.jdbc.repository;
 
-import com.example.springbootbook2.domain.Book;
+import guru.springframework.jdbc.domain.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

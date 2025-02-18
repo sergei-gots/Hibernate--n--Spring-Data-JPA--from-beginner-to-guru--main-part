@@ -1,7 +1,7 @@
-package com.example.springbootbook2;
+package guru.springframework.jdbc;
 
-import com.example.springbootbook2.domain.Author;
-import com.example.springbootbook2.repository.AuthorRepository;
+import guru.springframework.jdbc.domain.Author;
+import guru.springframework.jdbc.repository.AuthorRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

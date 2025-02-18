@@ -1,13 +1,10 @@
-package com.example.springbootbook2.domain;
+package guru.springframework.jdbc.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.hibernate.annotations.JdbcTypeCode;
 
-import java.sql.Types;
 import java.util.Objects;
 
 /**
