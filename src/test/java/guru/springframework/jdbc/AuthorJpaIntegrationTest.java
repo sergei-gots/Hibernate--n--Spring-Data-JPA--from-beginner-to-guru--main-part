@@ -14,13 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AuthorJpaSliceTest {
+public class AuthorJpaIntegrationTest {
 
     @Autowired
     AuthorRepository authorRepository;
 
     @Test
-    public void bookJpaSliceTest() {
+    public void bookJpaIntegrationTest() {
 
         Author author = new Author("S", "G", "Some Country");
 
