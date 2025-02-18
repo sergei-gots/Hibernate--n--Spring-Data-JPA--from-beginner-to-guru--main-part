@@ -22,7 +22,7 @@ public class AuthorDaoIntegrationTest {
     @Test
     public void getAuthorByIdTest() {
 
-        Author author = authorDao.getById(1L);
+        Author author = authorDao.getById(12L);
 
         assertThat(author).isNotNull();
     }
