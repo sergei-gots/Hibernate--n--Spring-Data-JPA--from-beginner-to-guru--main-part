@@ -9,7 +9,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 
 import java.sql.Types;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Created by sergei on 18/02/2025
@@ -17,10 +16,8 @@ import java.util.UUID;
 @Entity
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JdbcTypeCode(value = Types.VARCHAR)
-    @Column(length = 36, columnDefinition = "VARCHAR(36)", nullable = false, updatable = false)
-    UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
     String firstName;
     String lastName;
     String country;
@@ -34,11 +31,11 @@ public class Author {
         this.country = country;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

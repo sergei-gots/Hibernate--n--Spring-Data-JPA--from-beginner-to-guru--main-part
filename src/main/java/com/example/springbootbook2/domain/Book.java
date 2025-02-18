@@ -1,15 +1,11 @@
 package com.example.springbootbook2.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.hibernate.annotations.JdbcTypeCode;
 
-import java.sql.Types;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Created by sergei on 18/02/2025
@@ -17,31 +13,28 @@ import java.util.UUID;
 @Entity
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JdbcTypeCode(value = Types.VARCHAR)
-    @Column(length = 36, columnDefinition = "VARCHAR(36)", nullable = false, updatable = false)
-    UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
     String title;
     String isbn;
     String publisher;
-    @Column(columnDefinition = "VARCHAR (36)")
-    UUID authorId;
+    Long authorId;
 
     public Book() {
     }
 
-    public Book(String title, String isbn, String publisher, UUID authorId) {
+    public Book(String title, String isbn, String publisher, Long authorId) {
         this.title = title;
         this.isbn = isbn;
         this.publisher = publisher;
         this.authorId = authorId;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,11 +62,11 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public UUID getAuthorId() {
+    public Long getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(UUID authorId) {
+    public void setAuthorId(Long authorId) {
         this.authorId = authorId;
     }
 
