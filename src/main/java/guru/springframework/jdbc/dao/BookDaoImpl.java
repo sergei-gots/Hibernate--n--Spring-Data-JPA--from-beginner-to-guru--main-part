@@ -107,8 +107,8 @@ public class BookDaoImpl implements BookDao{
             ps.setString(1, book.getIsbn());
             ps.setString(2, book.getPublisher());
             ps.setString(3, book.getTitle());
-            if (book.getAuthorId() != null) {
-                ps.setLong(4, book.getAuthorId().getId());
+            if (book.getAuthor() != null) {
+                ps.setLong(4, book.getAuthor().getId());
             }
             else {
                 ps.setNull(4, Types.BIGINT);
@@ -153,8 +153,8 @@ public class BookDaoImpl implements BookDao{
             ps.setString(1, book.getIsbn());
             ps.setString(2, book.getPublisher());
             ps.setString(3, book.getTitle());
-            if (book.getAuthorId() != null) {
-                ps.setLong(4, book.getAuthorId().getId());
+            if (book.getAuthor() != null) {
+                ps.setLong(4, book.getAuthor().getId());
             }
             else {
                 ps.setNull(4, Types.BIGINT);
@@ -213,7 +213,7 @@ public class BookDaoImpl implements BookDao{
         book.setTitle(resultSet.getString("title"));
         Long authorId = resultSet.getLong("author_id");
         Author author = authorDao.getById(authorId);
-        book.setAuthorId(author);
+        book.setAuthor(author);
 
         return book;
     }

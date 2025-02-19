@@ -21,9 +21,6 @@ public class BookDaoIntegrationTest {
     @Autowired
     BookDao bookDao;
 
-    @Autowired
-    AuthorDao authorDao;
-
     @Test
     public void testGetBookById() {
 
@@ -46,8 +43,9 @@ public class BookDaoIntegrationTest {
     public void testSaveNewBook() {
 
         Book book = new Book();
-        Author author = authorDao.getById(13L);
-        book.setAuthorId(author);
+        Author author = new Author();
+        author.setId(13L);
+        book.setAuthor(author);
         book.setTitle("Clean Code");
         book.setIsbn("9780136083221");
 
@@ -56,7 +54,7 @@ public class BookDaoIntegrationTest {
         assertThat(saved).isNotNull();
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getTitle()).isEqualTo(book.getTitle());
-        assertThat(saved.getAuthorId()).isEqualTo(book.getAuthorId());
+        assertThat(saved.getAuthor()).isEqualTo(book.getAuthor());
     }
 
     @Test
@@ -77,15 +75,13 @@ public class BookDaoIntegrationTest {
         assertThat(updated.getId()).isEqualTo(saved.getId());
         assertThat(updated.getTitle()).isEqualTo("Clean Code. with illustrations");
         assertThat(updated.getIsbn()).isEqualTo("9780136083220");
-        assertThat(updated.getAuthorId()).isEqualTo(book.getAuthorId());
+        assertThat(updated.getAuthor()).isEqualTo(book.getAuthor());
     }
 
     @Test
     public void testDeleteBookById() {
 
         Book book = new Book();
-        Author author = authorDao.getById(13L);
-        book.setAuthorId(author);
         book.setTitle("Leave playground cleaner than you found it");
         book.setIsbn("0080136083220");
 
