@@ -1,6 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Author;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,6 +31,12 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void deleteAuthorById(Long id) {
+    }
 
+    /** This method is applied to get a new instance of RowMapper<Author> in order
+     * to provide thread safety
+     */
+    private RowMapper<Author> getRowMapper() {
+        return new AuthorRowMapper();
     }
 }
