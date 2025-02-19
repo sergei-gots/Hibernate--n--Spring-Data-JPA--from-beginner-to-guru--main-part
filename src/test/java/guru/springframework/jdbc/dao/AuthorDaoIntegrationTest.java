@@ -20,7 +20,7 @@ public class AuthorDaoIntegrationTest {
     AuthorDao authorDao;
 
     @Test
-    public void getAuthorByIdTest() {
+    public void testGetAuthorById() {
 
         Author author = authorDao.getById(12L);
 
@@ -28,7 +28,7 @@ public class AuthorDaoIntegrationTest {
     }
 
     @Test
-    public void getAuthorByNameTest() {
+    public void testGetAuthorByName() {
 
         Author author = authorDao.findAuthorByName("Craig", "Walls");
 

@@ -20,7 +20,7 @@ public class AuthorJpaIntegrationTest {
     AuthorRepository authorRepository;
 
     @Test
-    public void bookJpaIntegrationTest() {
+    public void authorJpaIntegrationTest() {
 
         Author author = new Author("S", "G", "Some Country");
 
