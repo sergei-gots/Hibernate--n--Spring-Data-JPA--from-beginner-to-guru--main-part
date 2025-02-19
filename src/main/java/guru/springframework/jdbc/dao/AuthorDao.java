@@ -12,4 +12,6 @@ public interface AuthorDao {
     Author saveNewAuthor(Author author);
 
     Author updateAuthor(Author persisted);
+
+    void deleteAuthorById(Long id);
 }

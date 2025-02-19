@@ -43,6 +43,7 @@ public class AuthorDaoImpl implements AuthorDao{
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
         }
 
         return null;
@@ -115,7 +116,9 @@ public class AuthorDaoImpl implements AuthorDao{
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
         }
+
         return null;
     }
 
@@ -124,7 +127,6 @@ public class AuthorDaoImpl implements AuthorDao{
 
         Connection connection = null;
         PreparedStatement ps = null;
-        ResultSet resultSet = null;
 
         try {
             connection = dataSource.getConnection();
@@ -142,12 +144,42 @@ public class AuthorDaoImpl implements AuthorDao{
         finally {
 
             try {
-                closeAll(resultSet, ps, connection);
+                closeAll(null, ps, connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
         }
+
         return this.getById(author.getId());
+    }
+
+    @Override
+    public void deleteAuthorById(Long id) {
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = dataSource.getConnection();
+
+            ps = connection.prepareStatement("DELETE FROM author WHERE id = ?");
+            ps.setLong(1, id);
+            ps.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+
+            try {
+                closeAll(null, ps, connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     private static Author getAuthorFromRs(ResultSet resultSet) throws SQLException {
