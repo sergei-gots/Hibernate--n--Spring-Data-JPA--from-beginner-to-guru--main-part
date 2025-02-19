@@ -11,7 +11,7 @@ public interface AuthorDao {
     Author findAuthorByName(String firstName, String lastName);
     Author saveNewAuthor(Author author);
 
-    Author updateAuthor(Author persisted);
+    Author updateAuthor(Author author);
 
     void deleteAuthorById(Long id);
 }
