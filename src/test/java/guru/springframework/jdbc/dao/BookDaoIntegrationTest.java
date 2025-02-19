@@ -1,5 +1,6 @@
 package guru.springframework.jdbc.dao;
 
+import guru.springframework.jdbc.domain.Author;
 import guru.springframework.jdbc.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class BookDaoIntegrationTest {
 
     @Autowired
     BookDao bookDao;
+
+    @Autowired
+    AuthorDao authorDao;
 
     @Test
     public void testGetBookById() {
@@ -42,7 +46,8 @@ public class BookDaoIntegrationTest {
     public void testSaveNewBook() {
 
         Book book = new Book();
-        book.setAuthorId(13L);
+        Author author = authorDao.getById(13L);
+        book.setAuthorId(author);
         book.setTitle("Clean Code");
         book.setIsbn("9780136083221");
 
@@ -58,7 +63,6 @@ public class BookDaoIntegrationTest {
     public void testUpdateBook() {
 
         Book book = new Book();
-        book.setAuthorId(13L);
         book.setTitle("Leave playground cleaner than you found it");
         book.setIsbn("0080136083220");
 
@@ -80,7 +84,8 @@ public class BookDaoIntegrationTest {
     public void testDeleteBookById() {
 
         Book book = new Book();
-        book.setAuthorId(13L);
+        Author author = authorDao.getById(13L);
+        book.setAuthorId(author);
         book.setTitle("Leave playground cleaner than you found it");
         book.setIsbn("0080136083220");
 

@@ -22,7 +22,10 @@ public class BookJpaIntegrationTest {
     @Test
     public void bookJpaIntegrationTest() {
 
-        Book book = new Book("A Title", "An Isbn", "A Publisher", null);
+        Book book = new Book();
+        book.setIsbn("an Isbn");
+        book.setPublisher("A Publisher");
+        book.setTitle("A Title");
 
         long countBefore = bookRepository.count();
         Book saved = bookRepository.save(book);

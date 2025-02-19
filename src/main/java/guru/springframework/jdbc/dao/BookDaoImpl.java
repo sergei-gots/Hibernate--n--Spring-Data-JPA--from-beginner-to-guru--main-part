@@ -1,5 +1,6 @@
 package guru.springframework.jdbc.dao;
 
+import guru.springframework.jdbc.domain.Author;
 import guru.springframework.jdbc.domain.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,13 @@ import java.sql.*;
 @Component
 public class BookDaoImpl implements BookDao{
 
-    @Autowired
     private final DataSource dataSource;
+    private final AuthorDao authorDao;
 
-    public BookDaoImpl(DataSource dataSource) {
+    @Autowired
+    public BookDaoImpl(DataSource dataSource, AuthorDao authorDao) {
         this.dataSource = dataSource;
+        this.authorDao = authorDao;
     }
 
     @Override
@@ -104,7 +107,12 @@ public class BookDaoImpl implements BookDao{
             ps.setString(1, book.getIsbn());
             ps.setString(2, book.getPublisher());
             ps.setString(3, book.getTitle());
-            ps.setLong(4, book.getAuthorId());
+            if (book.getAuthorId() != null) {
+                ps.setLong(4, book.getAuthorId().getId());
+            }
+            else {
+                ps.setNull(4, Types.BIGINT);
+            }
             ps.execute();
 
             Statement statement = connection.createStatement();
@@ -145,7 +153,12 @@ public class BookDaoImpl implements BookDao{
             ps.setString(1, book.getIsbn());
             ps.setString(2, book.getPublisher());
             ps.setString(3, book.getTitle());
-            ps.setLong(4, book.getAuthorId());
+            if (book.getAuthorId() != null) {
+                ps.setLong(4, book.getAuthorId().getId());
+            }
+            else {
+                ps.setNull(4, Types.BIGINT);
+            }
             ps.setLong(5, book.getId());
             ps.execute();
 
@@ -191,14 +204,16 @@ public class BookDaoImpl implements BookDao{
 
     }
 
-    private static Book getBookFromRs(ResultSet resultSet) throws SQLException {
+    private Book getBookFromRs(ResultSet resultSet) throws SQLException {
         Book book = new Book();
 
         book.setId(resultSet.getLong("id"));
         book.setIsbn(resultSet.getString("isbn"));
         book.setPublisher(resultSet.getString("publisher"));
         book.setTitle(resultSet.getString("title"));
-        book.setAuthorId(resultSet.getLong("author_id"));
+        Long authorId = resultSet.getLong("author_id");
+        Author author = authorDao.getById(authorId);
+        book.setAuthorId(author);
 
         return book;
     }
