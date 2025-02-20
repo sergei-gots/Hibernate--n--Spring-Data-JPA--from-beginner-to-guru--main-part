@@ -39,9 +39,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
         jdbcTemplate.update(
                 "INSERT INTO author(first_name, last_name, country) VALUES(?, ?, ?)",
-                author.getFirstName(),
-                author.getLastName(),
-                author.getCountry()
+                author.getFirstName(), author.getLastName(), author.getCountry()
         );
 
         Long savedId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
@@ -51,11 +49,18 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author updateAuthor(Author author) {
-        return null;
+
+        jdbcTemplate.update("UPDATE author SET first_name = ?, last_name = ?, country = ? WHERE id = ?",
+                author.getFirstName(), author.getLastName(), author.getCountry(), author.getId()
+        );
+
+        return this.getById(author.getId());
     }
 
     @Override
     public void deleteAuthorById(Long id) {
+
+        jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
     }
 
     /** This method is applied to get a new instance of RowMapper<Author> in order
