@@ -19,12 +19,19 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author getById(Long id) {
+
         return jdbcTemplate.queryForObject("SELECT * FROM author WHERE id = ?", getRowMapper(), id);
     }
 
+
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        return null;
+
+        return jdbcTemplate.queryForObject(
+                "SELECT * FROM author WHERE first_name = ? AND last_name = ?",
+                getRowMapper(),
+                firstName, lastName
+        );
     }
 
     @Override
