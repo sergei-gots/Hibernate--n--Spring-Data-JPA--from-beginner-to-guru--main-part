@@ -20,7 +20,7 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public Author getById(Long id) {
 
-        return jdbcTemplate.queryForObject("SELECT * FROM author WHERE id = ?", getRowMapper(), id);
+        return jdbcTemplate.queryForObject("SELECT * FROM author WHERE id = ?", getAuthorRowMapper(), id);
     }
 
 
@@ -29,7 +29,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM author WHERE first_name = ? AND last_name = ?",
-                getRowMapper(),
+                getAuthorRowMapper(),
                 firstName, lastName
         );
     }
@@ -66,7 +66,7 @@ public class AuthorDaoImpl implements AuthorDao {
     /** This method is applied to get a new instance of RowMapper<Author> in order
      * to provide thread safety
      */
-    private RowMapper<Author> getRowMapper() {
+    private RowMapper<Author> getAuthorRowMapper() {
         return new AuthorRowMapper();
     }
 }

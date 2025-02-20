@@ -20,7 +20,7 @@ public class Book {
     String isbn;
     String publisher;
     @Transient
-    Author authorId;
+    Author author;
 
     public Book() {
     }
@@ -58,11 +58,11 @@ public class Book {
     }
 
     public Author getAuthor() {
-        return authorId;
+        return author;
     }
 
     public void setAuthor(Author author) {
-        this.authorId = authorId;
+        this.author = this.author;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", publisher='" + publisher + '\'' +
-                ", authorId=" + authorId +
+                ", authorId=" + author +
                 '}';
     }
 }
