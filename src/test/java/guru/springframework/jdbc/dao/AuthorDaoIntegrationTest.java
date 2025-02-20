@@ -39,7 +39,7 @@ public class AuthorDaoIntegrationTest {
     public void testSaveNewAuthor() {
 
         Author author = new Author();
-        author.setFirstName("John");
+        author.setFirstName("John-Lesson-78");
         author.setLastName("Thompson");
 
         Author saved = authorDao.saveNewAuthor(author);
