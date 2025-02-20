@@ -4,7 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,15 +24,12 @@ public class Author {
     public Author() {
     }
 
-    public Author(String firstName, String lastName, String country) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.country = country;
-    }
-
     public Long getId() {
         return id;
     }
+
+    @Transient
+    List<Book> books;
 
     public void setId(Long id) {
         this.id = id;
@@ -58,6 +57,14 @@ public class Author {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     @Override

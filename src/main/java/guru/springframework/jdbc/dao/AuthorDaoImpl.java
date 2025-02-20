@@ -2,7 +2,7 @@ package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Author;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,6 +10,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AuthorDaoImpl implements AuthorDao {
+
+    private final static String SQL_GET_AUTHOR_LEFT_OUTER_JOIN_BOOK_BASE =
+        """
+            SELECT author.*, book.id as book_id, book.title, book.isbn, book.publisher
+            FROM author
+            LEFT OUTER JOIN book ON book.author_id = author.id
+        """;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -20,16 +27,20 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public Author getById(Long id) {
 
-        return jdbcTemplate.queryForObject("SELECT * FROM author WHERE id = ?", getAuthorRowMapper(), id);
+
+        return jdbcTemplate.query(
+                SQL_GET_AUTHOR_LEFT_OUTER_JOIN_BOOK_BASE + " WHERE author.id = ?",
+                getAuthorResultSetExtractor(),
+                id);
     }
 
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
 
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM author WHERE first_name = ? AND last_name = ?",
-                getAuthorRowMapper(),
+        return jdbcTemplate.query(
+                SQL_GET_AUTHOR_LEFT_OUTER_JOIN_BOOK_BASE + " WHERE first_name = ? AND last_name = ?",
+                getAuthorResultSetExtractor(),
                 firstName, lastName
         );
     }
@@ -63,10 +74,10 @@ public class AuthorDaoImpl implements AuthorDao {
         jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
     }
 
-    /** This method is applied to get a new instance of RowMapper<Author> in order
+    /** This method is applied to get a new instance of ResultSetExtractor<Author> in order
      * to provide thread safety
      */
-    private RowMapper<Author> getAuthorRowMapper() {
-        return new AuthorRowMapper();
+    private ResultSetExtractor<Author> getAuthorResultSetExtractor() {
+        return new AuthorResultSetExtractor();
     }
 }
