@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by sergei on 18/02/2025
@@ -19,20 +17,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ComponentScan("guru.springframework.jdbc.dao")
 public class BookDaoIntegrationTest {
     @Autowired
-    BookDao BookDao;
+    BookDao bookDao;
 
     @Test
     public void testGetBookById() {
 
-        Book Book = BookDao.getById(5L);
+        Book book = bookDao.getById(5L);
 
-        assertThat(Book).isNotNull();
+        assertThat(book).isNotNull();
     }
 
     @Test
     public void testGetBookByTitle() {
 
-        Book Book = BookDao.findBookByTitle("Spring in Action. 5th Edition");
+        Book Book = bookDao.findBookByTitle("Spring in Action. 5th Edition");
 
         assertThat(Book).isNotNull();
     }
@@ -44,7 +42,7 @@ public class BookDaoIntegrationTest {
         book.setIsbn("an ISBN");
         book.setTitle("a Title");
 
-        Book saved = BookDao.saveNewBook(book);
+        Book saved = bookDao.saveNewBook(book);
 
         assertThat(saved).isNotNull();
         assertThat(saved.getId()).isNotNull();
@@ -54,15 +52,15 @@ public class BookDaoIntegrationTest {
 
     @Test
     public void testUpdateBook() {
-        Book Book = new Book();
-        Book.setTitle("j-thomson's book");
-        Book.setIsbn("some-new-ISBN");
+        Book book = new Book();
+        book.setTitle("j-thomson's book");
+        book.setIsbn("some-new-ISBN");
 
-        Book persisted = BookDao.saveNewBook(Book);
+        Book persisted = bookDao.saveNewBook(book);
         persisted.setTitle("John's book");
         persisted.setIsbn("another-ISBN");
 
-        Book updated = BookDao.updateBook(persisted);
+        Book updated = bookDao.updateBook(persisted);
 
         assertThat(updated).isNotNull();
         assertThat(updated.getId()).isEqualTo(persisted.getId());
@@ -74,14 +72,14 @@ public class BookDaoIntegrationTest {
     @Test
     public void testDeleteBookById() {
 
-        Book Book = new Book();
-        Book.setTitle("Book to delete");
-        Book.setIsbn("ISBN");
+        Book book = new Book();
+        book.setTitle("Book to delete");
+        book.setIsbn("ISBN");
 
-        Book saved = BookDao.saveNewBook(Book);
+        Book saved = bookDao.saveNewBook(book);
 
-        BookDao.deleteBookById(saved.getId());
+        bookDao.deleteBookById(saved.getId());
 
-        assertThat(BookDao.getById(saved.getId())).isNull();
+        assertThat(bookDao.getById(saved.getId())).isNull();
     }
 }
