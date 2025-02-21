@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Created by sergei on 21/02/2025
  */
@@ -38,41 +40,58 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
+    public List<Author> findAuthorListByLastNameLike(String lastName) {
+
+        try(EntityManager em = getEntityManager()) {
+
+            TypedQuery<Author> query = em.createQuery(
+                    "SELECT a FROM Author a WHERE a.lastName like :last_name",
+                    Author.class
+            );
+            query.setParameter("last_name", lastName + '%');
+            return query.getResultList();
+        }
+    }
+
+    @Override
     public Author saveNewAuthor(Author author) {
 
-        EntityManager em = getEntityManager();
+        try (EntityManager em = getEntityManager()) {
 
-        em.getTransaction().begin();
-        em.persist(author);
-        em.flush();
-        em.getTransaction().commit();
+            em.getTransaction().begin();
+            em.persist(author);
+            em.flush();
+            em.getTransaction().commit();
 
-        return author;
+            return author;
+        }
     }
 
     @Override
     public Author updateAuthor(Author author) {
 
-        EntityManager em = getEntityManager();
+        try (EntityManager em = getEntityManager()) {
 
-        em.joinTransaction();
-        em.merge(author);
-        em.flush();
-        em.clear();     //this em.clear(); clears the first level cache
+            em.joinTransaction();
+            em.merge(author);
+            em.flush();
+            em.clear();     //this em.clear(); clears the first level cache
 
-        return em.find(Author.class, author.getId());
+            return em.find(Author.class, author.getId());
+        }
     }
 
     @Override
     public void deleteAuthorById(Long id) {
 
-        EntityManager em = getEntityManager();
+        try (EntityManager em = getEntityManager()) {
 
-        em.joinTransaction();
-        Author author = em.find(Author.class, id);
-        em.remove(author);
-        em.flush();
-        em.getTransaction().commit();
+            em.joinTransaction();
+            Author author = em.find(Author.class, id);
+            em.remove(author);
+            em.flush();
+            em.getTransaction().commit();
+        }
     }
 
     private EntityManager getEntityManager() {
