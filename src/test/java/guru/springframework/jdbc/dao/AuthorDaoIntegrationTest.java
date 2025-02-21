@@ -51,7 +51,7 @@ public class AuthorDaoIntegrationTest {
     public void testSaveNewAuthor() {
 
         Author author = new Author();
-        author.setFirstName("John-Lesson-78");
+        author.setFirstName("John-Lesson-87-Hibernate");
         author.setLastName("Thompson");
 
         Author saved = authorDao.saveNewAuthor(author);
