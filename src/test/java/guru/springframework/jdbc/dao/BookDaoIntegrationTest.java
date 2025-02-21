@@ -1,6 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
+import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,9 +31,27 @@ public class BookDaoIntegrationTest {
     @Test
     public void testGetBookByTitle() {
 
-        Book Book = bookDao.findBookByTitle("Spring in Action. 5th Edition");
+        Book book = bookDao.findBookByTitle("Spring in Action. 5th Edition");
 
-        assertThat(Book).isNotNull();
+        assertThat(book).isNotNull();
+    }
+
+    @Test
+    public void testGetBookByIsbn() {
+
+        Book book = new Book();
+        book.setTitle("SpringFramework: from beginner to guru. Lesson 92. TypedQuery<T> vs 'cringe' Query");
+        String isbn = "123" + RandomString.make(7);
+        book.setIsbn(isbn);
+
+        Book saved = bookDao.saveNewBook(book);
+
+        Book fetched = bookDao.findBookByIsbn(isbn);
+
+        assertThat(fetched).isNotNull();
+        assertThat(fetched.getId()).isEqualTo(saved.getId());
+        assertThat(fetched.getIsbn()).isEqualTo(isbn);
+
     }
 
     @Test
