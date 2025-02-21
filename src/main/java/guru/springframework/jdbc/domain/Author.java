@@ -8,7 +8,10 @@ import java.util.Objects;
 /**
  * Created by sergei on 18/02/2025
  */
-@NamedQuery(name = "find_all_authors", query = "SELECT a FROM Author a")
+@NamedQueries({
+    @NamedQuery(name = "find_all", query = "FROM Author"),
+    @NamedQuery(name = "find_by_name", query = "FROM Author a WHERE a.firstName = :first_name AND a.lastName = :last_name")
+})
 @Entity
 public class Author {
     @Id
