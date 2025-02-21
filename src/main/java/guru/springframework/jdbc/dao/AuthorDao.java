@@ -11,6 +11,8 @@ public interface AuthorDao {
 
     Author getById(Long id);
 
+    List<Author> findAll();
+
     Author findAuthorByName(String firstName, String lastName);
 
     List<Author> findAuthorListByLastNameLike(String lastName);

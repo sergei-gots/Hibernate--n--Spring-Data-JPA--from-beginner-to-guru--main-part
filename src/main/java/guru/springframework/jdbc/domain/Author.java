@@ -1,10 +1,6 @@
 package guru.springframework.jdbc.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,6 +8,7 @@ import java.util.Objects;
 /**
  * Created by sergei on 18/02/2025
  */
+@NamedQuery(name = "find_all_authors", query = "SELECT a FROM Author a")
 @Entity
 public class Author {
     @Id
