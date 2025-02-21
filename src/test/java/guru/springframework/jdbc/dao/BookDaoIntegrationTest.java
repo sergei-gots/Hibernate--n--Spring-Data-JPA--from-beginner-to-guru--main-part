@@ -40,15 +40,15 @@ public class BookDaoIntegrationTest {
     @Test
     public void testSaveNewBook() {
 
-        Book Book = new Book();
-        Book.setIsbn("an ISBN");
-        Book.setTitle("a Title");
+        Book book = new Book();
+        book.setIsbn("an ISBN");
+        book.setTitle("a Title");
 
-        Book saved = BookDao.saveNewBook(Book);
+        Book saved = BookDao.saveNewBook(book);
 
         assertThat(saved).isNotNull();
         assertThat(saved.getId()).isNotNull();
-        assertThat(saved.getTitle()).isEqualTo(Book.getTitle());
+        assertThat(saved.getTitle()).isEqualTo(book.getTitle());
 
     }
 
@@ -82,6 +82,6 @@ public class BookDaoIntegrationTest {
 
         BookDao.deleteBookById(saved.getId());
 
-        assertThrows(EmptyResultDataAccessException.class, () -> BookDao.getById(saved.getId()));
+        assertThat(BookDao.getById(saved.getId())).isNull();
     }
 }
