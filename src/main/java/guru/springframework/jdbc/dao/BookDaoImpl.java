@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class BookDaoImpl implements BookDao {
+
     @Override
     public Book getById(Long id) {
         return null;
@@ -32,4 +33,5 @@ public class BookDaoImpl implements BookDao {
     public void deleteBookById(Long id) {
 
     }
+
 }
