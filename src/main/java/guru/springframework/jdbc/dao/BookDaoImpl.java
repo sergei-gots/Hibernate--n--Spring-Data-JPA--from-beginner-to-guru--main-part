@@ -31,50 +31,43 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book findBookByTitle(String title) {
 
-        EntityManager em = getEntityManager();
+        try (EntityManager em = getEntityManager()) {
 
-        TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.title = :title ", Book.class);
-        query.setParameter("title", title);
+            TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.title = :title ", Book.class);
+            query.setParameter("title", title);
 
-        Book book =  query.getSingleResult();
-
-        em.close();
-
-        return book;
+            return query.getSingleResult();
+        }
     }
 
     @Override
     public Book saveNewBook(Book book) {
 
-        EntityManager em = getEntityManager();
+        try (EntityManager em = getEntityManager()) {
+            em.getTransaction().begin();
 
-        em.getTransaction().begin();
-        em.persist(book);
-        em.flush();
-        em.getTransaction().commit();
+            em.persist(book);
+            em.flush();
+            //Try to comment the next line with 'commit' and you'll see the result with tests-:)
+            em.getTransaction().commit();
 
-        Book persistent = em.find(Book.class, book.getId());
+            return em.find(Book.class, book.getId());
+        }
 
-        em.close();
-
-        return persistent;
     }
 
     @Override
     public Book updateBook(Book book) {
 
-        EntityManager em = getEntityManager();
+        try (EntityManager em = emf.createEntityManager()) {
 
-        em.joinTransaction();
-        em.merge(book);
-        em.flush();
-        em.clear();
+            em.joinTransaction();
+            em.merge(book);
+            em.flush();
+            em.clear();
 
-        Book persistent = em.find(Book.class, book.getId());
-
-        em.close();
-
-        return persistent;
+            return em.find(Book.class, book.getId());
+        }
     }
 
     @Override
