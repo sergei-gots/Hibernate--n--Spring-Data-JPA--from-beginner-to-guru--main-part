@@ -68,14 +68,14 @@ public class AuthorDaoIntegrationTest {
         author.setFirstName("j");
         author.setLastName("thompson");
 
-        Author persisted = authorDao.saveNewAuthor(author);
-        persisted.setFirstName("John");
-        persisted.setLastName("Thompson");
+        Author persistent = authorDao.saveNewAuthor(author);
+        persistent.setFirstName("John");
+        persistent.setLastName("Thompson");
 
-        Author updated = authorDao.updateAuthor(persisted);
+        Author updated = authorDao.updateAuthor(persistent);
 
         assertThat(updated).isNotNull();
-        assertThat(updated.getId()).isEqualTo(persisted.getId());
+        assertThat(updated.getId()).isEqualTo(persistent.getId());
         assertThat(updated.getFirstName()).isEqualTo("John");
         assertThat(updated.getLastName()).isEqualTo("Thompson");
         assertThat(updated.getCountry()).isEqualTo(author.getCountry());
