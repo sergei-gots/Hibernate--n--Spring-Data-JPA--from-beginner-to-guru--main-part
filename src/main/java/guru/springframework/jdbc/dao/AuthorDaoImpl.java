@@ -3,7 +3,12 @@ package guru.springframework.jdbc.dao;
 import guru.springframework.jdbc.domain.Author;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Parameter;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,7 +35,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
         try(EntityManager em = getEntityManager()) {
 
-            TypedQuery<Author> query = em.createNamedQuery("find_all", Author.class);
+            TypedQuery<Author> query = em.createNamedQuery("find_all_authors", Author.class);
             return query.getResultList();
         }
     }
@@ -39,10 +44,37 @@ public class AuthorDaoImpl implements AuthorDao {
     public Author findAuthorByName(String firstName, String lastName) {
 
         try(EntityManager em = getEntityManager()) {
-            TypedQuery<Author> query = em.createNamedQuery("find_by_name", Author.class);
+            TypedQuery<Author> query = em.createNamedQuery("find_author_by_name", Author.class);
 
             query.setParameter("first_name", firstName);
             query.setParameter("last_name", lastName);
+
+            return query.getSingleResult();
+        }
+    }
+
+    @Override
+    public Author findAuthorByNameWithCriteriaQuery(String firstName, String lastName) {
+
+        try(EntityManager em = getEntityManager()) {
+
+            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+            CriteriaQuery<Author> criteriaQuery = criteriaBuilder.createQuery(Author.class);
+
+            Root<Author> authorRoot = criteriaQuery.from(Author.class);
+
+            Parameter<String> firstNameParameter = criteriaBuilder.parameter(String.class, "firstName");
+            Parameter<String> lastNameParameter = criteriaBuilder.parameter(String.class, "lastName");
+
+            Predicate firstNamePredicate = criteriaBuilder.equal(authorRoot.get("firstName"), firstNameParameter);
+            Predicate lastNamePredicate = criteriaBuilder.equal(authorRoot.get("lastName"), lastNameParameter);
+
+            criteriaQuery.select(authorRoot).where(criteriaBuilder.and(firstNamePredicate, lastNamePredicate));
+
+            TypedQuery<Author> query = em.createQuery(criteriaQuery);
+
+            query.setParameter(firstNameParameter, firstName);
+            query.setParameter(lastNameParameter, lastName);
 
             return query.getSingleResult();
         }

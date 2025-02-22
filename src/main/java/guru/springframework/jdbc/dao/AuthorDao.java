@@ -15,6 +15,8 @@ public interface AuthorDao {
 
     Author findAuthorByName(String firstName, String lastName);
 
+    Author findAuthorByNameWithCriteriaQuery(String firstName, String lastName);
+
     List<Author> findAuthorListByLastNameLike(String lastName);
 
     Author saveNewAuthor(Author author);

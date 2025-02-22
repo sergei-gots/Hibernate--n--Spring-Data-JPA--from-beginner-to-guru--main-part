@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Transient;
 
 import java.util.Objects;
@@ -11,6 +13,11 @@ import java.util.Objects;
 /**
  * Created by sergei on 18/02/2025
  */
+@NamedQueries({
+        @NamedQuery(name = "find_all_books", query = "FROM Book"),
+        @NamedQuery(name = "find_book_by_title", query = "FROM Book b WHERE b.title = :title ")
+
+})
 @Entity
 public class Book {
     @Id

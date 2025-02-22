@@ -57,6 +57,14 @@ public class AuthorDaoIntegrationTest {
     }
 
     @Test
+    public void testGetAuthorByNameWithCriteriaQuery() {
+
+        Author author = authorDao.findAuthorByNameWithCriteriaQuery("Craig", "Walls");
+
+        assertThat(author).isNotNull();
+    }
+
+    @Test
     public void testGetAuthorsByLastNameLike() {
 
         List<Author> authors = authorDao.findAuthorListByLastNameLike("wall");
