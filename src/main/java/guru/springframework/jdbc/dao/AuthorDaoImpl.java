@@ -1,6 +1,8 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Author;
+import guru.springframework.jdbc.repository.AuthorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,38 +14,53 @@ import java.util.List;
 @Component
 public class AuthorDaoImpl implements AuthorDao {
 
+    private final AuthorRepository authorRepository;
+
+    public AuthorDaoImpl(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
+    }
+
     @Override
     public Author getById(Long id) {
-        return null;
+        return authorRepository.getReferenceById(id);
     }
 
     @Override
     public List<Author> findAll() {
-        return List.of();
+        return authorRepository.findAll();
     }
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        return null;
+        return null; //not implemented yet
     }
 
     @Override
     public List<Author> findAuthorListByLastNameLike(String lastName) {
-        return List.of();
+        return List.of(); //not implemented yet
     }
 
     @Override
     public Author saveNewAuthor(Author author) {
-        return null;
+        return authorRepository.save(author);
     }
 
     @Override
+    @Transactional
     public Author updateAuthor(Author author) {
-        return null;
+
+        Author persisted = authorRepository.getReferenceById(author.getId());
+
+        persisted.setFirstName(author.getFirstName());
+        persisted.setLastName(author.getLastName());
+        persisted.setCountry(author.getCountry());
+        persisted.setBooks(author.getBooks());
+
+        return authorRepository.save(persisted);
     }
 
     @Override
     public void deleteAuthorById(Long id) {
-
+        authorRepository.deleteById(id);
     }
 }
