@@ -1,10 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Author;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Parameter;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -50,6 +47,23 @@ public class AuthorDaoImpl implements AuthorDao {
             query.setParameter("last_name", lastName);
 
             return query.getSingleResult();
+        }
+    }
+
+    @Override
+    public Author findAuthorByNameWithNativeSqlQuery(String firstName, String lastName) {
+
+        try (EntityManager em = getEntityManager()) {
+
+            Query sqlNativeQuery = em.createNativeQuery(
+                    "SELECT * FROM author a WHERE a.first_name = ? AND a.last_name = ?",
+                    Author.class
+            );
+
+            sqlNativeQuery.setParameter(1, firstName);
+            sqlNativeQuery.setParameter(2, lastName);
+
+            return (Author) sqlNativeQuery.getSingleResult();
         }
     }
 
