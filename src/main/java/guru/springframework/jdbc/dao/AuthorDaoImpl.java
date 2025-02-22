@@ -69,7 +69,11 @@ public class AuthorDaoImpl implements AuthorDao {
             Predicate firstNamePredicate = criteriaBuilder.equal(authorRoot.get("firstName"), firstNameParameter);
             Predicate lastNamePredicate = criteriaBuilder.equal(authorRoot.get("lastName"), lastNameParameter);
 
-            criteriaQuery.select(authorRoot).where(criteriaBuilder.and(firstNamePredicate, lastNamePredicate));
+            criteriaQuery
+                    .select(authorRoot)
+                    .where(criteriaBuilder
+                            .and(firstNamePredicate, lastNamePredicate)
+                    );
 
             TypedQuery<Author> query = em.createQuery(criteriaQuery);
 

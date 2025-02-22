@@ -48,6 +48,14 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
+    public void testGetBookByTitleWithCriteriaQuery() {
+
+        Book book = bookDao.findBookByTitleWithCriteriaQuery("Spring in Action. 5th Edition");
+
+        assertThat(book).isNotNull();
+    }
+
+    @Test
     public void testGetBookByIsbn() {
 
         Book book = new Book();
