@@ -1,7 +1,6 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Author;
-import jakarta.persistence.NoResultException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by sergei on 18/02/2025
@@ -54,28 +52,6 @@ public class AuthorDaoIntegrationTest {
     public void testGetAuthorByName() {
 
         Author author = authorDao.findAuthorByName("Craig", "Walls");
-
-        assertThat(author).isNotNull();
-    }
-
-    @Test
-    public void testGetAuthorByNameWithNativeSqlQuery() {
-
-        Author author = authorDao.findAuthorByNameWithNativeSqlQuery("Craig", "Walls");
-
-        assertThat(author).isNotNull();
-    }
-
-    @Test
-    public void testGetAuthorByNameWithNativeSqlQuery_whenThereIsNoMatch_thenThrows() {
-
-        assertThrows(NoResultException.class, () ->authorDao.findAuthorByNameWithNativeSqlQuery("CraigX", "Walls"));
-    }
-
-    @Test
-    public void testGetAuthorByNameWithCriteriaQuery() {
-
-        Author author = authorDao.findAuthorByNameWithCriteriaQuery("Craig", "Walls");
 
         assertThat(author).isNotNull();
     }

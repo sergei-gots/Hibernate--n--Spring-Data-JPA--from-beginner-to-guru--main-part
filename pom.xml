@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>spring-boot-book2</artifactId>
+	<artifactId>spring-boot-book--part-2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot-book2</name>
 	<description>Spring Data JPA. Lesson 61. Assignment  5</description>

@@ -1,7 +1,6 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
-import jakarta.persistence.NoResultException;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.ComponentScan;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by sergei on 18/02/2025
@@ -45,28 +43,6 @@ public class BookDaoIntegrationTest {
     public void testGetBookByTitle() {
 
         Book book = bookDao.findBookByTitle("Spring in Action. 5th Edition");
-
-        assertThat(book).isNotNull();
-    }
-
-    @Test
-    public void testGetBookByTitleWithNativeSqlQuery() {
-
-        Book book = bookDao.findBookByTitleWithNativeSqlQuery("Spring in Action. 5th Edition");
-
-        assertThat(book).isNotNull();
-    }
-
-    @Test
-    public void testGetBookByTitleWithNativeSqlQuery_whenThereIsNoMatch_thenThrows() {
-
-        assertThrows(NoResultException.class, () -> bookDao.findBookByTitleWithNativeSqlQuery("Abbra-caddabra"));
-    }
-
-    @Test
-    public void testGetBookByTitleWithCriteriaQuery() {
-
-        Book book = bookDao.findBookByTitleWithCriteriaQuery("Spring in Action. 5th Edition");
 
         assertThat(book).isNotNull();
     }

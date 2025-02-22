@@ -17,9 +17,6 @@ public interface BookDao {
 
     Book findBookByTitle(String title);
 
-    Book findBookByTitleWithNativeSqlQuery(String title);
-
-    Book findBookByTitleWithCriteriaQuery(String title);
 
     Book saveNewBook(Book book);
 
