@@ -17,6 +17,8 @@ public interface BookDao {
 
     Book findBookByTitle(String title);
 
+    Book findBookByTitleWithNativeSqlQuery(String title);
+
     Book findBookByTitleWithCriteriaQuery(String title);
 
     Book saveNewBook(Book book);
@@ -24,5 +26,4 @@ public interface BookDao {
     Book updateBook(Book book);
 
     void deleteBookById(Long id);
-
 }

@@ -1,10 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Parameter;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -68,6 +65,22 @@ public class BookDaoImpl implements BookDao {
             query.setParameter("title", title);
 
             return query.getSingleResult();
+        }
+    }
+
+    @Override
+    public Book findBookByTitleWithNativeSqlQuery(String title) {
+
+        try (EntityManager em = getEntityManager()) {
+
+            Query nativeSqlQuery = em.createNativeQuery(
+                    "SELECT * FROM book WHERE title = :title",
+                    Book.class
+            );
+
+            nativeSqlQuery.setParameter("title", title);
+
+            return (Book) nativeSqlQuery.getSingleResult();
         }
     }
 
