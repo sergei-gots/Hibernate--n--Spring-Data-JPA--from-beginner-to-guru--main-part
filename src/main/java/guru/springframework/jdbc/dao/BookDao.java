@@ -1,6 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -17,10 +18,13 @@ public interface BookDao {
 
     Book findBookByTitle(String title);
 
-
     Book saveNewBook(Book book);
 
     Book updateBook(Book book);
 
     void deleteBookById(Long id);
+
+    Book getBookByTitle(String title);
+
+    Book readBookByTitle(@Nullable String title);
 }

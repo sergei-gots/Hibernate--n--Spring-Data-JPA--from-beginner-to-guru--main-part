@@ -43,6 +43,16 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
+    public Book getBookByTitle(String title) {
+        return bookRepository.getByTitle(title);
+    }
+
+    @Override
+    public Book readBookByTitle(String title) {
+        return bookRepository.readByTitle(title);
+    }
+
+    @Override
     public Book saveNewBook(Book book) {
         return bookRepository.save(book);
     }

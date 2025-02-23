@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import java.util.List;
@@ -47,6 +48,20 @@ public class BookDaoIntegrationTest {
         Book book = bookDao.findBookByTitle("Spring in Action. 5th Edition");
 
         assertThat(book).isNotNull();
+    }
+
+    @Test
+    public void testGetBookByTitle_whenThereIsNoMatch() {
+
+        Book book = bookDao.getBookByTitle(null);
+
+        assertThat(book).isNull();
+    }
+
+    @Test
+    public void testReadBookByTitle_whenThereIsNoMatch_thenThrowsEmptyResultDataAccessException() {
+
+        assertThrows(EmptyResultDataAccessException.class, ()-> bookDao.readBookByTitle(null));
     }
 
     @Test
