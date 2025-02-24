@@ -77,6 +77,22 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
+    public void findBookByTitleUsingSqlQuery() {
+
+        Book book = bookRepository.findByTitleUsingSqlQuery("Clean Code");
+
+        assertThat(book).isNotNull();
+    }
+
+    @Test
+    public void findBookByTitleUsingHqlQuery() {
+
+        Stream<Book> books = bookRepository.findByTitleUsingHqlQuery("Clean Code");
+
+        assertThat(books).isNotNull();
+    }
+
+    @Test
     public void testReadBookByTitle_whenThereIsNoMatch_thenThrowsEmptyResultDataAccessException() {
 
         assertThrows(EmptyResultDataAccessException.class, ()-> bookDao.readBookByTitle(null));

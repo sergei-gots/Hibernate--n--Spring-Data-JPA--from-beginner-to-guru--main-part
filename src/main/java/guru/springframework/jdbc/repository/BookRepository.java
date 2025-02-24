@@ -2,6 +2,7 @@ package guru.springframework.jdbc.repository;
 
 import guru.springframework.jdbc.domain.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Async;
 
@@ -17,6 +18,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findByIsbn(String isbn);
 
     Optional<Book> findByTitle(String title);
+
+    @Query("SELECT b FROM Book b WHERE b.title = :title")
+    Stream<Book> findByTitleUsingHqlQuery(String title);
+
+    @Query(nativeQuery = true,  value = "SELECT * FROM book b WHERE b.title = :title LIMIT 1")
+    Book findByTitleUsingSqlQuery(String title);
 
     @Nullable
     Book getByTitle(@Nullable String title);
