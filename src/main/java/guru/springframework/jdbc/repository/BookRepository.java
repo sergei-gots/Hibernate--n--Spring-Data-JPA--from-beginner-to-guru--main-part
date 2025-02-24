@@ -26,6 +26,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b WHERE b.title = :title")
     Stream<Book> findByTitleUsingHqlQueryBindingParameter(@Param("title") String bookTitle);
 
+    Stream<Book> jpaNamedQuery(String title);
+
     @Query(nativeQuery = true,  value = "SELECT * FROM book b WHERE b.title = :title LIMIT 1")
     Book findByTitleUsingSqlQuery(String title);
 

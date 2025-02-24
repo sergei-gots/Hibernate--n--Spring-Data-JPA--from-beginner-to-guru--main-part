@@ -101,6 +101,14 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
+    public void findBookByTitleUsingJpaNamedQuery() {
+
+        Stream<Book> books = bookRepository.jpaNamedQuery("Clean Code");
+
+        assertThat(books).isNotNull();
+    }
+
+    @Test
     public void testReadBookByTitle_whenThereIsNoMatch_thenThrowsEmptyResultDataAccessException() {
 
         assertThrows(EmptyResultDataAccessException.class, ()-> bookDao.readBookByTitle(null));
