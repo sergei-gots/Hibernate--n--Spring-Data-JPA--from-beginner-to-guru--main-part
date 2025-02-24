@@ -93,6 +93,14 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
+    public void findBookByTitleUsingHqlQueryBindingParameter() {
+
+        Stream<Book> books = bookRepository.findByTitleUsingHqlQueryBindingParameter("Clean Code");
+
+        assertThat(books).isNotNull();
+    }
+
+    @Test
     public void testReadBookByTitle_whenThereIsNoMatch_thenThrowsEmptyResultDataAccessException() {
 
         assertThrows(EmptyResultDataAccessException.class, ()-> bookDao.readBookByTitle(null));
