@@ -1,6 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
+import guru.springframework.jdbc.repository.BookRepository;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,6 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BookDaoIntegrationTest {
     @Autowired
     BookDao bookDao;
+
+    @Autowired
+    BookRepository bookRepository;
 
     @Test
     public void testGetBookById() {
@@ -73,6 +80,13 @@ public class BookDaoIntegrationTest {
     public void testReadBookByTitle_whenThereIsNoMatch_thenThrowsEmptyResultDataAccessException() {
 
         assertThrows(EmptyResultDataAccessException.class, ()-> bookDao.readBookByTitle(null));
+    }
+
+    @Test
+    public void  testFutureQueryBooksByTitle() throws ExecutionException, InterruptedException {
+
+        Future<Stream<Book>> futureBooks = bookRepository.queryByTitle("Clean Code");
+        assertThat(futureBooks.get().findAny().isPresent()).isTrue();
     }
 
     @Test

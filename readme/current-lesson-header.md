@@ -1,5 +1,5 @@
 # Spring Data JPA Queries
 
-## Lesson 104. Stream<T> Query Results
+## Lesson 105. Asynchronous Query Results
 
-    Stream<Book> findAllByTitleNotNull();
+https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html#repositories.query-async
