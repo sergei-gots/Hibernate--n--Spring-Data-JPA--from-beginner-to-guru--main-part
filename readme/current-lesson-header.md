@@ -1,3 +1,5 @@
 # Spring Data JPA Queries
 
-## Implement Book DAO
+## Lesson 104. Stream<T> Query Results
+
+    Stream<Book> findAllByTitleNotNull();

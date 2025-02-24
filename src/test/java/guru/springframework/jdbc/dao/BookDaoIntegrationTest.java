@@ -11,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -40,6 +41,16 @@ public class BookDaoIntegrationTest {
 
         assertThat(books).isNotNull();
         assertThat(books.size()).isGreaterThan(0);
+    }
+
+    @Test
+    public void testFindAllByTitleNotNull() {
+
+        AtomicInteger count = new AtomicInteger();
+        bookDao.findAllByTitleNotNull()
+                .forEach(book -> count.incrementAndGet());
+
+        assertThat(count.get()).isGreaterThan(5);
     }
 
     @Test

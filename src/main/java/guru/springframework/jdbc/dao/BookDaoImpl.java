@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by sergei on 21/02/2025
@@ -28,6 +29,11 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findAll() {
         return bookRepository.findAll();
+    }
+
+    @Override
+    public Stream<Book> findAllByTitleNotNull() {
+        return bookRepository.findByTitleNotNull();
     }
 
     @Override
