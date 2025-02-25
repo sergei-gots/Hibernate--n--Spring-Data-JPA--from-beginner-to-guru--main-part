@@ -7,9 +7,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 /**
  * Created by sergei on 21/02/2025
  */
@@ -25,35 +22,10 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public List<Book> findAll() {
-        return bookRepository.findAll();
-    }
-
-    @Override
-    public Stream<Book> findAllByTitleNotNull() {
-        return bookRepository.findByTitleNotNull();
-    }
-
-    @Override
-    public Book findBookByIsbn(String isbn) {
-        return bookRepository.findByIsbn(isbn)
-                .orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Override
-    public Book findBookByTitle(String title) {
+    public Book findAnyByTitle(String title) {
         return bookRepository.findByTitle(title)
-                .orElseThrow(EntityNotFoundException::new);
-    }
-
-    @Override
-    public Book getBookByTitle(String title) {
-        return bookRepository.getByTitle(title);
-    }
-
-    @Override
-    public Book readBookByTitle(String title) {
-        return bookRepository.readByTitle(title);
+                .findAny()
+                .orElseThrow((EntityNotFoundException::new));
     }
 
     @Override
@@ -68,7 +40,7 @@ public class BookDaoImpl implements BookDao {
         Book persisted = bookRepository.getReferenceById(book.getId());
 
         persisted.setIsbn(book.getIsbn());
-        persisted.setAuthor(book.getAuthor());
+        persisted.setAuthorId(book.getAuthorId());
         persisted.setPublisher(book.getPublisher());
         persisted.setTitle(book.getTitle());
 

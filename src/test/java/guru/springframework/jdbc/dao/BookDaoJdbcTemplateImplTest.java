@@ -2,13 +2,14 @@ package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
 import guru.springframework.jdbc.repository.BookRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -16,17 +17,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Created by sergei on 18/02/2025
+ * Created by sergei on 24/02/2025
  */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan("guru.springframework.jdbc.dao")
-public class BookDaoIntegrationTest {
-    @Autowired
-    BookDao bookDao;
+class BookDaoJdbcTemplateImplTest {
 
     @Autowired
     BookRepository bookRepository;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    BookDao bookDao;
+
+    @BeforeEach
+    public void setUp() {
+        bookDao = new BookDaoJdbcTemplateImpl(jdbcTemplate);
+    }
 
     @Test
     public void testGetBookById() {
@@ -56,7 +65,7 @@ public class BookDaoIntegrationTest {
     @Test
     public void testGetBookByTitle_whenThereIsNoBooksWithNoTitle() {
 
-        assertThrows(EntityNotFoundException.class, ()->bookDao.findAnyByTitle(null));
+        assertThrows(EmptyResultDataAccessException.class, () -> bookDao.findAnyByTitle(null));
     }
 
     @Test
@@ -76,6 +85,7 @@ public class BookDaoIntegrationTest {
 
     @Test
     public void testUpdateBook() {
+
         Book book = new Book();
         book.setTitle("j-thomson's book");
         book.setIsbn("some-new-ISBN");
@@ -104,6 +114,7 @@ public class BookDaoIntegrationTest {
 
         bookDao.deleteBookById(saved.getId());
 
-        assertThrows(JpaObjectRetrievalFailureException.class, ()-> bookDao.getById(saved.getId()));
+        assertThrows(EmptyResultDataAccessException.class, () -> bookDao.getById(saved.getId()));
     }
+
 }

@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.Transient;
 
 import java.util.Objects;
 
@@ -27,8 +26,7 @@ public class Book {
     String title;
     String isbn;
     String publisher;
-    @Transient
-    Author author;
+    Long authorId;
 
     public Book() {
     }
@@ -65,12 +63,12 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public Author getAuthor() {
-        return author;
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
     @Override
@@ -91,7 +89,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", publisher='" + publisher + '\'' +
-                ", authorId=" + author +
+                ", authorId=" + authorId +
                 '}';
     }
 }
