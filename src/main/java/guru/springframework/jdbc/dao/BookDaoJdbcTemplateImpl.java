@@ -2,6 +2,7 @@ package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -42,6 +43,26 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
                 pageable.getOffset()
         );
     }
+
+    @Override
+    public List<Book> findAllSortedByTitle(Pageable pageable) {
+
+        Sort.Order sortOrderForTitle = pageable.getSort().getOrderFor("title");
+
+        String sortOrderDirectionForTitle = sortOrderForTitle != null ?
+                sortOrderForTitle.getDirection().toString() :
+                "";
+
+        String sql = "SELECT * FROM book ORDER BY title " + sortOrderDirectionForTitle + " limit ? offset ?";
+
+        return jdbcTemplate.query(
+                sql,
+                getBookRowMapper(),
+                pageable.getPageSize(),
+                pageable.getOffset()
+        );
+    }
+
 
     @Override
     public Book getById(Long id) {

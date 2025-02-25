@@ -24,12 +24,19 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findAll();
     }
 
-    //Stub implementation
+    //ToDo
     @Override
-    public List<Book> findAll(int limit, int offset) {
-        return null;
+    public List<Book> findAllSortedByTitle(Pageable pageable) {
+        return List.of();
     }
 
+    //ToDo
+    @Override
+    public List<Book> findAll(int limit, int offset) {
+        return List.of();
+    }
+
+    //ToDo
     @Override
     public List<Book> findAll(Pageable pageable) {
         return List.of();

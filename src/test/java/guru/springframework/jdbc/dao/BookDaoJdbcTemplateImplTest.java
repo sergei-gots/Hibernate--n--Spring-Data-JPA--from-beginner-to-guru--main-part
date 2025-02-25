@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -113,6 +114,48 @@ class BookDaoJdbcTemplateImplTest {
         assertThat(books).isNotNull();
         assertThat(books.size()).isEqualTo(0);
     }
+
+    @Test
+    public void testFindAllPage1_SortedByTitleDesc() {
+
+        int pageNumber = 0;
+        int pageSize = 10;
+
+        List<Book> books = bookDao.findAllSortedByTitle(
+                PageRequest.of(
+                        pageNumber,
+                        pageSize,
+                        Sort.by(Sort.Order.desc("title")))
+        );
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(pageSize);
+
+        assertThat(books.get(0).getTitle().compareToIgnoreCase(books.get(1).getTitle())).isGreaterThan(-1);
+        assertThat(books.get(1).getTitle().compareToIgnoreCase(books.get(2).getTitle())).isGreaterThan(-1);
+        assertThat(books.get(0).getTitle().compareToIgnoreCase(books.get(9).getTitle())).isGreaterThan(-1);
+    }
+
+    @Test
+    public void testFindAllPage1_SortedByTitleByDefaultAsc() {
+
+        int pageNumber = 0;
+        int pageSize = 10;
+
+        List<Book> books = bookDao.findAllSortedByTitle(
+                PageRequest.of(
+                        pageNumber,
+                        pageSize)
+        );
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(pageSize);
+
+        assertThat(books.get(0).getTitle().compareToIgnoreCase(books.get(1).getTitle())).isLessThan(1);
+        assertThat(books.get(1).getTitle().compareToIgnoreCase(books.get(2).getTitle())).isLessThan(1);
+        assertThat(books.get(0).getTitle().compareToIgnoreCase(books.get(9).getTitle())).isLessThan(1);
+    }
+
 
     @Test
     public void testGetBookById() {

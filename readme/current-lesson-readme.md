@@ -1,41 +1,105 @@
 #### Chapter 15: Paging-n-Sorting
-###  Lesson 115
-## findAllBooks() using JdbcTemplate. Paging using Pageable<T>
+###  Lesson 116
+## findAllBooksOrderByTitle() using JdbcTemplate. 
 
-We will use here the interface <code>Pageable</code> and its the most popular implementation 
-<code>PageRequest extends AbstractPageRequest implements Pageable</code>
+1. We'll add the method use here the interface <code>Pageable</code> and its the most popular implementation 
 
-    org.springframework.data.domain.Pageable
+        List<Book> findAllSortedByTitle(Pageable pageable);
 
-We will introduce one more overloading of <code>findAll</code> to the <code>BookDao</code> class:
+to the <code>BookDao</code> interface.
 
-    List<Book> findAll(Pageable pageable);
+2. We'll add the implementation:
 
-And our implementation with <code>JdbcTemplate</code> will have the next look:
+        @Override
+        public List<Book> findAllSortedByTitle(Pageable pageable) {
 
-    @Override 
-    public List<Book> findAll(Pageable pageable) {
-        
-        return jdbcTemplate.query(
-            "SELECT * FROM book limit ? offset ?",
-            getBookRowMapper(),
-            pageable.getPageSize(),
-            pageable, getOffset()
-        );
-    }
+            Sort.Order sortOrderForTitle = pageable.getSort().getOrderFor("title");
 
-To test that we will add the methods <code>testFindAllPageN_UsingPageable()</code>, e.g.:
+            String sortOrderDirectionForTitle = sortOrderForTitle != null ?
+                sortOrderForTitle.getDirection().toString() :
+                "";
+
+            String sql = "SELECT * FROM book ORDER BY title " + 
+                sortOrderDirectionForTitle + 
+                " limit ? offset ?";
+
+              return jdbcTemplate.query(
+                      sql,
+                      getBookRowMapper(),
+                      pageable.getPageSize(),
+                      pageable.getOffset()
+              );
+          }
+
+So, the parameterized sql we use here is:
+
+        SELECT * FROM book ORDER by title DESC limit ? offset ?
+
+    or 
+
+        SELECT * FROM book ORDER by title ASC limit ? offset ?
+or 
+
+        SELECT * FORM book ORDER by title limit ? offset ?
+ 
+The last one will sort as it is set by default in the database, usually - ASC 
+
+We get the sorting direction with
+
+        Sort.Order sortOrderForTitle = pageable.getSort().getOrderFor("title");
+
+4. We'll add the test method:
+
 
     @Test
-    public void testFindAllPage1_UsingPageable() {
-        
-        int pageNumber = 0;
-        int pageSize = 10;        
+    public void testFindAllPage1_SortedByTitle() {
 
-        List<Book> books = bookDao.findAll(PageRequest.of(pageNumber, pageSize));
-        
+        int pageNumber = 0;
+        int pageSize = 10;
+
+        List<Book> books = bookDao.findAllSortedByTitle(
+                PageRequest.of(
+                        pageNumber,
+                        pageSize,
+                        Sort.by(Sort.Order.desc("title")))
+        );
+
         assertThat(books).isNotNull();
         assertThat(books.size()).isEqualTo(pageSize);
+
+        assertThat(books.get(0).getTitle().compareToIgnoreCase(books.get(1).getTitle())).isGreaterThan(-1);
+        assertThat(books.get(1).getTitle().compareToIgnoreCase(books.get(2).getTitle())).isGreaterThan(-1);
+        assertThat(books.get(0).getTitle().compareToIgnoreCase(books.get(9).getTitle())).isGreaterThan(-1);
     }
    
-We should understand that <code>pageNumber</code> is not human-accepted 'one-based' but java-accepted zero-based.
+To add the direction of order we use:
+
+        Sort.by(Sort.Order.desc("title");
+or      
+        
+        Sort.by(Sort.Order.asc("title);
+The sort direction by default is 
+
+    Sort.Direction DEFAULT_DIRECTION = Direction.ASC;
+
+And for this case we also can add the next test method:
+
+    @Test
+    public void testFindAllPage1_SortedByTitleByDefaultAsc() {
+
+        int pageNumber = 0;
+        int pageSize = 10;
+
+        List<Book> books = bookDao.findAllSortedByTitle(
+                PageRequest.of(
+                        pageNumber,
+                        pageSize)
+        );
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(pageSize);
+
+        assertThat(books.get(0).getTitle().compareToIgnoreCase(books.get(1).getTitle())).isLessThan(1);
+        assertThat(books.get(1).getTitle().compareToIgnoreCase(books.get(2).getTitle())).isLessThan(1);
+        assertThat(books.get(0).getTitle().compareToIgnoreCase(books.get(9).getTitle())).isLessThan(1);
+    }

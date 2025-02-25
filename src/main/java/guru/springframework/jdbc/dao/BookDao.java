@@ -17,6 +17,8 @@ public interface BookDao {
 
     List<Book> findAll(Pageable pageable);
 
+    List<Book> findAllSortedByTitle(Pageable pageable);
+
     Book getById(Long id);
 
     Book findAnyByTitle(String title);
