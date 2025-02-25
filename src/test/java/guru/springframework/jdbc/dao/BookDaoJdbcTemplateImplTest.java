@@ -43,6 +43,41 @@ class BookDaoJdbcTemplateImplTest {
     }
 
     @Test
+    public void testGetPage1() {
+
+        int limit = 10;
+        int offset = 0;
+
+        List<Book> books = bookDao.findAll(limit, offset);
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(limit);
+    }
+    @Test
+    public void testGetPage2() {
+
+        int limit = 10;
+        int offset = 10;
+
+        List<Book> books = bookDao.findAll(limit, offset);
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(limit);
+    }
+
+    @Test
+    public void testGetPage100() {
+
+        int limit = 10;
+        int offset = 990;
+
+        List<Book> books = bookDao.findAll(limit, offset);
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(0);
+    }
+
+    @Test
     public void testGetBookById() {
 
         Book book = bookDao.getById(5L);

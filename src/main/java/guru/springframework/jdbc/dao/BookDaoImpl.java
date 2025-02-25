@@ -23,6 +23,12 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findAll();
     }
 
+    //Stub implementation
+    @Override
+    public List<Book> findAll(int limit, int offset) {
+        return null;
+    }
+
     @Override
     public Book getById(Long id) {
         return bookRepository.getReferenceById(id);

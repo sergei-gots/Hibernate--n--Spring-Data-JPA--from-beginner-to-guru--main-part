@@ -11,6 +11,8 @@ public interface BookDao {
 
     List<Book> findAll();
 
+    List<Book> findAll(int limit, int offset);
+
     Book getById(Long id);
 
     Book findAnyByTitle(String title);

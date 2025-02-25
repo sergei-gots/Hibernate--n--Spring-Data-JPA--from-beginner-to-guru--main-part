@@ -23,6 +23,15 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
     }
 
     @Override
+    public List<Book> findAll(int limit, int offset) {
+        return jdbcTemplate.query(
+                "SELECT * FROM book limit ? offset ?",
+                getBookRowMapper(),
+                limit, offset
+        );
+    }
+
+    @Override
     public Book getById(Long id) {
         return jdbcTemplate.queryForObject("SELECT * FROM book WHERE id = ?", getBookRowMapper(), id);
     }

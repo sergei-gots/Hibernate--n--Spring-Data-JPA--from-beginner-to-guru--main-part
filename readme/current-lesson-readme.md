@@ -1,29 +1,61 @@
 #### Chapter 14: Paging-n-Sorting
-###  Lesson 113
-## findAllBooks() using JdbcTemplate
+###  Lesson 114
+## findAllBooks() using JdbcTemplate. Adding Paging
 
-We're providing the method <code>findAll()</code>'s implementation:
-    
-    public List<Book> findAll() {
-        return jdbcTemplate.query("SELECT * FROM book", getBookRowMapper());
+What we're doing here is adding an overloading for the method <code>findAll()</code> to our <code>BookDao</code> class:
+
+    List<Book> findAll(int limit, int offset)
+
+And then we're implementing that:
+
+    @Override
+    public List<Book> findAll(int limit, int offset) {
+        return jdbcTemplate.query(
+            "SELECT * FROM book limit ? offset ?", 
+            getBookRowMapper(),
+            limit, offset
+        );
     }   
 
-Remember, the <code>BookRowMapper</code> is:
+So, the SQL Statement is becoming the next:
 
-    public class BookRowMapper implements RowMapper<Book> {
+    SELECT * FROM book limit ? offset ?;
 
-        @Override
-        public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
+Also, we're performing the next test cases for that:
 
-            Book book = new Book();
+    @Test
+    public void testGetPage1() {
 
-            book.setId(rs.getLong("id"));
-            book.setIsbn(rs.getString("isbn"));
-            book.setPublisher(rs.getString("publisher"));
-            book.setTitle(rs.getString("title"));
-            book.setAuthorId(rs.getLong("author_id"));
+        int limit = 10;
+        int offset = 0;
 
-            return book;
-        }
+        List<Book> books = bookDao.findAll(limit, offset);
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(limit);
+    }
+    @Test
+    public void testGetPage2() {
+
+        int limit = 10;
+        int offset = 10;
+
+        List<Book> books = bookDao.findAll(limit, offset);
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(limit);
     }
 
+    @Test
+    public void testGetPage100() {
+
+        int limit = 10;
+        int offset = 990;
+
+        List<Book> books = bookDao.findAll(limit, offset);
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(0);
+    }
+
+That will be made in assumption, that there are ca. 100 records in the table <code>book</code> in our test database.
