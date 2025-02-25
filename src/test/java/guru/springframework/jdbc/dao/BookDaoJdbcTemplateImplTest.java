@@ -1,7 +1,6 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
-import guru.springframework.jdbc.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class BookDaoJdbcTemplateImplTest {
 
     @Autowired
-    BookRepository bookRepository;
-
-    @Autowired
     JdbcTemplate jdbcTemplate;
 
     BookDao bookDao;
@@ -38,20 +34,20 @@ class BookDaoJdbcTemplateImplTest {
     }
 
     @Test
+    public void testGetAll() {
+
+        List<Book> books = bookDao.findAll();
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isGreaterThan(0);
+    }
+
+    @Test
     public void testGetBookById() {
 
         Book book = bookDao.getById(5L);
 
         assertThat(book).isNotNull();
-    }
-
-    @Test
-    public void testGetAll() {
-
-        List<Book> books = bookRepository.findAll();
-
-        assertThat(books).isNotNull();
-        assertThat(books.size()).isGreaterThan(0);
     }
 
     @Test

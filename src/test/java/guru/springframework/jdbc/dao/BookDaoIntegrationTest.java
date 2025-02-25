@@ -1,7 +1,6 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
-import guru.springframework.jdbc.repository.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ public class BookDaoIntegrationTest {
     @Autowired
     BookDao bookDao;
 
-    @Autowired
-    BookRepository bookRepository;
-
     @Test
     public void testGetBookById() {
 
@@ -39,7 +35,7 @@ public class BookDaoIntegrationTest {
     @Test
     public void testGetAll() {
 
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookDao.findAll();
 
         assertThat(books).isNotNull();
         assertThat(books.size()).isGreaterThan(0);

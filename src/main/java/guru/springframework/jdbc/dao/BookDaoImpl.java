@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Created by sergei on 21/02/2025
  */
@@ -15,6 +17,11 @@ public class BookDaoImpl implements BookDao {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Override
+    public List<Book> findAll() {
+        return bookRepository.findAll();
+    }
 
     @Override
     public Book getById(Long id) {

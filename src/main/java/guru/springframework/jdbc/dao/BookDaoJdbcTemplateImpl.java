@@ -3,6 +3,8 @@ package guru.springframework.jdbc.dao;
 import guru.springframework.jdbc.domain.Book;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.List;
+
 /**
  * Created by sergei on 24/02/2025
  */
@@ -12,6 +14,12 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
 
     public BookDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+
+    @Override
+    public List<Book> findAll() {
+        return jdbcTemplate.query("SELECT * FROM book", getBookRowMapper());
     }
 
     @Override
