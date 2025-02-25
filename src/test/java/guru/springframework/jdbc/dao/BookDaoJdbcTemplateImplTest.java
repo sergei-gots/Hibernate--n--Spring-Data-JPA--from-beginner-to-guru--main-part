@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -72,6 +73,42 @@ class BookDaoJdbcTemplateImplTest {
         int offset = 990;
 
         List<Book> books = bookDao.findAll(limit, offset);
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void testFindAllPage1_UsingPageable() {
+
+        int pageNumber = 0;
+        int pageSize = 10;
+
+        List<Book> books = bookDao.findAll(PageRequest.of(pageNumber, pageSize));
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(pageSize);
+    }
+
+    @Test
+    public void testFindAllPage2_UsingPageable() {
+
+        int pageNumber = 1;
+        int pageSize = 10;
+
+        List<Book> books = bookDao.findAll(PageRequest.of(pageNumber, pageSize));
+
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(pageSize);
+    }
+
+    @Test
+    public void testFindAllPage100_UsingPageable() {
+
+        int pageNumber = 99;
+        int pageSize = 10;
+
+        List<Book> books = bookDao.findAll(PageRequest.of(pageNumber, pageSize));
 
         assertThat(books).isNotNull();
         assertThat(books.size()).isEqualTo(0);
