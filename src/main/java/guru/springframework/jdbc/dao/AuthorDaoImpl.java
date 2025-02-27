@@ -68,7 +68,7 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public void deleteAuthorById(Long id) {
+    public void deleteById(Long id) {
         authorRepository.deleteById(id);
     }
 }

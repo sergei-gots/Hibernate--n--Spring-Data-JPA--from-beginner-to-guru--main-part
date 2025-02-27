@@ -112,7 +112,7 @@ public class AuthorDaoIntegrationTest {
     }
 
     @Test
-    public void testDeleteAuthorById() {
+    public void testDeleteById() {
 
         Author author = new Author();
         author.setFirstName("John");
@@ -120,7 +120,7 @@ public class AuthorDaoIntegrationTest {
 
         Author saved = authorDao.saveNewAuthor(author);
 
-        authorDao.deleteAuthorById(saved.getId());
+        authorDao.deleteById(saved.getId());
 
         assertThrows(JpaObjectRetrievalFailureException.class, () -> authorDao.getById(saved.getId()));
     }

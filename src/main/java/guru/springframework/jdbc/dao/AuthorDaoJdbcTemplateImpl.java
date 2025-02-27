@@ -20,7 +20,7 @@ public class AuthorDaoJdbcTemplateImpl implements AuthorDao {
 
     @Override
     public Author getById(Long id) {
-        return null;
+        return jdbcTemplate.queryForObject("SELECT * FROM author WHERE id = ?", getAuthorRowMapper(), id);
     }
 
     @Override
@@ -74,17 +74,32 @@ public class AuthorDaoJdbcTemplateImpl implements AuthorDao {
 
     @Override
     public Author saveNewAuthor(Author author) {
-        return null;
+
+        jdbcTemplate.update(
+                "INSERT INTO author(first_name, last_name, country) VALUES(?,?,?)",
+                author.getFirstName(), author.getLastName(), author.getCountry()
+        );
+
+        Long id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+
+        return this.getById(id);
     }
 
     @Override
     public Author updateAuthor(Author author) {
-        return null;
+
+        jdbcTemplate.update(
+                "UPDATE author SET first_name = ?, last_name = ?, country = ? WHERE id = ?",
+                author.getFirstName(), author.getLastName(), author.getCountry(), author.getId()
+        );
+
+        return this.getById(author.getId());
     }
 
     @Override
-    public void deleteAuthorById(Long id) {
+    public void deleteById(Long id) {
 
+        jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
     }
 
     private AuthorRowMapper getAuthorRowMapper() {

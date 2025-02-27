@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by sergei on 26/02/2025
@@ -136,6 +138,55 @@ public class AuthorDaoJdbcTemplateImplTest {
 
         assertThat(authorList).isNotNull();
         assertThat(authorList.size()).isEqualTo(pageSize);
+
+    }
+
+    @Test
+    void saveNewAuthor() {
+
+        Author author = new Author();
+        author.setFirstName("John");
+        author.setLastName("Thompson");
+
+        Author saved = authorDao.saveNewAuthor(author);
+
+        assertThat(saved).isNotNull();
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getFirstName()).isEqualTo("John");
+    }
+
+    @Test
+    void updateAuthor() {
+
+        Author author = new Author();
+        author.setFirstName("John");
+        author.setLastName("Thompson");
+
+        Author saved = authorDao.saveNewAuthor(author);
+
+        saved.setFirstName("J.");
+
+        Author updated = authorDao.updateAuthor(saved);
+
+        assertThat(updated).isEqualTo(saved);
+        assertThat(updated.getFirstName()).isEqualTo("J.");
+
+    }
+
+    @Test
+    void deleteById() {
+
+        Author author = new Author();
+        author.setFirstName("John");
+        author.setLastName("Thompson");
+
+        Author saved = authorDao.saveNewAuthor(author);
+
+        Long id = saved.getId();
+
+        authorDao.deleteById(id);
+
+        assertThrows(EmptyResultDataAccessException.class, ()-> authorDao.getById(id));
 
     }
 }
