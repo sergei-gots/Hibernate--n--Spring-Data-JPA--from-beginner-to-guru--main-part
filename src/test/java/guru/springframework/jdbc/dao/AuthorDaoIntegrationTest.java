@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -37,7 +38,7 @@ public class AuthorDaoIntegrationTest {
     @Test
     public void testGetAll() {
 
-        List<Author> authors = authorDao.findAll();
+        List<Author> authors = authorDao.findAll(Pageable.ofSize(10));
 
         assertThat(authors).isNotNull();
         assertThat(authors.size()).isGreaterThan(0);
@@ -68,7 +69,7 @@ public class AuthorDaoIntegrationTest {
     @Test
     public void testGetAuthorsByLastNameLike() {
 
-        List<Author> authors = authorDao.findAuthorListByLastNameLike("wall");
+        List<Author> authors = authorDao.findAllByLastNameLike("wall", Pageable.unpaged());
 
         assertThat(authors).isNotNull();
         assertThat(authors.size()).isGreaterThan(0);

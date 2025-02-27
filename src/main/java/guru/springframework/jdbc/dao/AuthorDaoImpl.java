@@ -4,6 +4,7 @@ import guru.springframework.jdbc.domain.Author;
 import guru.springframework.jdbc.repository.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,19 +28,24 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public List<Author> findAll() {
-        return authorRepository.findAll();
-    }
-
-    @Override
     public Author findAuthorByName(String firstName, String lastName) {
         return authorRepository.findByFirstNameAndLastName(firstName, lastName)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
-    public List<Author> findAuthorListByLastNameLike(String lastName) {
-        return authorRepository.findByLastNameLike(lastName + '%');
+    public List<Author> findAll(Pageable pageable) {
+        return authorRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public List<Author> findAllByLastNameLike(String lastName, Pageable pageable) {
+        return authorRepository.findByLastNameLike(lastName + '%', pageable);
+    }
+
+    @Override
+    public List<Author> findAllByLastNameSortByFirstName(String lastName, Pageable pageable) {
+        return List.of();
     }
 
     @Override

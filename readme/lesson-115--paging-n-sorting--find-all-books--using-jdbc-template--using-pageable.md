@@ -1,4 +1,4 @@
-#### Chapter 15: Paging-n-Sorting
+#### Chapter 14: Paging-n-Sorting
 ###  Lesson 115
 ## findAllBooks() using JdbcTemplate. Paging using Pageable<T>
 
