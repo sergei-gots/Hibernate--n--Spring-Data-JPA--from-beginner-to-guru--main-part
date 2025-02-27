@@ -1,7 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
-import jakarta.persistence.EntityNotFoundException;
+import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,36 +9,26 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Created by sergei on 18/02/2025
+ * Created by sergei on 27/02/2025
  */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan("guru.springframework.jdbc.dao")
-public class BookDaoIntegrationTest {
+public class BookDaoHibernateImplTest {
+
     @Autowired
     BookDao bookDao;
 
     @Test
-    public void testGetBookById() {
+    public void testGetById() {
 
         Book book = bookDao.getById(5L);
 
         assertThat(book).isNotNull();
-    }
-
-    @Test
-    public void testGetAll() {
-
-        List<Book> books = bookDao.findAll();
-
-        assertThat(books).isNotNull();
-        assertThat(books.size()).isGreaterThan(0);
     }
 
     @Test
@@ -50,9 +40,20 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
-    public void testGetBookByTitle_whenThereIsNoBooksWithNoTitle() {
+    public void testGetBookByTitle_saveAndGet() {
 
-        assertThrows(EntityNotFoundException.class, ()->bookDao.findBookByTitle(null));
+        Book book = new Book();
+        book.setIsbn("ISBN-" + RandomString.make(7));
+        String title = "Title " + RandomString.make(7);
+        book.setTitle(title);
+
+        Book saved = bookDao.save(book);
+
+        Book fetched = bookDao.findBookByTitle(title);
+
+        assertThat(fetched).isNotNull();
+        assertThat(fetched.getId()).isEqualTo(saved.getId());
+        assertThat(fetched.getTitle()).isEqualTo(title);
     }
 
     @Test
@@ -90,7 +91,7 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
-    public void testDeleteById() {
+    public void testDeleteBookById() {
 
         Book book = new Book();
         book.setTitle("Book to delete");
@@ -100,6 +101,6 @@ public class BookDaoIntegrationTest {
 
         bookDao.deleteById(saved.getId());
 
-        assertThrows(JpaObjectRetrievalFailureException.class, ()-> bookDao.getById(saved.getId()));
+        assertThrows(JpaObjectRetrievalFailureException.class, () -> bookDao.getById(saved.getId()));
     }
 }

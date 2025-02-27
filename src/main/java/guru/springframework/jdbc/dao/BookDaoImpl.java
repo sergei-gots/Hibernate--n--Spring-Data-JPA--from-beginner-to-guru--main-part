@@ -26,7 +26,7 @@ public class BookDaoImpl implements BookDao {
 
     //ToDo
     @Override
-    public List<Book> findAllSortedByTitle(Pageable pageable) {
+    public List<Book> findAllSortByTitle(Pageable pageable) {
         return List.of();
     }
 
@@ -48,20 +48,20 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Book findAnyByTitle(String title) {
+    public Book findBookByTitle(String title) {
         return bookRepository.findByTitle(title)
                 .findAny()
                 .orElseThrow((EntityNotFoundException::new));
     }
 
     @Override
-    public Book saveNewBook(Book book) {
+    public Book save(Book book) {
         return bookRepository.save(book);
     }
 
     @Transactional
     @Override
-    public Book updateBook(Book book) {
+    public Book update(Book book) {
 
         Book persisted = bookRepository.getReferenceById(book.getId());
 
@@ -74,7 +74,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void deleteBookById(Long id) {
+    public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
 }

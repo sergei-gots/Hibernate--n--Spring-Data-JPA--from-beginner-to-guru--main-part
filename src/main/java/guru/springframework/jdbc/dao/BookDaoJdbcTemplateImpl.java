@@ -45,7 +45,7 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
     }
 
     @Override
-    public List<Book> findAllSortedByTitle(Pageable pageable) {
+    public List<Book> findAllSortByTitle(Pageable pageable) {
 
         Sort.Order sortOrderForTitle = pageable.getSort().getOrderFor("title");
 
@@ -70,12 +70,12 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
     }
 
     @Override
-    public Book findAnyByTitle(String title) {
+    public Book findBookByTitle(String title) {
         return jdbcTemplate.queryForObject("SELECT * FROM book WHERE title = ?", getBookRowMapper(), title);
     }
 
     @Override
-    public Book saveNewBook(Book book) {
+    public Book save(Book book) {
 
         jdbcTemplate.update(
                 "INSERT INTO book (isbn, publisher, title, author_id) VALUES (?, ?, ?, ?)",
@@ -88,7 +88,7 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
     }
 
     @Override
-    public Book updateBook(Book book) {
+    public Book update(Book book) {
 
         Long bookId = book.getId();
 
@@ -106,7 +106,7 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
     }
 
     @Override
-    public void deleteBookById(Long id) {
+    public void deleteById(Long id) {
 
         jdbcTemplate.update("DELETE FROM book WHERE id = ?", id);
     }

@@ -17,16 +17,16 @@ public interface BookDao {
 
     List<Book> findAll(Pageable pageable);
 
-    List<Book> findAllSortedByTitle(Pageable pageable);
+    List<Book> findAllSortByTitle(Pageable pageable);
 
     Book getById(Long id);
 
-    Book findAnyByTitle(String title);
+    Book findBookByTitle(String title);
 
-    Book saveNewBook(Book book);
+    Book save(Book book);
 
-    Book updateBook(Book book);
+    Book update(Book book);
 
-    void deleteBookById(Long id);
+    void deleteById(Long id);
 
 }

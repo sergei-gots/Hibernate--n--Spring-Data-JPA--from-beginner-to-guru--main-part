@@ -121,7 +121,7 @@ class BookDaoJdbcTemplateImplTest {
         int pageNumber = 0;
         int pageSize = 10;
 
-        List<Book> books = bookDao.findAllSortedByTitle(
+        List<Book> books = bookDao.findAllSortByTitle(
                 PageRequest.of(
                         pageNumber,
                         pageSize,
@@ -142,7 +142,7 @@ class BookDaoJdbcTemplateImplTest {
         int pageNumber = 0;
         int pageSize = 10;
 
-        List<Book> books = bookDao.findAllSortedByTitle(
+        List<Book> books = bookDao.findAllSortByTitle(
                 PageRequest.of(
                         pageNumber,
                         pageSize)
@@ -168,7 +168,7 @@ class BookDaoJdbcTemplateImplTest {
     @Test
     public void testGetBookByTitle() {
 
-        Book book = bookDao.findAnyByTitle("Spring in Action. 5th Edition");
+        Book book = bookDao.findBookByTitle("Spring in Action. 5th Edition");
 
         assertThat(book).isNotNull();
     }
@@ -176,17 +176,17 @@ class BookDaoJdbcTemplateImplTest {
     @Test
     public void testGetBookByTitle_whenThereIsNoBooksWithNoTitle() {
 
-        assertThrows(EmptyResultDataAccessException.class, () -> bookDao.findAnyByTitle(null));
+        assertThrows(EmptyResultDataAccessException.class, () -> bookDao.findBookByTitle(null));
     }
 
     @Test
-    public void testSaveNewBook() {
+    public void testSave() {
 
         Book book = new Book();
         book.setIsbn("an ISBN");
         book.setTitle("a Title");
 
-        Book saved = bookDao.saveNewBook(book);
+        Book saved = bookDao.save(book);
 
         assertThat(saved).isNotNull();
         assertThat(saved.getId()).isNotNull();
@@ -195,17 +195,17 @@ class BookDaoJdbcTemplateImplTest {
     }
 
     @Test
-    public void testUpdateBook() {
+    public void testUpdate() {
 
         Book book = new Book();
         book.setTitle("j-thomson's book");
         book.setIsbn("some-new-ISBN");
 
-        Book persisted = bookDao.saveNewBook(book);
+        Book persisted = bookDao.save(book);
         persisted.setTitle("John's book");
         persisted.setIsbn("another-ISBN");
 
-        Book updated = bookDao.updateBook(persisted);
+        Book updated = bookDao.update(persisted);
 
         assertThat(updated).isNotNull();
         assertThat(updated.getId()).isEqualTo(persisted.getId());
@@ -215,15 +215,15 @@ class BookDaoJdbcTemplateImplTest {
     }
 
     @Test
-    public void testDeleteBookById() {
+    public void testDeleteById() {
 
         Book book = new Book();
         book.setTitle("Book to delete");
         book.setIsbn("ISBN");
 
-        Book saved = bookDao.saveNewBook(book);
+        Book saved = bookDao.save(book);
 
-        bookDao.deleteBookById(saved.getId());
+        bookDao.deleteById(saved.getId());
 
         assertThrows(EmptyResultDataAccessException.class, () -> bookDao.getById(saved.getId()));
     }
