@@ -1,12 +1,17 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
+import guru.springframework.jdbc.repository.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import java.util.List;
@@ -21,8 +26,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan("guru.springframework.jdbc.dao")
 public class BookDaoIntegrationTest {
+
     @Autowired
+    BookRepository bookRepository;
+
     BookDao bookDao;
+
+    @BeforeEach
+    public void setUp() {
+        bookDao = new BookDaoImpl(bookRepository);
+    }
 
     @Test
     public void testGetBookById() {
@@ -40,6 +53,33 @@ public class BookDaoIntegrationTest {
         assertThat(books).isNotNull();
         assertThat(books.size()).isGreaterThan(0);
     }
+
+    @Test
+    public void TestGetAll_Page2() {
+
+        int pageSize = 10;
+
+        Pageable pageable = PageRequest.of(1, pageSize);
+
+        List<Book> books = bookDao.findAll(pageable);
+
+        AssertionsForClassTypes.assertThat(books).isNotNull();
+        AssertionsForClassTypes.assertThat(books.size()).isEqualTo(pageSize);
+    }
+
+    @Test
+    public void TestGetAll_SortByTitle_Page1() {
+
+        int pageSize = 10;
+
+        Pageable pageable = PageRequest.of(0, pageSize);
+
+        List<Book> books = bookDao.findAll(pageable);
+
+        AssertionsForClassTypes.assertThat(books).isNotNull();
+        AssertionsForClassTypes.assertThat(books.size()).isEqualTo(pageSize);
+    }
+
 
     @Test
     public void testGetBookByTitle() {

@@ -11,15 +11,13 @@ import java.util.List;
  */
 public interface BookDao {
 
+    Book getById(Long id);
+
     List<Book> findAll();
 
     List<Book> findAll(int limit, int offset);
 
     List<Book> findAll(Pageable pageable);
-
-    List<Book> findAllSortByTitle(Pageable pageable);
-
-    Book getById(Long id);
 
     Book findBookByTitle(String title);
 

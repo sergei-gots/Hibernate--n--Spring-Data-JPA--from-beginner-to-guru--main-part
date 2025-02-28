@@ -1,36 +1,49 @@
 #### Chapter 14: Paging-n-Sorting
-###  Lesson 116. Assignment 15. Extra
+###  Lesson 119. Paging-n-Sorting with Hibernate. HQL queries
 
-In this commit we'll complete implementation for the next methods:
+In this commit we'll complete implementation for the method 
 
-    public interface AuthorDao {
+        Book findAll(Pageable pageable);
+
+in the class <code>BookDaoHibernateImpl</code>
+
+Also, we'll make <code>findAll(Pageable pageable)</code> more universal,
+and in the implementation we will discover all the sorting properties and their values
+to build the sorting clause based on the content of the <code>pageable.getSort()</code>
+passed in the method:
+
         ...
-        Author getById(Long id);
-        
-        Author save(Author author);
-        Author update(Author author);
-    
-        Author deleteById()
+
+        StringBuilder hql = new StringBuilder("FROM book ");
+
+        StringBuilder orderClause = new StringBuilder();
+        pageable.getSort().get()
+                .forEach((order) -> {
+                    orderClause.append(orderClause.isEmpty() ? " ORDER BY " : ", ");
+                    orderClause.append(order.getProperty());
+                    orderClause.append(' ');
+                    orderClause.append(order.getDirection());
+                });
+
+        hql.append(orderClause);
+        hql.append(" LIMIT :pageSize OFFSET :offset");
+
         ...
-    }   
 
-for the class <code>AuthorDaoJdbcTemplateImpl</code>
+The query's parameters <code>LIMIT</code> and <code>OFFSET</code> will be set through the Hibernate provided methods:
 
-Note: since this commit we will use shorter but clearer naming for these methods,
-e.g. we will use
+    query.setMaxResults(pageable.getPageSize());
+    query.setFirstResult((int) offset);
 
-    save
+Offset here is being passed not directly from <code>pageable</code>, but through retrieval and check:
 
-instead of
+    long offset = pageable.getOffset();
+    if (offset > Integer.MAX_VALUE) {
+        throw new IllegalArgumentException("Offset is too large for setFirstResult");
+    }
+    query.setFirstResult((int) offset);
 
-    saveNewAuthor
-
-or 
-
-    deleteById
-
-instead of
-
-    deleteAuthorById
-
-etc.
+It is because the <code>pageable.getOffset()</code> returns <code>long</code> but
+<code>TypedQuery.setFirstResult(int startPosition)</code> accepts <code>int</code>.
+<br><br>
+<u>Note</u>: we are not allowed to pass <code>LIMIT</code> and <code>OFFSET</code> as named parameters in <code>HQL</code>.

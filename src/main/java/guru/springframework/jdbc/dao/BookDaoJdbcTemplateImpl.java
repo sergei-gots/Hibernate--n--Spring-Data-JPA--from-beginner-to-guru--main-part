@@ -36,24 +36,9 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
     @Override
     public List<Book> findAll(Pageable pageable) {
 
-        return jdbcTemplate.query(
-                "SELECT * FROM book limit ? offset ?",
-                getBookRowMapper(),
-                pageable.getPageSize(),
-                pageable.getOffset()
-        );
-    }
-
-    @Override
-    public List<Book> findAllSortByTitle(Pageable pageable) {
-
-        Sort.Order sortOrderForTitle = pageable.getSort().getOrderFor("title");
-
-        String sortOrderDirectionForTitle = sortOrderForTitle != null ?
-                sortOrderForTitle.getDirection().toString() :
-                "";
-
-        String sql = "SELECT * FROM book ORDER BY title " + sortOrderDirectionForTitle + " limit ? offset ?";
+        String sql = "SELECT * FROM book " +
+                        getOrderForTitle(pageable) +
+                        " LIMIT ? OFFSET ?";
 
         return jdbcTemplate.query(
                 sql,
@@ -113,5 +98,17 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
 
     private BookRowMapper getBookRowMapper() {
         return new BookRowMapper();
+    }
+
+    private String getOrderForTitle(Pageable pageable) {
+
+        Sort.Order sortOrderForTitle = pageable.getSort().getOrderFor("title");
+
+        String sortOrderDirectionForTitle = sortOrderForTitle != null ?
+                sortOrderForTitle.getDirection().toString() :
+                "";
+
+        return  " ORDER BY title " + sortOrderDirectionForTitle + ' ';
+
     }
 }

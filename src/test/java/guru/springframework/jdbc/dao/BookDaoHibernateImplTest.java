@@ -1,13 +1,20 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import net.bytebuddy.utility.RandomString;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,7 +28,40 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BookDaoHibernateImplTest {
 
     @Autowired
+    EntityManagerFactory emf;
+
     BookDao bookDao;
+
+    @BeforeEach
+    public void setUp() {
+        bookDao = new BookDaoHibernateImpl(emf);
+    }
+
+    @Test
+    public void TestGetAll_Page1() {
+
+        int pageSize = 10;
+
+        Pageable pageable = PageRequest.of(1, pageSize);
+
+        List<Book> books = bookDao.findAll(pageable);
+
+        AssertionsForClassTypes.assertThat(books).isNotNull();
+        AssertionsForClassTypes.assertThat(books.size()).isEqualTo(pageSize);
+    }
+
+    @Test
+    public void TestGetAll_Page2_SortByTitle() {
+
+        int pageSize = 10;
+
+        Pageable pageable = PageRequest.of(1, pageSize);
+
+        List<Book> books = bookDao.findAll(pageable);
+
+        AssertionsForClassTypes.assertThat(books).isNotNull();
+        AssertionsForClassTypes.assertThat(books.size()).isEqualTo(pageSize);
+    }
 
     @Test
     public void testGetById() {
@@ -101,6 +141,6 @@ public class BookDaoHibernateImplTest {
 
         bookDao.deleteById(saved.getId());
 
-        assertThrows(JpaObjectRetrievalFailureException.class, () -> bookDao.getById(saved.getId()));
+        assertThrows(EntityNotFoundException.class, () -> bookDao.getById(saved.getId()));
     }
 }

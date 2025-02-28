@@ -3,6 +3,7 @@ package guru.springframework.jdbc.dao;
 import guru.springframework.jdbc.domain.Book;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import org.springframework.data.domain.Pageable;
 
@@ -44,12 +45,34 @@ public class BookDaoHibernateImpl implements BookDao{
 
     @Override
     public List<Book> findAll(Pageable pageable) {
-        return List.of();
-    }
 
-    @Override
-    public List<Book> findAllSortByTitle(Pageable pageable) {
-        return List.of();
+        long offset = pageable.getOffset();
+        if (offset > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException("Offset is too large for setFirstResult");
+        }
+
+        StringBuilder hql = new StringBuilder("FROM Book ");
+
+        StringBuilder orderClause = new StringBuilder();
+        pageable.getSort().get()
+                .forEach((order) -> {
+                    orderClause.append(orderClause.isEmpty() ? " ORDER BY " : ", ");
+                    orderClause.append(order.getProperty());
+                    orderClause.append(' ');
+                    orderClause.append(order.getDirection());
+                });
+
+        hql.append(orderClause);
+
+        try (EntityManager em = getEntityManager()) {
+
+            TypedQuery<Book> query = em.createQuery(hql.toString(), Book.class);
+
+            query.setMaxResults(pageable.getPageSize());
+            query.setFirstResult((int) offset);
+
+            return query.getResultList();
+        }
     }
 
     @Override
@@ -57,7 +80,13 @@ public class BookDaoHibernateImpl implements BookDao{
 
         try (EntityManager em = getEntityManager()) {
 
-            return em.find(Book.class, id);
+            Book book = em.find(Book.class, id);
+
+            if (book == null) {
+                throw new EntityNotFoundException("Book with id " + id + " is not found in the database");
+            }
+
+            return book;
         }
     }
 
@@ -66,7 +95,7 @@ public class BookDaoHibernateImpl implements BookDao{
 
         try (EntityManager em = getEntityManager()) {
 
-            TypedQuery<Book> query = em.createQuery("FROM Book WHERE tile = :limit", Book.class);
+            TypedQuery<Book> query = em.createQuery("FROM Book WHERE title = :title", Book.class);
 
             query.setParameter("title", title);
 

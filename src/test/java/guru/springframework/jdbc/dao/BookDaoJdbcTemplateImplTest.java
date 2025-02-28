@@ -116,12 +116,12 @@ class BookDaoJdbcTemplateImplTest {
     }
 
     @Test
-    public void testFindAllPage1_SortedByTitleDesc() {
+    public void testFindAllPage1_SortByTitleDesc() {
 
         int pageNumber = 0;
         int pageSize = 10;
 
-        List<Book> books = bookDao.findAllSortByTitle(
+        List<Book> books = bookDao.findAll(
                 PageRequest.of(
                         pageNumber,
                         pageSize,
@@ -137,12 +137,12 @@ class BookDaoJdbcTemplateImplTest {
     }
 
     @Test
-    public void testFindAllPage1_SortedByTitleByDefaultAsc() {
+    public void testFindAllPage1_SortByTitleByDefaultAsc() {
 
         int pageNumber = 0;
         int pageSize = 10;
 
-        List<Book> books = bookDao.findAllSortByTitle(
+        List<Book> books = bookDao.findAll(
                 PageRequest.of(
                         pageNumber,
                         pageSize)
