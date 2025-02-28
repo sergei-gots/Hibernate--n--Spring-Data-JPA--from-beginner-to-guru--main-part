@@ -38,7 +38,18 @@ public class BookDaoHibernateImplTest {
     }
 
     @Test
-    public void TestGetAll_Page1() {
+    public void TestFindAll_usingIntLimitAndIntOffset_Page1() {
+
+        int pageSize = 10;
+
+        List<Book> books = bookDao.findAll(pageSize, 0);
+
+        AssertionsForClassTypes.assertThat(books).isNotNull();
+        AssertionsForClassTypes.assertThat(books.size()).isEqualTo(pageSize);
+    }
+
+    @Test
+    public void TestFindAll_Page1() {
 
         int pageSize = 10;
 
@@ -51,7 +62,7 @@ public class BookDaoHibernateImplTest {
     }
 
     @Test
-    public void TestGetAll_Page2_SortByTitle() {
+    public void TestFindAll_Page2_SortByTitle() {
 
         int pageSize = 10;
 

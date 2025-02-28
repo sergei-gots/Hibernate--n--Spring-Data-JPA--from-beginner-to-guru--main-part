@@ -34,10 +34,10 @@ public class BookDaoHibernateImpl implements BookDao{
 
         try (EntityManager em = getEntityManager()) {
 
-            TypedQuery<Book> query = em.createQuery("FROM Book LIMIT :limit OFFSET :offset", Book.class);
+            TypedQuery<Book> query = em.createQuery("FROM Book", Book.class);
 
-            query.setParameter("limit", limit);
-            query.setParameter("offset", offset);
+            query.setMaxResults(limit);
+            query.setFirstResult(offset);
 
             return query.getResultList();
         }
@@ -45,11 +45,6 @@ public class BookDaoHibernateImpl implements BookDao{
 
     @Override
     public List<Book> findAll(Pageable pageable) {
-
-        long offset = pageable.getOffset();
-        if (offset > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Offset is too large for setFirstResult");
-        }
 
         StringBuilder hql = new StringBuilder("FROM Book ");
 
@@ -69,7 +64,7 @@ public class BookDaoHibernateImpl implements BookDao{
             TypedQuery<Book> query = em.createQuery(hql.toString(), Book.class);
 
             query.setMaxResults(pageable.getPageSize());
-            query.setFirstResult((int) offset);
+            query.setFirstResult(Math.toIntExact(pageable.getOffset()));
 
             return query.getResultList();
         }
@@ -142,7 +137,6 @@ public class BookDaoHibernateImpl implements BookDao{
                 em.remove(book);
                 em.getTransaction().commit();
             }
-
     }
 
     private EntityManager getEntityManager() {
