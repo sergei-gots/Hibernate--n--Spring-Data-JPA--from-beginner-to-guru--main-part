@@ -16,7 +16,7 @@ public interface AuthorDao {
 
     List<Author> findAll(Pageable pageable);
 
-    List<Author> findAllByLastNameSortByFirstName(String lastName, Pageable pageable);
+    List<Author> findAllByLastName(String lastName, Pageable pageable);
 
     List<Author> findAllByLastNameLike(String lastName, Pageable pageable);
 

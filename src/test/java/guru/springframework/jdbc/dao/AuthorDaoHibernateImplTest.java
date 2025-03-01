@@ -1,16 +1,17 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Author;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -24,16 +25,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ActiveProfiles("local")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AuthorDaoJdbcTemplateImplTest {
+@ComponentScan("guru.springframefork.jdbc.dao")
+public class AuthorDaoHibernateImplTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    EntityManagerFactory emf;
 
-    AuthorDaoJdbcTemplateImpl authorDao;
+    AuthorDaoHibernateImpl authorDao;
 
     @BeforeEach
     public void setUp() {
-        authorDao = new AuthorDaoJdbcTemplateImpl(jdbcTemplate);
+        authorDao = new AuthorDaoHibernateImpl(emf);
     }
 
     @Test
@@ -51,7 +53,7 @@ public class AuthorDaoJdbcTemplateImplTest {
         int pageSize = 10;
 
 
-        Sort sort = Sort.by(Sort.Direction.ASC, "first_name");
+        Sort sort = Sort.by(Sort.Direction.ASC, "firstName");
 
         Pageable pageable = PageRequest.of(0, pageSize, sort);
 
@@ -66,9 +68,26 @@ public class AuthorDaoJdbcTemplateImplTest {
 
         int pageSize = 10;
 
-        Pageable pageable = PageRequest.of(0, pageSize);
+        Sort sortByFirstName = Sort.by("firstName");
+        Pageable pageable = PageRequest.of(0, pageSize, sortByFirstName);
 
         List<Author> authorList = authorDao.findAllByLastName("Smith", pageable);
+
+        assertThat(authorList).isNotNull();
+        assertThat(authorList.size()).isEqualTo(pageSize);
+
+        assertThat(authorList.get(0).getFirstName()).isEqualTo("Ahmed");
+    }
+
+    @Test
+    public void TestGetAuthorsByLastNameLike_SortByFirstName_DefaultIsAsc_Page1() {
+
+        int pageSize = 10;
+
+        Sort sortByFirstName = Sort.by("firstName");
+        Pageable pageable = PageRequest.of(0, pageSize, sortByFirstName);
+
+        List<Author> authorList = authorDao.findAllByLastNameLike("%mit%", pageable);
 
         assertThat(authorList).isNotNull();
         assertThat(authorList.size()).isEqualTo(pageSize);
@@ -81,7 +100,8 @@ public class AuthorDaoJdbcTemplateImplTest {
 
         int pageSize = 10;
 
-        Pageable pageable = PageRequest.of(1, pageSize);
+        Sort sortByFirstName = Sort.by("firstName");
+        Pageable pageable = PageRequest.of(1, pageSize, sortByFirstName);
 
         List<Author> authorList = authorDao.findAllByLastName("Smith", pageable);
 
@@ -186,7 +206,7 @@ public class AuthorDaoJdbcTemplateImplTest {
 
         authorDao.deleteById(id);
 
-        assertThrows(EmptyResultDataAccessException.class, ()-> authorDao.getById(id));
+        assertThrows(EntityNotFoundException.class, ()-> authorDao.getById(id));
 
     }
 }

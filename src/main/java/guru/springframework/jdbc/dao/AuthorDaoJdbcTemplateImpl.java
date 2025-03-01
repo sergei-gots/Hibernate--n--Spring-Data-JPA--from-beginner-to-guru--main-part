@@ -40,7 +40,7 @@ public class AuthorDaoJdbcTemplateImpl implements AuthorDao {
     }
 
     @Override
-    public List<Author> findAllByLastNameSortByFirstName(String lastName, Pageable pageable) {
+    public List<Author> findAllByLastName(String lastName, Pageable pageable) {
 
         StringBuilder sql = new StringBuilder("SELECT * FROM author WHERE last_name = ? ORDER BY first_name ");
 
