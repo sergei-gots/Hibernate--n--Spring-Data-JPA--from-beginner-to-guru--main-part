@@ -1,6 +1,7 @@
 package guru.springframework.jdbc.repository;
 
 import guru.springframework.jdbc.domain.Author;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,4 +16,10 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     Optional<Author> findByFirstNameAndLastName(String firstName, String lastName);
 
     List<Author> findByLastNameLike(String lastNamePattern, Pageable pageable);
+
+    List<Author> findByLastName(String lastNamePattern, Pageable pageable);
+
+    Page<Author> readByLastNameLike(String lastNamePattern, Pageable pageable);
+
+    Page<Author> readByLastName(String lastNamePattern, Pageable pageable);
 }

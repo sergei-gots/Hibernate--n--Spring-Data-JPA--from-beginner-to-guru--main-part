@@ -4,7 +4,9 @@ import guru.springframework.jdbc.domain.Author;
 import guru.springframework.jdbc.repository.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,17 +16,22 @@ import java.util.List;
  * Created by sergei on 21/02/2025
  */
 @Component
-public class AuthorDaoImpl implements AuthorDao {
+public class AuthorDaoSpringDataJpaImpl implements AuthorDao {
 
     private final AuthorRepository authorRepository;
 
-    public AuthorDaoImpl(AuthorRepository authorRepository) {
+    public AuthorDaoSpringDataJpaImpl(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
     }
 
     @Override
     public Author getById(Long id) {
-        return authorRepository.getReferenceById(id);
+
+        try {
+            return authorRepository.getReferenceById(id);
+        } catch (JpaObjectRetrievalFailureException e) {
+            throw new EntityNotFoundException(e);
+        }
     }
 
     @Override
@@ -45,7 +52,18 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public List<Author> findAllByLastName(String lastName, Pageable pageable) {
-        return List.of();
+        return authorRepository.findByLastName(lastName, pageable);
+    }
+
+
+    @Override
+    public Page<Author> readAllByLastNameLike(String lastNamePattern, Pageable pageable) {
+        return authorRepository.readByLastNameLike(lastNamePattern, pageable);
+    }
+
+    @Override
+    public Page<Author> readAllByLastName(String lastName, Pageable pageable) {
+        return authorRepository.readByLastName(lastName, pageable);
     }
 
     @Override

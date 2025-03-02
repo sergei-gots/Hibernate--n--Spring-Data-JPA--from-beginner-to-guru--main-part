@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -122,6 +121,6 @@ public class AuthorDaoIntegrationTest {
 
         authorDao.deleteById(saved.getId());
 
-        assertThrows(JpaObjectRetrievalFailureException.class, () -> authorDao.getById(saved.getId()));
+        assertThrows(EntityNotFoundException.class, () -> authorDao.getById(saved.getId()));
     }
 }

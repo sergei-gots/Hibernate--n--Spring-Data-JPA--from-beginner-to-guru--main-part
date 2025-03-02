@@ -1,16 +1,3 @@
-#### Chapter 14: Paging-n-Sorting
-## Assignment 16. Implement Author Hibernate DAO
-### What are we going to do
-<li> Create Hibernate version of Author DAO
-<li> Create stubs of previously covered methods
-<li> Do not add as Spring managed component, not needed
-<li> Implement Find All Authors by Last Name with paging and sorting
-<li> Make sort optional
-<li> Use named bind parameters
-<li> Create test and verify
-
-#### Extra Material
-
 ## Annotation @ComponentScan upon a test class
 
 The annotation:

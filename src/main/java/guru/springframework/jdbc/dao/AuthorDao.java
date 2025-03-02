@@ -1,6 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Author;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -19,6 +20,14 @@ public interface AuthorDao {
     List<Author> findAllByLastName(String lastName, Pageable pageable);
 
     List<Author> findAllByLastNameLike(String lastName, Pageable pageable);
+
+    default Page<Author> readAllByLastNameLike(String lastName, Pageable pageable) {
+        return null;
+    }
+
+    default Page<Author> readAllByLastName(String lastName, Pageable pageable) {
+        return null;
+    }
 
     Author saveNewAuthor(Author author);
 
