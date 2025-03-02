@@ -4,6 +4,7 @@ import guru.springframework.jdbc.domain.Book;
 import guru.springframework.jdbc.repository.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +14,11 @@ import java.util.List;
  * Created by sergei on 21/02/2025
  */
 @Component
-public class BookDaoImpl implements BookDao {
+public class BookDaoSpringDataJpaImpl implements BookDao {
 
     private final BookRepository bookRepository;
 
-    public BookDaoImpl(BookRepository bookRepository) {
+    public BookDaoSpringDataJpaImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
@@ -26,10 +27,9 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findAll();
     }
 
-    //ToDo
     @Override
     public List<Book> findAll(int limit, int offset) {
-        return List.of();
+        return findAll(PageRequest.of(offset/limit, limit));
     }
 
 

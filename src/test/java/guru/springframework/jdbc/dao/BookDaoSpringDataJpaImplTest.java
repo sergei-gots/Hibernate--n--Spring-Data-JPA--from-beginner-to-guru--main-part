@@ -2,7 +2,7 @@ package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
 import guru.springframework.jdbc.repository.BookRepository;
-import jakarta.persistence.EntityNotFoundException;
+import net.bytebuddy.utility.RandomString;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Created by sergei on 18/02/2025
+ * Created by sergei on 27/02/2025
  */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan("guru.springframework.jdbc.dao")
-public class BookDaoIntegrationTest {
+public class BookDaoSpringDataJpaImplTest {
 
     @Autowired
     BookRepository bookRepository;
@@ -38,24 +38,18 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
-    public void testGetBookById() {
+    public void TestFindAll_usingIntLimitAndIntOffset_Page1() {
 
-        Book book = bookDao.getById(5L);
+        int pageSize = 10;
 
-        assertThat(book).isNotNull();
+        List<Book> books = bookDao.findAll(pageSize, 0);
+
+        AssertionsForClassTypes.assertThat(books).isNotNull();
+        AssertionsForClassTypes.assertThat(books.size()).isEqualTo(pageSize);
     }
 
     @Test
-    public void testGetAll() {
-
-        List<Book> books = bookDao.findAll();
-
-        assertThat(books).isNotNull();
-        assertThat(books.size()).isGreaterThan(0);
-    }
-
-    @Test
-    public void TestGetAll_Page2() {
+    public void TestFindAll_Page1() {
 
         int pageSize = 10;
 
@@ -68,11 +62,11 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
-    public void TestGetAll_SortByTitle_Page1() {
+    public void TestFindAll_Page2_SortByTitle() {
 
         int pageSize = 10;
 
-        Pageable pageable = PageRequest.of(0, pageSize);
+        Pageable pageable = PageRequest.of(1, pageSize);
 
         List<Book> books = bookDao.findAll(pageable);
 
@@ -80,6 +74,13 @@ public class BookDaoIntegrationTest {
         AssertionsForClassTypes.assertThat(books.size()).isEqualTo(pageSize);
     }
 
+    @Test
+    public void testGetById() {
+
+        Book book = bookDao.getById(5L);
+
+        assertThat(book).isNotNull();
+    }
 
     @Test
     public void testGetBookByTitle() {
@@ -90,9 +91,20 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
-    public void testGetBookByTitle_whenThereIsNoBooksWithNoTitle() {
+    public void testGetBookByTitle_saveAndGet() {
 
-        assertThrows(EntityNotFoundException.class, ()->bookDao.findBookByTitle(null));
+        Book book = new Book();
+        book.setIsbn("ISBN-" + RandomString.make(7));
+        String title = "Title " + RandomString.make(7);
+        book.setTitle(title);
+
+        Book saved = bookDao.save(book);
+
+        Book fetched = bookDao.findBookByTitle(title);
+
+        assertThat(fetched).isNotNull();
+        assertThat(fetched.getId()).isEqualTo(saved.getId());
+        assertThat(fetched.getTitle()).isEqualTo(title);
     }
 
     @Test
@@ -130,7 +142,7 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
-    public void testDeleteById() {
+    public void testDeleteBookById() {
 
         Book book = new Book();
         book.setTitle("Book to delete");
@@ -140,6 +152,6 @@ public class BookDaoIntegrationTest {
 
         bookDao.deleteById(saved.getId());
 
-        assertThrows(JpaObjectRetrievalFailureException.class, ()-> bookDao.getById(saved.getId()));
+        assertThrows(JpaObjectRetrievalFailureException.class, () -> bookDao.getById(saved.getId()));
     }
 }
