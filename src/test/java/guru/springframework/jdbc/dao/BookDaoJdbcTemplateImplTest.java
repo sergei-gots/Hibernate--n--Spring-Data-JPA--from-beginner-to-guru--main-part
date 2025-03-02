@@ -121,7 +121,7 @@ class BookDaoJdbcTemplateImplTest {
         int pageNumber = 0;
         int pageSize = 10;
 
-        List<Book> books = bookDao.findAll(
+        List<Book> books = bookDao.findAllSortByTitle(
                 PageRequest.of(
                         pageNumber,
                         pageSize,
@@ -142,7 +142,7 @@ class BookDaoJdbcTemplateImplTest {
         int pageNumber = 0;
         int pageSize = 10;
 
-        List<Book> books = bookDao.findAll(
+        List<Book> books = bookDao.findAllSortByTitle(
                 PageRequest.of(
                         pageNumber,
                         pageSize)

@@ -1,16 +1,25 @@
 #### Chapter 14: Paging-n-Sorting
-## Lesson 120 Paging-n-Sorting with Spring Data Jpa
+## Lesson 121 Sorting with Spring Data Jpa
 
 
-For clarity, we will refactor the class <code>BookDaoImpl</code> with renaming to <code>BookDaoSpringDataJpaImpl</code>
-<br>
-Then we will copy-paste <code>BookDaoHibernateTest</code> creating the <code>BookDaoSpringDataJpaImplTest</code>,
-and make some fixes to apply this test to the <code>BookDaoSpringDataJpaImpl<code>.
+We will introduce again the method <code>List<Book> findAllSortByTitle(Pageable pageable)</code>.For clarity, we will refactor the class <code>BookDaoImpl</code> with renaming to <code>BookDaoSpringDataJpaImpl</code>
+It will have the default implementation and will just replace the existing <code>Sort</code> property
+with sorting by title. Obviously, we create a new <code>Pageable</code> instance based on the passed one.
+If sorting by title was present in the <code>pageable</code> passed in we should copy the <code>Sort.Direction</code>
+property of that.
 
-All what we will need to do in the <code>BookDaoSpringDataJpaImpl</code> is to replace
-stub with actual code for the <code>findAll(int limit, int offset)</code> method:
+    default List<Book> findAllSortByTitle(Pageable pageable) {
 
-    @Override
-    public List<Book> findAll(int limit, int offset) {
-        return findAll(PageRequest.of(offset/limit, limit));
-    }
+        Sort.Order titleSortOrderIfExist = pageable.getSort().getOrderFor("title");
+        Sort.Direction titleSortOrderDirection = titleSortOrderIfExist != null ?
+                titleSortOrderIfExist.getDirection() : Sort.DEFAULT_DIRECTION;
+
+
+        Pageable pageableSortByTitle = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(titleSortOrderDirection, "title")
+        );
+
+        return findAll(pageableSortByTitle);
+    };

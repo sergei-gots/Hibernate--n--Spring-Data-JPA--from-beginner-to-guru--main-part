@@ -18,7 +18,6 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Override
     public List<Book> findAll() {
         return jdbcTemplate.query("SELECT * FROM book", getBookRowMapper());
@@ -47,7 +46,6 @@ public class BookDaoJdbcTemplateImpl implements BookDao {
                 pageable.getOffset()
         );
     }
-
 
     @Override
     public Book getById(Long id) {

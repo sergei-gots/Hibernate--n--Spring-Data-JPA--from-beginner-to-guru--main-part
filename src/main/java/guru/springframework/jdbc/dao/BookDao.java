@@ -1,7 +1,9 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 
 import java.util.List;
@@ -18,6 +20,22 @@ public interface BookDao {
     List<Book> findAll(int limit, int offset);
 
     List<Book> findAll(Pageable pageable);
+
+    default List<Book> findAllSortByTitle(Pageable pageable) {
+
+        Sort.Order titleSortOrderIfExist = pageable.getSort().getOrderFor("title");
+        Sort.Direction titleSortOrderDirection = titleSortOrderIfExist != null ?
+                titleSortOrderIfExist.getDirection() : Sort.DEFAULT_DIRECTION;
+
+
+        Pageable pageableSortByTitle = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(titleSortOrderDirection, "title")
+        );
+
+        return findAll(pageableSortByTitle);
+    }
 
     Book findBookByTitle(String title);
 

@@ -68,7 +68,7 @@ public class BookDaoHibernateImplTest {
 
         Pageable pageable = PageRequest.of(1, pageSize);
 
-        List<Book> books = bookDao.findAll(pageable);
+        List<Book> books = bookDao.findAllSortByTitle(pageable);
 
         AssertionsForClassTypes.assertThat(books).isNotNull();
         AssertionsForClassTypes.assertThat(books.size()).isEqualTo(pageSize);
