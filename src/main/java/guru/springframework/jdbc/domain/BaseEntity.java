@@ -1,10 +1,13 @@
 package guru.springframework.jdbc.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
@@ -16,25 +19,35 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp createdDate;
+
     public Long getId() {
         return id;
     }
 
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof BaseEntity book)) return false;
-        return Objects.equals(id, book.id);
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseEntity that = (BaseEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(createdDate, that.createdDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id, createdDate);
     }
 
     @Override
     public String toString() {
         return "BaseEntity{" +
                 "id=" + id +
+                ", createdDate=" + createdDate +
                 '}';
     }
 }

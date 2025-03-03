@@ -6,7 +6,6 @@ import guru.springframework.jdbc.enumeration.OrderStatus;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import net.bytebuddy.utility.RandomString;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -86,6 +86,8 @@ public class OrderHeaderDaoImpTest {
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getCustomer()).isEqualTo(orderHeader.getCustomer());
 
+        assertNotNull(saved.getCreatedDate());
+
     }
 
     @Test
@@ -116,12 +118,12 @@ public class OrderHeaderDaoImpTest {
 
         Page<OrderHeader> orderHeadersPage = orderHeaderDao.findAll(pageable);
 
-        AssertionsForClassTypes.assertThat(orderHeadersPage).isNotNull();
+        assertThat(orderHeadersPage).isNotNull();
 
         List<OrderHeader> orderHeaders = orderHeadersPage.getContent();
 
-        AssertionsForClassTypes.assertThat(orderHeaders.size()).isGreaterThanOrEqualTo(0);
-        AssertionsForClassTypes.assertThat(orderHeaders.size()).isLessThanOrEqualTo(pageSize);
+        assertThat(orderHeaders.size()).isGreaterThanOrEqualTo(0);
+        assertThat(orderHeaders.size()).isLessThanOrEqualTo(pageSize);
     }
 
     @Test
