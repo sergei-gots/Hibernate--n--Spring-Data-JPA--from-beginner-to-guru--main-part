@@ -1,5 +1,5 @@
 ### Section 15. Hibernate JPA. Embedded Objects
-### Lesson 126. Embedded Types
+### Lesson 126. Embedded Types 
 @javax.persistence annotations 
 ## @Embedded/@Embeddable 
 and 
