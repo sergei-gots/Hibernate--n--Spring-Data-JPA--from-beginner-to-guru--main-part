@@ -39,8 +39,6 @@ public class OrderHeaderDaoImpl implements OrderHeaderDao {
     @Override
     public OrderHeader update(OrderHeader orderHeader) {
 
-        OrderHeader persisted = getById(orderHeader.getId());
-        persisted.setCustomer(orderHeader.getCustomer());
         return orderHeaderRepository.save(orderHeader);
 
     }

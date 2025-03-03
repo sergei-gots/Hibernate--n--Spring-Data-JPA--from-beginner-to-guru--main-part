@@ -1,6 +1,8 @@
 package guru.springframework.jdbc.dao;
 
+import guru.springframework.jdbc.domain.Address;
 import guru.springframework.jdbc.domain.OrderHeader;
+import guru.springframework.jdbc.enumeration.OrderStatus;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import net.bytebuddy.utility.RandomString;
@@ -69,6 +71,14 @@ public class OrderHeaderDaoImpTest {
 
         OrderHeader orderHeader = new OrderHeader();
         orderHeader.setCustomer("Customer#" + RandomString.make(10));
+        Address address = new Address();
+        address.setAddress("37 West Avenue");
+        address.setCity("South Park");
+        address.setState("CA");
+        address.setZipCode("322233");
+
+        orderHeader.setShippingAddress(address);
+        orderHeader.setBillingAddress(address);
 
         OrderHeader saved = orderHeaderDao.save(orderHeader);
 
@@ -119,14 +129,25 @@ public class OrderHeaderDaoImpTest {
         OrderHeader orderHeader = new OrderHeader();
         orderHeader.setCustomer("Customer#1" + RandomString.make(10));
 
+        orderHeader.setCustomer("Customer#" + RandomString.make(10));
+        Address address = new Address();
+        address.setAddress("37 West Avenue");
+        address.setCity("South Park");
+        address.setState("CA");
+        address.setZipCode("322233");
+        orderHeader.setBillingAddress(address);
+
+
         OrderHeader persisted = orderHeaderDao.save(orderHeader);
+
         orderHeader.setCustomer("Customer#2" + RandomString.make(10));
+        orderHeader.setOrderStatus(OrderStatus.DELIVERED);
 
         OrderHeader updated = orderHeaderDao.update(persisted);
 
         assertThat(updated).isNotNull();
-        assertThat(updated.getId()).isEqualTo(persisted.getId());
-        assertThat(updated.getCustomer()).isEqualTo(persisted.getCustomer());
+        assertThat(updated).isEqualTo(persisted);
+        assertThat(updated.getOrderStatus()).isEqualTo(persisted.getOrderStatus());
 
     }
 
