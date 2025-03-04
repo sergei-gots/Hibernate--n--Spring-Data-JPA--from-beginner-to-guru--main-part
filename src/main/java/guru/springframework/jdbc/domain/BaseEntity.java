@@ -55,10 +55,8 @@ public abstract class BaseEntity {
 
     @Override
     public String toString() {
-        return "BaseEntity{" +
-                "id=" + id +
+        return  "id=" + id +
                 ", createdDate=" + createdDate +
-                ", lastModifiedDate=" + lastModifiedDate +
-                '}';
+                ", lastModifiedDate=" + lastModifiedDate;
     }
 }

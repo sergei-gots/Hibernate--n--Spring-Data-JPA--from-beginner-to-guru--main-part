@@ -3,7 +3,7 @@ package guru.springframework.jdbc.enumeration;
 /**
  * Created by sergei on 03/03/2025
  */
-public enum OrderStatus {
+public enum OrderStatus implements Titled {
 
     NEW("Order created"),
     PAID("Order has being paid"),
@@ -16,6 +16,7 @@ public enum OrderStatus {
         this.title = title;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

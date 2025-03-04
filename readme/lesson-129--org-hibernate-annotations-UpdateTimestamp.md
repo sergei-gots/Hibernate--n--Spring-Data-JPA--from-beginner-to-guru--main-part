@@ -12,13 +12,15 @@ Java:
     @UpdateTimestamp
     private Timestamp lastModifiedDatea;
 
+And also we add the <code>getter</code> and alter <code>equals-hashCode-toString</code>
+
+
 Tests:
 
 <li>testSave
     
     assertNotNull(saved.getLastModifiedDate());
     assertThat(saved.getCreatedDate()).isNotEqualTo(saved.getLastModifiedDate());;
-
 
 <li>testUpdate
 
