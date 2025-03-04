@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -23,6 +24,9 @@ public abstract class BaseEntity {
     @Column(updatable = false)
     private Timestamp createdDate;
 
+    @UpdateTimestamp
+    private Timestamp lastModifiedDate;
+
     public Long getId() {
         return id;
     }
@@ -31,16 +35,22 @@ public abstract class BaseEntity {
         return createdDate;
     }
 
+    public Timestamp getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         BaseEntity that = (BaseEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(createdDate, that.createdDate);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(createdDate, that.createdDate) &&
+                Objects.equals(lastModifiedDate, that.lastModifiedDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdDate);
+        return Objects.hash(id, createdDate, lastModifiedDate);
     }
 
     @Override
@@ -48,6 +58,7 @@ public abstract class BaseEntity {
         return "BaseEntity{" +
                 "id=" + id +
                 ", createdDate=" + createdDate +
+                ", lastModifiedDate=" + lastModifiedDate +
                 '}';
     }
 }

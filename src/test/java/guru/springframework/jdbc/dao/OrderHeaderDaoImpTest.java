@@ -87,7 +87,10 @@ public class OrderHeaderDaoImpTest {
         assertThat(saved.getCustomer()).isEqualTo(orderHeader.getCustomer());
 
         assertNotNull(saved.getCreatedDate());
+        assertNotNull(saved.getLastModifiedDate());
 
+        long timeDiffMillis = saved.getLastModifiedDate().getTime() - saved.getCreatedDate().getTime();
+        assertThat(timeDiffMillis).isLessThan(10);
     }
 
     @Test
@@ -150,6 +153,10 @@ public class OrderHeaderDaoImpTest {
         assertThat(updated).isNotNull();
         assertThat(updated).isEqualTo(persisted);
         assertThat(updated.getOrderStatus()).isEqualTo(persisted.getOrderStatus());
+
+        assertNotNull(updated.getCreatedDate());
+        assertNotNull(updated.getLastModifiedDate());
+        assertThat(updated.getCreatedDate()).isNotEqualTo(updated.getLastModifiedDate());
 
     }
 

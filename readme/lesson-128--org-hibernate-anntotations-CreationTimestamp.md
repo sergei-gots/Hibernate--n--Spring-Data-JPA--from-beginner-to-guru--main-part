@@ -1,7 +1,7 @@
 ### Section 15. 
 ### Lesson 128. created_date 
 @org.hibernate.annotations 
-## @CreationTimeStamp
+## @CreationTimestamp
 
 SQL:
 
@@ -17,8 +17,3 @@ Java:
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdDate;
-
-
-
-
-
