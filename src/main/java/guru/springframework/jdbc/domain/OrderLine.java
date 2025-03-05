@@ -12,12 +12,31 @@ import java.util.Objects;
 @Entity
 public class OrderLine extends BaseEntity {
 
-    private Integer quantityOrdered;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private OrderHeader orderHeader;
 
+    @ManyToOne
+    private Product product;
+
+    private Integer quantityOrdered;
+
     public OrderLine() {
+    }
+
+    public OrderHeader getOrderHeader() {
+        return orderHeader;
+    }
+
+    public void setOrderHeader(OrderHeader orderHeader) {
+        this.orderHeader = orderHeader;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Integer getQuantityOrdered() {
@@ -31,25 +50,19 @@ public class OrderLine extends BaseEntity {
         this.quantityOrdered = quantityOrdered;
     }
 
-    public OrderHeader getOrderHeader() {
-        return orderHeader;
-    }
-
-    public void setOrderHeader(OrderHeader orderHeader) {
-        this.orderHeader = orderHeader;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         OrderLine orderLine = (OrderLine) o;
-        return Objects.equals(quantityOrdered, orderLine.quantityOrdered) && Objects.equals(orderHeader, orderLine.orderHeader);
+        return Objects.equals(quantityOrdered, orderLine.quantityOrdered) &&
+                Objects.equals(orderHeader, orderLine.orderHeader) &&
+                Objects.equals(product, orderLine.product);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), quantityOrdered, orderHeader.getId());
+        return Objects.hash(super.hashCode(), orderHeader.getId(), product, quantityOrdered);
     }
 
     @Override

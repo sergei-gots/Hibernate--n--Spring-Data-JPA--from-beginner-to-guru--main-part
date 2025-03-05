@@ -1,6 +1,6 @@
 #### Section 15. Database Relationship Mappings
 ### Lessons 132-133
-##  1-to-Many Relationship : OrderHeader-to-OrderLines
+##  1-to-Many Bi-directional Relationship : OrderHeader-to-OrderLines
 
 Relationship in SQL:
 
@@ -33,9 +33,10 @@ Relationship in Java:
 
 Note: to avoid the situation when cyclic dependency causes <code>StackOverFlowError</code>
 we reduce <code>OrderLine.hashCode()</code> and <code>OrderLine.toString()</code> methods
-to use <code>orderHeader.getId()</code> instead of <code>orderHeader</code>:
+to use <code>orderHeader.getId()</code> instead of <code>orderHeader</code> or we could at all
+remove this part from calculating the hashCode for <code>OrderLine</code> entity:
 
-    public class OrderHeader extends BaseEntity{
+    public class OrderLine extends BaseEntity{
         ...
         @Override
         public int hashCode() {

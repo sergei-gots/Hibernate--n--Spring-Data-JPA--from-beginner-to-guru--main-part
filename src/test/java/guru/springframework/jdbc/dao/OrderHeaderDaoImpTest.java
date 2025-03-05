@@ -3,8 +3,11 @@ package guru.springframework.jdbc.dao;
 import guru.springframework.jdbc.domain.Address;
 import guru.springframework.jdbc.domain.OrderHeader;
 import guru.springframework.jdbc.domain.OrderLine;
+import guru.springframework.jdbc.domain.Product;
 import guru.springframework.jdbc.enumeration.OrderStatus;
+import guru.springframework.jdbc.enumeration.ProductStatus;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
+import guru.springframework.jdbc.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,11 +39,23 @@ public class OrderHeaderDaoImpTest {
     @Autowired
     OrderHeaderRepository orderHeaderRepository;
 
+    @Autowired
+    ProductRepository productRepository;
+
     OrderHeaderDao orderHeaderDao;
+
+    Product product;
 
     @BeforeEach
     public void setUp() {
+
         orderHeaderDao = new OrderHeaderDaoImpl(orderHeaderRepository);
+
+        product = new Product();
+        product.setProductStatus(ProductStatus.NEW);
+        product.setDescription("Test Product");
+
+        product = productRepository.save(product);
     }
 
     @Test
@@ -104,6 +119,7 @@ public class OrderHeaderDaoImpTest {
 
         OrderLine orderLine = new OrderLine();
         orderLine.setOrderHeader(orderHeader);
+        orderLine.setProduct(product);
         orderLine.setQuantityOrdered(1);
 
         orderHeader.setOrderLines(Set.of(orderLine));
@@ -118,6 +134,8 @@ public class OrderHeaderDaoImpTest {
 
         assertNotNull(orderLine1);
         assertNotNull(orderLine1.getId());
+        assertNotNull(orderLine1.getProduct());
+        assertEquals(product, orderLine1.getProduct());
         assertEquals(1, orderLine1.getQuantityOrdered());
 
         assertNotNull(orderLine1.getOrderHeader());
