@@ -3,13 +3,16 @@ package guru.springframework.jdbc.domain;
 import guru.springframework.jdbc.enumeration.OrderStatus;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by sergei on 02/03/2025
@@ -28,6 +31,9 @@ import java.util.Objects;
 public class OrderHeader extends BaseEntity{
 
     private String customer;
+
+    @OneToMany(mappedBy = "orderHeader", cascade = CascadeType.PERSIST)
+    Set<OrderLine> orderLines;
 
     @Embedded
     private Address shippingAddress;
@@ -50,6 +56,14 @@ public class OrderHeader extends BaseEntity{
 
     public Address getShippingAddress() {
         return shippingAddress;
+    }
+
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
+    public void setOrderLines(Set<OrderLine> orderLines) {
+        this.orderLines = orderLines;
     }
 
     public void setShippingAddress(Address shippingAddress) {
@@ -77,12 +91,12 @@ public class OrderHeader extends BaseEntity{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         OrderHeader that = (OrderHeader) o;
-        return Objects.equals(customer, that.customer) && Objects.equals(shippingAddress, that.shippingAddress) && Objects.equals(billingAddress, that.billingAddress) && orderStatus == that.orderStatus;
+        return Objects.equals(customer, that.customer) && Objects.equals(orderLines, that.orderLines) && Objects.equals(shippingAddress, that.shippingAddress) && Objects.equals(billingAddress, that.billingAddress) && orderStatus == that.orderStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), customer, shippingAddress, billingAddress, orderStatus);
+        return Objects.hash(super.hashCode(), customer, orderLines, shippingAddress, billingAddress, orderStatus);
     }
 
     @Override
@@ -90,6 +104,7 @@ public class OrderHeader extends BaseEntity{
         return "OrderHeader{" +
                 "id=" + id + '\'' +
                 "customer='" + customer + '\'' +
+                "order lines=" + orderLines.toString() +
                 ", shippingAddress=" + shippingAddress + '\'' +
                 ", billingAddress=" + billingAddress  + '\'' +
                 ", orderStatus=" + orderStatus +

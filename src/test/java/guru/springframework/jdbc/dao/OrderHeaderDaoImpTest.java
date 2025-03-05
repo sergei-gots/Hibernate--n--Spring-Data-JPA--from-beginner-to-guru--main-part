@@ -2,6 +2,7 @@ package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Address;
 import guru.springframework.jdbc.domain.OrderHeader;
+import guru.springframework.jdbc.domain.OrderLine;
 import guru.springframework.jdbc.enumeration.OrderStatus;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,8 +18,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -91,6 +94,36 @@ public class OrderHeaderDaoImpTest {
 
         long timeDiffMillis = saved.getLastModifiedDate().getTime() - saved.getCreatedDate().getTime();
         assertThat(timeDiffMillis).isLessThan(10);
+    }
+
+    @Test
+    public void testSaveWithLine() {
+
+        OrderHeader orderHeader = new OrderHeader();
+        orderHeader.setCustomer("Customer#" + RandomString.make(10));
+
+        OrderLine orderLine = new OrderLine();
+        orderLine.setOrderHeader(orderHeader);
+        orderLine.setQuantityOrdered(1);
+
+        orderHeader.setOrderLines(Set.of(orderLine));
+
+        OrderHeader savedOrder = orderHeaderDao.save(orderHeader);
+
+        assertNotNull(savedOrder);
+        assertNotNull(savedOrder.getOrderLines());
+        assertEquals(1, savedOrder.getOrderLines().size());
+
+        OrderLine orderLine1 = savedOrder.getOrderLines().stream().findFirst().orElse(null);
+
+        assertNotNull(orderLine1);
+        assertNotNull(orderLine1.getId());
+        assertEquals(1, orderLine1.getQuantityOrdered());
+
+        assertNotNull(orderLine1.getOrderHeader());
+        assertNotNull(orderLine1.getOrderHeader().getId());
+        assertNotNull(orderLine1.getOrderHeader().getOrderLines());
+
     }
 
     @Test
