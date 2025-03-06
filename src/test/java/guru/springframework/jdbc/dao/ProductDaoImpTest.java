@@ -1,5 +1,6 @@
 package guru.springframework.jdbc.dao;
 
+import guru.springframework.jdbc.domain.Category;
 import guru.springframework.jdbc.domain.Product;
 import guru.springframework.jdbc.enumeration.ProductStatus;
 import guru.springframework.jdbc.repository.ProductRepository;
@@ -16,10 +17,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by sergei on 04/03/2025
@@ -182,6 +186,28 @@ public class ProductDaoImpTest {
 
         assertThrows(EntityNotFoundException.class, () -> productDao.findProductByDescription(customerName));
 
+    }
+
+    @Test
+    public void testGetByDescription_checkCategory() {
+
+        Product fetched = productDao.findProductByDescription("Product 1");
+
+        assertNotNull(fetched);
+        assertEquals("Product 1", fetched.getDescription());
+
+        Set<Category> categories = fetched.getCategories();
+        assertNotNull(categories);
+        assertEquals(2, categories.size());
+        assertTrue(
+                categories.stream()
+                        .anyMatch(category ->
+                            category.getDescription().equals("Category 2") &&
+                                    category.getProducts().size() == 2 &&
+                                    category.getProducts().stream()
+                                            .anyMatch(product -> product.getDescription().equals("Product 1"))
+                        )
+        );
     }
 
 }
