@@ -11,6 +11,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -44,6 +45,9 @@ public class OrderHeader extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    @OneToOne
+    private OrderApproval orderApproval;
 
     public OrderHeader() {
     }
@@ -89,6 +93,14 @@ public class OrderHeader extends BaseEntity{
         this.orderStatus = orderStatus;
     }
 
+    public OrderApproval getOrderApproval() {
+        return orderApproval;
+    }
+
+    public void setOrderApproval(OrderApproval orderApproval) {
+        this.orderApproval = orderApproval;
+    }
+
     @Override
     public String toString() {
         return "OrderHeader{" +
@@ -98,6 +110,7 @@ public class OrderHeader extends BaseEntity{
                 ", shippingAddress=" + shippingAddress + '\'' +
                 ", billingAddress=" + billingAddress  + '\'' +
                 ", orderStatus=" + orderStatus +
+                ", orderApproval=" + orderApproval +
                 '}';
     }
 

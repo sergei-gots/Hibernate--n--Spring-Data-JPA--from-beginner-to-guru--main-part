@@ -2,12 +2,14 @@ package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Address;
 import guru.springframework.jdbc.domain.Customer;
+import guru.springframework.jdbc.domain.OrderApproval;
 import guru.springframework.jdbc.domain.OrderHeader;
 import guru.springframework.jdbc.domain.OrderLine;
 import guru.springframework.jdbc.domain.Product;
 import guru.springframework.jdbc.enumeration.OrderStatus;
 import guru.springframework.jdbc.enumeration.ProductStatus;
 import guru.springframework.jdbc.repository.CustomerRepository;
+import guru.springframework.jdbc.repository.OrderApprovalRepository;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
 import guru.springframework.jdbc.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -47,6 +49,9 @@ public class OrderHeaderTest {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    OrderApprovalRepository orderApprovalRepository;
 
     OrderHeaderDao orderHeaderDao;
 
@@ -110,6 +115,11 @@ public class OrderHeaderTest {
         orderHeader.setShippingAddress(address);
         orderHeader.setBillingAddress(address);
 
+        OrderApproval orderApproval = new OrderApproval();
+        orderApproval.setApprovedBy("me");
+        OrderApproval savedOrderApproval = orderApprovalRepository.save(orderApproval);
+        orderHeader.setOrderApproval(savedOrderApproval);
+
         OrderHeader saved = orderHeaderDao.save(orderHeader);
 
         assertNotNull(saved);
@@ -117,6 +127,9 @@ public class OrderHeaderTest {
         assertEquals(saved.getCustomer(), orderHeader.getCustomer());
         assertEquals(saved.getBillingAddress(), orderHeader.getBillingAddress());
         assertEquals(saved.getShippingAddress(), orderHeader.getShippingAddress());
+
+        assertEquals(saved.getOrderStatus(), orderHeader.getOrderStatus());
+        assertEquals(saved.getOrderApproval(), orderHeader.getOrderApproval());
 
         assertNotNull(saved.getCreatedDate());
         assertNotNull(saved.getLastModifiedDate());
