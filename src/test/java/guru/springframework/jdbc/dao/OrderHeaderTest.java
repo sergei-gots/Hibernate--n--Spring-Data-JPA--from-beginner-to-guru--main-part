@@ -306,6 +306,7 @@ public class OrderHeaderTest {
         customer.addOrderHeader(orderHeader);
 
         Customer fetchedCustomer = orderHeader.getCustomer();
+        orderHeaderRepository.save(orderHeader);
 
         OrderHeader fetchedOrderHeader = orderHeaderDao.findOrderHeaderByCustomer(fetchedCustomer);
 
@@ -339,6 +340,7 @@ public class OrderHeaderTest {
 
         assertTrue(orderHeader.getCustomer().getOrderHeaders().contains(orderHeader));
 
+        orderHeaderRepository.save(orderHeader);
         Customer fetchedCustomer = orderHeader.getCustomer();
 
         OrderHeader fetchedOrderHeader = orderHeaderDao.findOrderHeaderByCustomer(fetchedCustomer);

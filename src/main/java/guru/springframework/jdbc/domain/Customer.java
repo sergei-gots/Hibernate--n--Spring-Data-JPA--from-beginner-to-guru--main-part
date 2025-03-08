@@ -1,6 +1,5 @@
 package guru.springframework.jdbc.domain;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -29,7 +28,7 @@ public class Customer extends BaseEntity {
 
     private String email;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private Set<OrderHeader> orderHeaders;
 
     public Customer() {
