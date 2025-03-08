@@ -1,5 +1,6 @@
 package guru.springframework.jdbc.dao;
 
+import guru.springframework.jdbc.domain.Customer;
 import guru.springframework.jdbc.domain.OrderHeader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,5 +20,5 @@ public interface OrderHeaderDao {
 
     void deleteById(Long id);
 
-    OrderHeader findOrderHeaderByCustomer(String customer);
+    OrderHeader findOrderHeaderByCustomer(Customer customer);
 }

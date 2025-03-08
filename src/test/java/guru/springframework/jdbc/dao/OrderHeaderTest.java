@@ -1,11 +1,13 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Address;
+import guru.springframework.jdbc.domain.Customer;
 import guru.springframework.jdbc.domain.OrderHeader;
 import guru.springframework.jdbc.domain.OrderLine;
 import guru.springframework.jdbc.domain.Product;
 import guru.springframework.jdbc.enumeration.OrderStatus;
 import guru.springframework.jdbc.enumeration.ProductStatus;
+import guru.springframework.jdbc.repository.CustomerRepository;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
 import guru.springframework.jdbc.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,8 +26,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by sergei on 27/02/2025
@@ -33,10 +37,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan("guru.springframework.jdbc.dao")
-public class OrderHeaderDaoImpTest {
+public class OrderHeaderTest {
 
     @Autowired
     OrderHeaderRepository orderHeaderRepository;
+
+    @Autowired
+    CustomerRepository customerRepository;
 
     @Autowired
     ProductRepository productRepository;
@@ -60,48 +67,56 @@ public class OrderHeaderDaoImpTest {
     @Test
     public void testEquals() {
 
-        String customer = RandomString.make(7);
+        Customer customer = createTestCustomer();
+        customerRepository.save(customer);
 
         OrderHeader orderHeader1 = new OrderHeader();
-        orderHeader1.setCustomer(customer);
+        customer.addOrderHeader(orderHeader1);
 
         OrderHeader orderHeader2 = new OrderHeader();
-        orderHeader2.setCustomer(customer);
+        customer.addOrderHeader(orderHeader2);
 
         assertThat(orderHeader1).isEqualTo(orderHeader2);
     }
 
     @Test
-    public void testNotEquals() {
+    public void testEquals_whenCustomerDiffer() {
 
         OrderHeader orderHeader1 = new OrderHeader();
-        orderHeader1.setCustomer(RandomString.make(7));
+        Customer customer1 = new Customer();
+        customer1.setCustomerName(RandomString.make(7));
+        customerRepository.save(customer1);
+        customer1.addOrderHeader(orderHeader1);
 
         OrderHeader orderHeader2 = new OrderHeader();
-        orderHeader2.setCustomer(RandomString.make(8));
+        Customer customer2 = new Customer();
+        customer2.setCustomerName(RandomString.make(7));
+        customerRepository.save(customer2);
+        customer2.addOrderHeader(orderHeader2);
 
-        assertThat(orderHeader1).isNotEqualTo(orderHeader2);
+        assertEquals(orderHeader1, orderHeader2);
     }
 
     @Test
     public void testSave() {
 
+        Address address = createTestAddress();
+
         OrderHeader orderHeader = new OrderHeader();
-        orderHeader.setCustomer("Customer#" + RandomString.make(10));
-        Address address = new Address();
-        address.setAddress("37 West Avenue");
-        address.setCity("South Park");
-        address.setState("CA");
-        address.setZipCode("322233");
+        Customer customer = createTestCustomer();
+        customerRepository.save(customer);
+        customer.addOrderHeader(orderHeader);
 
         orderHeader.setShippingAddress(address);
         orderHeader.setBillingAddress(address);
 
         OrderHeader saved = orderHeaderDao.save(orderHeader);
 
-        assertThat(saved).isNotNull();
-        assertThat(saved.getId()).isNotNull();
-        assertThat(saved.getCustomer()).isEqualTo(orderHeader.getCustomer());
+        assertNotNull(saved);
+        assertNotNull(saved.getId());
+        assertEquals(saved.getCustomer(), orderHeader.getCustomer());
+        assertEquals(saved.getBillingAddress(), orderHeader.getBillingAddress());
+        assertEquals(saved.getShippingAddress(), orderHeader.getShippingAddress());
 
         assertNotNull(saved.getCreatedDate());
         assertNotNull(saved.getLastModifiedDate());
@@ -111,10 +126,41 @@ public class OrderHeaderDaoImpTest {
     }
 
     @Test
-    public void testSaveWithLine() {
+    public void testSaveSave() {
+
+        Address address = createTestAddress();
 
         OrderHeader orderHeader = new OrderHeader();
-        orderHeader.setCustomer("Customer#" + RandomString.make(10));
+        Customer customer = createTestCustomer();
+        customerRepository.save(customer);
+        customer.addOrderHeader(orderHeader);
+
+        orderHeader.setShippingAddress(address);
+        orderHeader.setBillingAddress(address);
+
+        OrderHeader saved = orderHeaderDao.save(orderHeader);
+
+        assertNotNull(saved);
+        assertNotNull(saved.getId());
+        assertEquals(saved.getCustomer(), orderHeader.getCustomer());
+        assertEquals(saved.getBillingAddress(), orderHeader.getBillingAddress());
+        assertEquals(saved.getShippingAddress(), orderHeader.getShippingAddress());
+
+        assertNotNull(saved.getCreatedDate());
+        assertNotNull(saved.getLastModifiedDate());
+
+        long timeDiffMillis = saved.getLastModifiedDate().getTime() - saved.getCreatedDate().getTime();
+        assertThat(timeDiffMillis).isLessThan(10);
+    }
+
+    @Test
+    public void testSaveWithOrderHeaderAndOrderLine() {
+
+        OrderHeader orderHeader = new OrderHeader();
+
+        Customer customer = createTestCustomer();
+        customerRepository.save(customer);
+        customer.addOrderHeader(orderHeader);
 
         OrderLine orderLine = new OrderLine();
         orderLine.setOrderHeader(orderHeader);
@@ -140,14 +186,19 @@ public class OrderHeaderDaoImpTest {
         assertNotNull(orderLine1.getOrderHeader());
         assertNotNull(orderLine1.getOrderHeader().getId());
         assertNotNull(orderLine1.getOrderHeader().getOrderLines());
+        assertEquals(product, orderLine1.getProduct());
 
     }
 
     @Test
     public void testGetById() {
 
+
+        Customer customer = createTestCustomer();
+        customerRepository.save(customer);
+
         OrderHeader orderHeader = new OrderHeader();
-        orderHeader.setCustomer("CustomerName##");
+        customer.addOrderHeader(orderHeader);
         OrderHeader saved = orderHeaderRepository.save(orderHeader);
 
         OrderHeader fetched = orderHeaderDao.getById(saved.getId());
@@ -181,21 +232,18 @@ public class OrderHeaderDaoImpTest {
 
     @Test
     public void testUpdate() {
+
         OrderHeader orderHeader = new OrderHeader();
-        orderHeader.setCustomer("Customer#1" + RandomString.make(10));
 
-        orderHeader.setCustomer("Customer#" + RandomString.make(10));
-        Address address = new Address();
-        address.setAddress("37 West Avenue");
-        address.setCity("South Park");
-        address.setState("CA");
-        address.setZipCode("322233");
+        Customer customer = createTestCustomer();
+        customerRepository.save(customer);
+        customer.addOrderHeader(orderHeader);
+
+        Address address = createTestAddress();
         orderHeader.setBillingAddress(address);
-
 
         OrderHeader persisted = orderHeaderDao.save(orderHeader);
 
-        orderHeader.setCustomer("Customer#2" + RandomString.make(10));
         orderHeader.setOrderStatus(OrderStatus.DELIVERED);
 
         OrderHeader updated = orderHeaderDao.update(persisted);
@@ -210,11 +258,22 @@ public class OrderHeaderDaoImpTest {
 
     }
 
+    private static Address createTestAddress() {
+        Address address = new Address();
+        address.setAddress("37 West Avenue");
+        address.setCity("South Park");
+        address.setState("CA");
+        address.setZipCode("322233");
+        return address;
+    }
+
     @Test
     public void testDeleteById() {
 
         OrderHeader orderHeader = new OrderHeader();
-        orderHeader.setCustomer("Customer#" + RandomString.make(10));
+        Customer customer= createTestCustomer();
+        customerRepository.save(customer);
+        customer.addOrderHeader(orderHeader);
 
         OrderHeader saved = orderHeaderDao.save(orderHeader);
 
@@ -224,29 +283,77 @@ public class OrderHeaderDaoImpTest {
     }
 
     @Test
-    public void testGetByCustomerName() {
+    public void testGetByCustomer() {
 
-        String customerName = "Customer#" + RandomString.make(10);
+        Customer customer = createTestCustomer();
+        Customer savedCustomer = customerRepository.save(customer);
 
         OrderHeader orderHeader = new OrderHeader();
-        orderHeader.setCustomer(customerName);
 
-        OrderHeader saved = orderHeaderDao.save(orderHeader);
+        customer.addOrderHeader(orderHeader);
 
-        OrderHeader fetched = orderHeaderDao.findOrderHeaderByCustomer(customerName);
+        Customer fetchedCustomer = orderHeader.getCustomer();
 
-        assertThat(fetched).isNotNull();
-        assertThat(fetched.getId()).isEqualTo(saved.getId());
-        assertThat(fetched.getCustomer()).isEqualTo(customerName);
+        OrderHeader fetchedOrderHeader = orderHeaderDao.findOrderHeaderByCustomer(fetchedCustomer);
+
+        assertEquals(customer, savedCustomer);
+        assertEquals(customer, fetchedCustomer);
+
+        assertNotNull(fetchedOrderHeader);
+        assertEquals(orderHeader.getId(), fetchedOrderHeader.getId());
+        assertEquals(customer, fetchedOrderHeader.getCustomer());
+
+        assertNotNull(fetchedOrderHeader.getCustomer().getOrderHeaders());
+        assertEquals(1, fetchedOrderHeader.getCustomer().getOrderHeaders().size());
+
+        assertTrue(fetchedCustomer.getOrderHeaders().stream()
+                .anyMatch(o -> o.equals(orderHeader)
+                )
+        );
+
+        assertFalse(fetchedCustomer.getOrderHeaders().contains(orderHeader));
+
+    }
+    @Test
+    public void testGetByCustomer_assertThat_persistedSet_contains_mayNotWorkProperly() {
+
+        Customer customer = createTestCustomer();
+        customerRepository.save(customer);
+
+        OrderHeader orderHeader = new OrderHeader();
+
+        customer.addOrderHeader(orderHeader);
+
+        assertTrue(orderHeader.getCustomer().getOrderHeaders().contains(orderHeader));
+
+        Customer fetchedCustomer = orderHeader.getCustomer();
+
+        OrderHeader fetchedOrderHeader = orderHeaderDao.findOrderHeaderByCustomer(fetchedCustomer);
+
+        assertEquals(fetchedOrderHeader, orderHeader);
+
+        assertFalse(fetchedCustomer.getOrderHeaders().contains(orderHeader));
     }
 
+
     @Test
-    public void testGetByCustomerName_whenNotExists_thenThrows() {
+    public void testGetByCustomer_whenNotExists_thenThrows() {
 
-        String customerName = "Customer#that#is#not#in#db" + RandomString.make(10);
+        Customer customer = new Customer();
+        customer.setCustomerName("Customer#that#is#not#in#db" + RandomString.make(10));
+        customerRepository.save(customer);
 
-        assertThrows(EntityNotFoundException.class, () -> orderHeaderDao.findOrderHeaderByCustomer(customerName));
+        assertThrows(EntityNotFoundException.class, () -> orderHeaderDao.findOrderHeaderByCustomer(customer));
 
+    }
+
+    private static Customer createTestCustomer() {
+
+        Customer customer = new Customer();
+
+        customer.setCustomerName("Customer#" + RandomString.make(10));
+
+        return customer;
     }
 
 }

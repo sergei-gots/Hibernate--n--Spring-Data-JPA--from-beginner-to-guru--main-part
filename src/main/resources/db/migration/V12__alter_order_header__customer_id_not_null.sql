@@ -1,0 +1,1 @@
+ALTER TABLE order_header MODIFY COLUMN customer_id bigint NOT NULL;

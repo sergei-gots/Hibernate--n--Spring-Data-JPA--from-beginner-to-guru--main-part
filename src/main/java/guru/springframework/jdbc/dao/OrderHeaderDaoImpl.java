@@ -1,5 +1,6 @@
 package guru.springframework.jdbc.dao;
 
+import guru.springframework.jdbc.domain.Customer;
 import guru.springframework.jdbc.domain.OrderHeader;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,7 +51,7 @@ public class OrderHeaderDaoImpl implements OrderHeaderDao {
     }
 
     @Override
-    public OrderHeader findOrderHeaderByCustomer(String customer) {
+    public OrderHeader findOrderHeaderByCustomer(Customer customer) {
 
         return orderHeaderRepository.findByCustomer(customer)
                 .orElseThrow(EntityNotFoundException::new);

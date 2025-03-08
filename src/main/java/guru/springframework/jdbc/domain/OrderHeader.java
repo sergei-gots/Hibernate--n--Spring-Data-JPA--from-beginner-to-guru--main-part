@@ -9,10 +9,10 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -31,7 +31,8 @@ import java.util.Set;
 })
 public class OrderHeader extends BaseEntity{
 
-    private String customer;
+    @ManyToOne
+    private Customer customer;
 
     @OneToMany(mappedBy = "orderHeader", cascade = CascadeType.PERSIST)
     Set<OrderLine> orderLines;
@@ -47,21 +48,16 @@ public class OrderHeader extends BaseEntity{
     public OrderHeader() {
     }
 
-    public void addOrderLine(OrderLine orderLine) {
-
-        if (orderLines == null) {
-            orderLines = new HashSet<>();
-        }
-
-        orderLines.add(orderLine);
-        orderLine.setOrderHeader(this);
-    }
-
-    public String getCustomer() {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(String customer) {
+    /**
+     * this method is declared as package-private.
+     * Use instead the method
+     * {@link guru.springframework.jdbc.domain.Customer#addOrderHeader(OrderHeader orderHeader)}
+     */
+    void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
@@ -71,10 +67,6 @@ public class OrderHeader extends BaseEntity{
 
     public Set<OrderLine> getOrderLines() {
         return orderLines;
-    }
-
-    public void setOrderLines(Set<OrderLine> orderLines) {
-        this.orderLines = orderLines;
     }
 
     public void setShippingAddress(Address shippingAddress) {
@@ -98,28 +90,25 @@ public class OrderHeader extends BaseEntity{
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        OrderHeader that = (OrderHeader) o;
-        return Objects.equals(customer, that.customer) && Objects.equals(orderLines, that.orderLines) && Objects.equals(shippingAddress, that.shippingAddress) && Objects.equals(billingAddress, that.billingAddress) && orderStatus == that.orderStatus;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), customer, orderLines, shippingAddress, billingAddress, orderStatus);
-    }
-
-    @Override
     public String toString() {
         return "OrderHeader{" +
                 "id=" + id + '\'' +
                 "customer='" + customer + '\'' +
-                "order lines=" + orderLines.toString() +
+                "order lines=" + orderLines +
                 ", shippingAddress=" + shippingAddress + '\'' +
                 ", billingAddress=" + billingAddress  + '\'' +
                 ", orderStatus=" + orderStatus +
                 '}';
+    }
+
+    public void addOrderLine(OrderLine orderLine) {
+
+        if (orderLines == null) {
+            orderLines = new LinkedHashSet<>();
+        }
+
+        orderLines.add(orderLine);
+        orderLine.setOrderHeader(this);
     }
 
 }
