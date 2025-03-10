@@ -27,7 +27,11 @@ public class OrderLine extends BaseEntity {
         return orderHeader;
     }
 
-    public void setOrderHeader(OrderHeader orderHeader) {
+    /**
+     * This method declared as private package.
+     * Use {@link guru.springframework.jdbc.domain.OrderHeader#addOrderLine(OrderLine orderLine)} instead.
+     */
+    void setOrderHeader(OrderHeader orderHeader) {
         this.orderHeader = orderHeader;
     }
 

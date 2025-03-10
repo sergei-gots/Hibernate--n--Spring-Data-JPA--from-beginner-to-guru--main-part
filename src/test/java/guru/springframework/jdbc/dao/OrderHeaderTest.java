@@ -9,7 +9,6 @@ import guru.springframework.jdbc.domain.Product;
 import guru.springframework.jdbc.enumeration.OrderStatus;
 import guru.springframework.jdbc.enumeration.ProductStatus;
 import guru.springframework.jdbc.repository.CustomerRepository;
-import guru.springframework.jdbc.repository.OrderApprovalRepository;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
 import guru.springframework.jdbc.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -49,9 +49,6 @@ public class OrderHeaderTest {
 
     @Autowired
     ProductRepository productRepository;
-
-    @Autowired
-    OrderApprovalRepository orderApprovalRepository;
 
     OrderHeaderDao orderHeaderDao;
 
@@ -103,43 +100,29 @@ public class OrderHeaderTest {
     }
 
     @Test
-    public void testSave() {
-
-        Address address = createTestAddress();
+    public void testSave_withOrderApproval() {
 
         OrderHeader orderHeader = new OrderHeader();
         Customer customer = createTestCustomer();
         customerRepository.save(customer);
         customer.addOrderHeader(orderHeader);
 
-        orderHeader.setShippingAddress(address);
-        orderHeader.setBillingAddress(address);
-
         OrderApproval orderApproval = new OrderApproval();
         orderApproval.setApprovedBy("me");
-        OrderApproval savedOrderApproval = orderApprovalRepository.save(orderApproval);
-        orderHeader.setOrderApproval(savedOrderApproval);
+        orderHeader.setOrderApproval(orderApproval);
 
         OrderHeader saved = orderHeaderDao.save(orderHeader);
 
         assertNotNull(saved);
         assertNotNull(saved.getId());
         assertEquals(saved.getCustomer(), orderHeader.getCustomer());
-        assertEquals(saved.getBillingAddress(), orderHeader.getBillingAddress());
-        assertEquals(saved.getShippingAddress(), orderHeader.getShippingAddress());
 
-        assertEquals(saved.getOrderStatus(), orderHeader.getOrderStatus());
         assertEquals(saved.getOrderApproval(), orderHeader.getOrderApproval());
 
-        assertNotNull(saved.getCreatedDate());
-        assertNotNull(saved.getLastModifiedDate());
-
-        long timeDiffMillis = saved.getLastModifiedDate().getTime() - saved.getCreatedDate().getTime();
-        assertThat(timeDiffMillis).isLessThan(10);
     }
 
     @Test
-    public void testSaveSave() {
+    public void testSave_basic() {
 
         Address address = createTestAddress();
 
@@ -176,15 +159,13 @@ public class OrderHeaderTest {
         customer.addOrderHeader(orderHeader);
 
         OrderLine orderLine = new OrderLine();
-        orderLine.setOrderHeader(orderHeader);
         orderLine.setProduct(product);
         orderLine.setQuantityOrdered(1);
-
         orderHeader.addOrderLine(orderLine);
 
         OrderHeader savedOrder = orderHeaderDao.save(orderHeader);
 
-        assertNotNull(savedOrder);
+        assertEquals(orderHeader, savedOrder);
         assertNotNull(savedOrder.getOrderLines());
         assertEquals(1, savedOrder.getOrderLines().size());
 
@@ -205,7 +186,6 @@ public class OrderHeaderTest {
 
     @Test
     public void testGetById() {
-
 
         Customer customer = createTestCustomer();
         customerRepository.save(customer);
@@ -268,6 +248,32 @@ public class OrderHeaderTest {
         assertNotNull(updated.getCreatedDate());
         assertNotNull(updated.getLastModifiedDate());
         assertThat(updated.getCreatedDate()).isNotEqualTo(updated.getLastModifiedDate());
+
+    }
+
+    @Test
+    public void testUpdate_setOrderApproval() {
+        OrderHeader orderHeader = new OrderHeader();
+
+        Customer customer = createTestCustomer();
+        customerRepository.save(customer);
+        customer.addOrderHeader(orderHeader);
+
+        OrderHeader savedOrder = orderHeaderRepository.save(orderHeader);
+
+        assertEquals(orderHeader, savedOrder);
+        assertNull(orderHeader.getOrderApproval());
+
+        OrderApproval orderApproval = new OrderApproval();
+        orderApproval.setApprovedBy("me");
+        savedOrder.setOrderApproval(orderApproval);
+
+        OrderHeader updatedOrder = orderHeaderRepository.save(savedOrder);
+
+        assertEquals(orderHeader, updatedOrder);
+        assertNotNull(orderHeader.getOrderApproval());
+        assertEquals("me", orderHeader.getOrderApproval().getApprovedBy());
+
 
     }
 

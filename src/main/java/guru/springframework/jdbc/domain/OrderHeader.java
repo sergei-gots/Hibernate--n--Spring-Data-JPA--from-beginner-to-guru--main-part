@@ -35,9 +35,6 @@ public class OrderHeader extends BaseEntity{
     @ManyToOne
     private Customer customer;
 
-    @OneToMany(mappedBy = "orderHeader", cascade = CascadeType.PERSIST)
-    Set<OrderLine> orderLines;
-
     @Embedded
     private Address shippingAddress;
     @Embedded
@@ -46,7 +43,10 @@ public class OrderHeader extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @OneToOne
+    @OneToMany(mappedBy = "orderHeader", cascade = CascadeType.PERSIST)
+    Set<OrderLine> orderLines;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
     private OrderApproval orderApproval;
 
     public OrderHeader() {
@@ -120,8 +120,8 @@ public class OrderHeader extends BaseEntity{
             orderLines = new LinkedHashSet<>();
         }
 
-        orderLines.add(orderLine);
         orderLine.setOrderHeader(this);
+        orderLines.add(orderLine);
     }
 
 }
