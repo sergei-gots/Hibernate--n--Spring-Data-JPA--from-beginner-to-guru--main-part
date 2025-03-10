@@ -53,6 +53,7 @@ public class OrderHeaderTest {
     OrderHeaderDao orderHeaderDao;
 
     Product product;
+    Customer customer;
 
     @BeforeEach
     public void setUp() {
@@ -62,15 +63,15 @@ public class OrderHeaderTest {
         product = new Product();
         product.setProductStatus(ProductStatus.NEW);
         product.setDescription("Test Product");
-
         product = productRepository.save(product);
+
+        customer = new Customer();
+        customer.setCustomerName("Test Customer");
+        customer = customerRepository.save(customer);
     }
 
     @Test
     public void testEquals() {
-
-        Customer customer = createTestCustomer();
-        customerRepository.save(customer);
 
         OrderHeader orderHeader1 = new OrderHeader();
         customer.addOrderHeader(orderHeader1);
@@ -103,7 +104,6 @@ public class OrderHeaderTest {
     public void testSave_withOrderApproval() {
 
         OrderHeader orderHeader = new OrderHeader();
-        Customer customer = createTestCustomer();
         customerRepository.save(customer);
         customer.addOrderHeader(orderHeader);
 
@@ -127,8 +127,6 @@ public class OrderHeaderTest {
         Address address = createTestAddress();
 
         OrderHeader orderHeader = new OrderHeader();
-        Customer customer = createTestCustomer();
-        customerRepository.save(customer);
         customer.addOrderHeader(orderHeader);
 
         orderHeader.setShippingAddress(address);
@@ -153,9 +151,6 @@ public class OrderHeaderTest {
     public void testSaveWithOrderHeaderAndOrderLine() {
 
         OrderHeader orderHeader = new OrderHeader();
-
-        Customer customer = createTestCustomer();
-        customerRepository.save(customer);
         customer.addOrderHeader(orderHeader);
 
         OrderLine orderLine = new OrderLine();
@@ -186,9 +181,6 @@ public class OrderHeaderTest {
 
     @Test
     public void testGetById() {
-
-        Customer customer = createTestCustomer();
-        customerRepository.save(customer);
 
         OrderHeader orderHeader = new OrderHeader();
         customer.addOrderHeader(orderHeader);
@@ -227,9 +219,6 @@ public class OrderHeaderTest {
     public void testUpdate() {
 
         OrderHeader orderHeader = new OrderHeader();
-
-        Customer customer = createTestCustomer();
-        customerRepository.save(customer);
         customer.addOrderHeader(orderHeader);
 
         Address address = createTestAddress();
@@ -253,10 +242,8 @@ public class OrderHeaderTest {
 
     @Test
     public void testUpdate_setOrderApproval() {
-        OrderHeader orderHeader = new OrderHeader();
 
-        Customer customer = createTestCustomer();
-        customerRepository.save(customer);
+        OrderHeader orderHeader = new OrderHeader();
         customer.addOrderHeader(orderHeader);
 
         OrderHeader savedOrder = orderHeaderRepository.save(orderHeader);
@@ -277,21 +264,10 @@ public class OrderHeaderTest {
 
     }
 
-    private static Address createTestAddress() {
-        Address address = new Address();
-        address.setAddress("37 West Avenue");
-        address.setCity("South Park");
-        address.setState("CA");
-        address.setZipCode("322233");
-        return address;
-    }
-
     @Test
     public void testDeleteById() {
 
         OrderHeader orderHeader = new OrderHeader();
-        Customer customer= createTestCustomer();
-        customerRepository.save(customer);
         customer.addOrderHeader(orderHeader);
 
         OrderHeader saved = orderHeaderDao.save(orderHeader);
@@ -302,10 +278,29 @@ public class OrderHeaderTest {
     }
 
     @Test
-    public void testGetByCustomer() {
+    public void testDeleteCascade() {
 
-        Customer customer = createTestCustomer();
-        Customer savedCustomer = customerRepository.save(customer);
+        OrderHeader orderHeader = new OrderHeader();
+        customer.addOrderHeader(orderHeader);
+
+        OrderLine orderLine = new OrderLine();
+        orderLine.setProduct(product);
+        orderLine.setQuantityOrdered(3);
+        orderHeader.addOrderLine(orderLine);
+
+        orderHeaderRepository.save(orderHeader);
+
+        assertEquals(1, orderHeader.getOrderLines().size());
+
+        orderHeaderRepository.deleteById(orderHeader.getId());
+        orderHeaderRepository.flush();
+
+        assertThrows(EntityNotFoundException.class, () ->
+            orderHeaderDao.getById(orderHeader.getId()));
+    }
+
+    @Test
+    public void testGetByCustomer() {
 
         OrderHeader orderHeader = new OrderHeader();
 
@@ -316,7 +311,6 @@ public class OrderHeaderTest {
 
         OrderHeader fetchedOrderHeader = orderHeaderDao.findOrderHeaderByCustomer(fetchedCustomer);
 
-        assertEquals(customer, savedCustomer);
         assertEquals(customer, fetchedCustomer);
 
         assertNotNull(fetchedOrderHeader);
@@ -334,11 +328,9 @@ public class OrderHeaderTest {
         assertFalse(fetchedCustomer.getOrderHeaders().contains(orderHeader));
 
     }
+
     @Test
     public void testGetByCustomer_assertThat_persistedSet_contains_mayNotWorkProperly() {
-
-        Customer customer = createTestCustomer();
-        customerRepository.save(customer);
 
         OrderHeader orderHeader = new OrderHeader();
 
@@ -356,7 +348,6 @@ public class OrderHeaderTest {
         assertFalse(fetchedCustomer.getOrderHeaders().contains(orderHeader));
     }
 
-
     @Test
     public void testGetByCustomer_whenNotExists_thenThrows() {
 
@@ -368,13 +359,13 @@ public class OrderHeaderTest {
 
     }
 
-    private static Customer createTestCustomer() {
-
-        Customer customer = new Customer();
-
-        customer.setCustomerName("Customer#" + RandomString.make(10));
-
-        return customer;
+    private static Address createTestAddress() {
+        Address address = new Address();
+        address.setAddress("37 West Avenue");
+        address.setCity("South Park");
+        address.setState("CA");
+        address.setZipCode("322233");
+        return address;
     }
 
 }
