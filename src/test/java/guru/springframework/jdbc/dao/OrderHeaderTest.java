@@ -9,10 +9,12 @@ import guru.springframework.jdbc.domain.Product;
 import guru.springframework.jdbc.enumeration.OrderStatus;
 import guru.springframework.jdbc.enumeration.ProductStatus;
 import guru.springframework.jdbc.repository.CustomerRepository;
+import guru.springframework.jdbc.repository.OrderApprovalRepository;
 import guru.springframework.jdbc.repository.OrderHeaderRepository;
 import guru.springframework.jdbc.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import net.bytebuddy.utility.RandomString;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,9 @@ public class OrderHeaderTest {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    OrderApprovalRepository orderApprovalRepository;
 
     OrderHeaderDao orderHeaderDao;
 
@@ -265,6 +270,29 @@ public class OrderHeaderTest {
     }
 
     @Test
+    public void testUpdate_setOrderApprovalNull_checkOrphanRemoval() {
+
+        OrderHeader orderHeader = new OrderHeader();
+        customer.addOrderHeader(orderHeader);
+
+        OrderApproval orderApproval = new OrderApproval();
+        orderApproval.setApprovedBy("me");
+        orderHeader.setOrderApproval(orderApproval);
+
+        orderHeaderRepository.save(orderHeader);
+
+        assertNotNull(orderApproval.getId());
+
+        orderHeader.setOrderApproval(null);
+        orderHeaderRepository.flush();
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            OrderApproval proxyOrderApproval = orderApprovalRepository.getReferenceById(orderApproval.getId());
+            Hibernate.initialize(proxyOrderApproval);
+        });
+    }
+
+    @Test
     public void testDeleteById() {
 
         OrderHeader orderHeader = new OrderHeader();
@@ -288,15 +316,27 @@ public class OrderHeaderTest {
         orderLine.setQuantityOrdered(3);
         orderHeader.addOrderLine(orderLine);
 
+        OrderApproval orderApproval = new OrderApproval();
+        orderApproval.setApprovedBy("me");
+        orderHeader.setOrderApproval(orderApproval);
+
         orderHeaderRepository.save(orderHeader);
 
+        Long orderApprovalId = orderApproval.getId();
+
+        assertNotNull(orderApprovalId);
         assertEquals(1, orderHeader.getOrderLines().size());
 
         orderHeaderRepository.deleteById(orderHeader.getId());
         orderHeaderRepository.flush();
 
         assertThrows(EntityNotFoundException.class, () ->
-            orderHeaderDao.getById(orderHeader.getId()));
+                orderHeaderDao.getById(orderHeader.getId()));
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            OrderApproval proxyOrderApproval = orderApprovalRepository.getReferenceById(orderApproval.getId());
+            Hibernate.initialize(proxyOrderApproval);
+        });
     }
 
     @Test
