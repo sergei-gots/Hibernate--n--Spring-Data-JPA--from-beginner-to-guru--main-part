@@ -1,6 +1,7 @@
 package guru.springframework.jdbc.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 
 import java.util.Objects;
 
@@ -9,6 +10,22 @@ import java.util.Objects;
  */
 @Entity
 public class OrderApproval extends BaseEntity{
+
+    @OneToOne
+    private OrderHeader orderHeader;
+
+    private String approvedBy;
+
+    public OrderHeader getOrderHeader() {
+        return orderHeader;
+    }
+
+    /** This method is declared as private-package.
+     *  Use {@link guru.springframework.jdbc.domain.OrderHeader#setOrderApproval(OrderApproval orderApproval)} instead.
+     */
+    void setOrderHeader(OrderHeader orderHeader) {
+        this.orderHeader = orderHeader;
+    }
 
     public String getApprovedBy() {
         return approvedBy;
@@ -30,8 +47,6 @@ public class OrderApproval extends BaseEntity{
     public int hashCode() {
         return Objects.hash(super.hashCode(), approvedBy);
     }
-
-    private String approvedBy;
 
     @Override
     public String toString() {
