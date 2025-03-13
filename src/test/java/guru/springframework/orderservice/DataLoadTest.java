@@ -53,12 +53,14 @@ public class DataLoadTest {
 
         final int ORDERS_TO_CREATE = 20;
 
+        ArrayList<OrderHeader> orderHeaders = new ArrayList<>(ORDERS_TO_CREATE);
+
         for (int i = 0; i < ORDERS_TO_CREATE; i++) {
             System.out.println("Creating order #:" + i);
-            saveOrder(customer, products);
+            orderHeaders.add(createOrder(customer, products));
         }
 
-        orderHeaderRepository.flush();
+        orderHeaderRepository.saveAll(orderHeaders);
     }
 
     private List<Product> loadProducts() {
@@ -67,7 +69,7 @@ public class DataLoadTest {
 
         products.add(getOrSaveProduct(PRODUCT_DESCRIPTION_1));
         products.add(getOrSaveProduct(PRODUCT_DESCRIPTION_2));
-        products.add(getOrSaveProduct(PRODUCT_DESCRIPTION_2));
+        products.add(getOrSaveProduct(PRODUCT_DESCRIPTION_3));
 
         return  products;
     }
@@ -86,7 +88,7 @@ public class DataLoadTest {
         return productRepository.save(product);
     }
 
-    private OrderHeader saveOrder(Customer customer, List<Product> products) {
+    private OrderHeader createOrder(Customer customer, List<Product> products) {
 
         Random random = new Random();
 
@@ -100,7 +102,7 @@ public class DataLoadTest {
             orderHeader.addOrderLine(orderLine);
         });
 
-        return orderHeaderRepository.save(orderHeader);
+        return orderHeader;
     }
 
     private Customer loadCustomer() { return getOrSaveCustomer(TEST_CUSTOMER); }
