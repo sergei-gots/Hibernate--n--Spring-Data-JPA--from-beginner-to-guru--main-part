@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import net.bytebuddy.utility.RandomString;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -195,7 +196,20 @@ public class OrderHeaderTest {
 
         assertThat(fetched).isNotNull();
         assertThat(fetched).isEqualTo(saved);
+        assertEquals(customer.getCustomerName(), orderHeader.getCustomer().getCustomerName());
     }
+
+    @Test
+    @Disabled
+    public void testGetBySpecifiedId() {
+
+        OrderHeader fetched = orderHeaderDao.getById(12_122L);
+
+        assertNotNull(fetched);
+        assertNotNull(fetched.getCustomer());
+        assertNotNull(fetched.getCustomer().getCustomerName());
+    }
+
 
     @Test
     public void testGetById_whenNotExists_thenThrows() {
