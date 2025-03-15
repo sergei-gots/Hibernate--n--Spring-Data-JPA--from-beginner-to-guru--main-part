@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.stream.Stream;
+
 /**
  * Created by sergei on 02/03/2025
  */
@@ -51,9 +53,8 @@ public class OrderHeaderDaoImpl implements OrderHeaderDao {
     }
 
     @Override
-    public OrderHeader findOrderHeaderByCustomer(Customer customer) {
+    public Stream<OrderHeader> findAllOrderHeaderByCustomer(Customer customer) {
 
-        return orderHeaderRepository.findByCustomer(customer)
-                .orElseThrow(EntityNotFoundException::new);
+        return orderHeaderRepository.findByCustomer(customer);
     }
 }

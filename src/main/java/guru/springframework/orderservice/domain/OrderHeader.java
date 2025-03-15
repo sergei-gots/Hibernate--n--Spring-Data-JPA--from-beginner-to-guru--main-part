@@ -9,9 +9,12 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -32,7 +35,7 @@ import java.util.Set;
 })
 public class OrderHeader extends BaseEntity{
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
     @Embedded
@@ -44,9 +47,10 @@ public class OrderHeader extends BaseEntity{
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "orderHeader", cascade = { CascadeType.PERSIST, CascadeType.REMOVE } )
+    @Fetch(FetchMode.SUBSELECT)
     Set<OrderLine> orderLines;
 
-    @OneToOne(cascade = {CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "orderHeader")
+    @OneToOne(mappedBy = "orderHeader", cascade = {CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
     private OrderApproval orderApproval;
 
     public OrderHeader() {
@@ -98,11 +102,10 @@ public class OrderHeader extends BaseEntity{
 
     public void setOrderApproval(OrderApproval orderApproval) {
 
-        this.orderApproval = orderApproval;
-
-        if (orderApproval != null){
+        if (orderApproval != null) {
             orderApproval.setOrderHeader(this);
         }
+        this.orderApproval = orderApproval;
     }
 
     @Override

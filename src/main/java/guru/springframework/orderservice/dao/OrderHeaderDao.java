@@ -5,6 +5,8 @@ import guru.springframework.orderservice.domain.OrderHeader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.stream.Stream;
+
 /**
  * Created by sergei on 02/03/2025
  */
@@ -20,5 +22,5 @@ public interface OrderHeaderDao {
 
     void deleteById(Long id);
 
-    OrderHeader findOrderHeaderByCustomer(Customer customer);
+    Stream<OrderHeader> findAllOrderHeaderByCustomer(Customer customer);
 }

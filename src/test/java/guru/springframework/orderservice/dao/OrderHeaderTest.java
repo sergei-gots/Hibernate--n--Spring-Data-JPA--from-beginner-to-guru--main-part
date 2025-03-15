@@ -1,5 +1,6 @@
 package guru.springframework.orderservice.dao;
 
+import guru.springframework.orderservice.DataLoadTest;
 import guru.springframework.orderservice.domain.Address;
 import guru.springframework.orderservice.domain.Customer;
 import guru.springframework.orderservice.domain.OrderApproval;
@@ -26,7 +27,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -363,7 +366,8 @@ public class OrderHeaderTest {
         Customer fetchedCustomer = orderHeader.getCustomer();
         orderHeaderRepository.save(orderHeader);
 
-        OrderHeader fetchedOrderHeader = orderHeaderDao.findOrderHeaderByCustomer(fetchedCustomer);
+        OrderHeader fetchedOrderHeader = orderHeaderDao.findAllOrderHeaderByCustomer(fetchedCustomer)
+                .findFirst().orElse(null);
 
         assertEquals(customer, fetchedCustomer);
 
@@ -395,7 +399,8 @@ public class OrderHeaderTest {
         orderHeaderRepository.save(orderHeader);
         Customer fetchedCustomer = orderHeader.getCustomer();
 
-        OrderHeader fetchedOrderHeader = orderHeaderDao.findOrderHeaderByCustomer(fetchedCustomer);
+        OrderHeader fetchedOrderHeader = orderHeaderDao.findAllOrderHeaderByCustomer(fetchedCustomer)
+                .findFirst().orElse(null);
 
         assertEquals(fetchedOrderHeader, orderHeader);
 
@@ -409,7 +414,33 @@ public class OrderHeaderTest {
         customer.setCustomerName("Customer#that#is#not#in#db" + RandomString.make(10));
         customerRepository.save(customer);
 
-        assertThrows(EntityNotFoundException.class, () -> orderHeaderDao.findOrderHeaderByCustomer(customer));
+        assertNull(orderHeaderDao.findAllOrderHeaderByCustomer(customer).findFirst().orElse(null));
+
+    }
+
+    @Test
+    public void testGetByCustomer_countQuantityOrdered() {
+        Customer customer = customerRepository
+                .findFirstCustomerByCustomerNameIgnoreCase(DataLoadTest.TEST_CUSTOMER)
+                .orElseThrow(()->new IllegalStateException("No Test Customer found"));
+
+        IntSummaryStatistics totalQuantityOrdered = orderHeaderDao.findAllOrderHeaderByCustomer(customer)
+                .flatMap(orderHeader -> orderHeader.getOrderLines().stream())
+                .collect(Collectors.summarizingInt(OrderLine::getQuantityOrdered));
+
+        System.out.println("totalQuantityOrdered.getCount() = " + totalQuantityOrdered.getCount());
+
+    }
+
+    @Test
+    public void testGetByCustomer_countQuantityOrdered_oneQuery() {
+        Customer customer = customerRepository
+                .findFirstCustomerByCustomerNameIgnoreCase(DataLoadTest.TEST_CUSTOMER)
+                .orElseThrow(()->new IllegalStateException("No Test Customer found"));
+
+        Long totalQuantityOrdered = orderHeaderRepository.countTotalProductOrderedByCustomerId(customer.getId());
+
+        System.out.println("totalQuantityOrdered.getCount() = " + totalQuantityOrdered);
 
     }
 

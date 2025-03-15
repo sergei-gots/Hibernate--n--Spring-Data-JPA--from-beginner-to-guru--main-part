@@ -32,7 +32,7 @@ public class DataLoadTest {
     final String PRODUCT_DESCRIPTION_2 = "Product 2";
     final String PRODUCT_DESCRIPTION_3 = "Product 3";
 
-    final String TEST_CUSTOMER = "Test Customer";
+    public static final String TEST_CUSTOMER = "Test Customer";
 
     @Autowired
     OrderHeaderRepository orderHeaderRepository;
@@ -51,7 +51,7 @@ public class DataLoadTest {
         List<Product> products = loadProducts();
         Customer customer = loadCustomer();
 
-        final int ORDERS_TO_CREATE = 20;
+        final int ORDERS_TO_CREATE = 10;
 
         ArrayList<OrderHeader> orderHeaders = new ArrayList<>(ORDERS_TO_CREATE);
 
@@ -108,7 +108,7 @@ public class DataLoadTest {
     private Customer loadCustomer() { return getOrSaveCustomer(TEST_CUSTOMER); }
 
     private Customer getOrSaveCustomer(String customerName) {
-        return customerRepository.findCustomerByCustomerNameIgnoreCase(customerName)
+        return customerRepository.findFirstCustomerByCustomerNameIgnoreCase(customerName)
                 .orElseGet(() -> saveCustomer(customerName));
     }
 
