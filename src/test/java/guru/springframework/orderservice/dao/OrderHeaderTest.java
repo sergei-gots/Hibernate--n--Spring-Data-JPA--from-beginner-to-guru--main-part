@@ -310,6 +310,16 @@ public class OrderHeaderTest {
     }
 
     @Test
+    public void testUpdate_whenDBLock() {
+        OrderHeader orderHeader = orderHeaderDao.getById(12_122L);
+
+        Address address = createTestAddress();
+        orderHeader.setBillingAddress(address);
+
+        orderHeaderRepository.saveAndFlush(orderHeader);
+    }
+
+    @Test
     public void testDeleteById() {
 
         OrderHeader orderHeader = new OrderHeader();
