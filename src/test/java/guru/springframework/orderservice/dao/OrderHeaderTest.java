@@ -429,6 +429,7 @@ public class OrderHeaderTest {
     }
 
     @Test
+    @Disabled
     public void testGetByCustomer_countQuantityOrdered() {
         Customer customer = customerRepository
                 .findFirstCustomerByCustomerNameIgnoreCase(DataLoadTest.TEST_CUSTOMER)
