@@ -1,6 +1,6 @@
 #### Section 18. 
-### Lesson 152
-##  @Component implements CommandLineRunner
+### Lesson 153
+##  @Transactional example
 
 
 

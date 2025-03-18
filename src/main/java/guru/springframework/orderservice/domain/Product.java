@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Objects;
 import java.util.Set;
@@ -27,6 +29,7 @@ public class Product extends BaseEntity {
         joinColumns = @JoinColumn(name = "product_id"),
         inverseJoinColumns =  @JoinColumn(name = "category_id")
     )
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Category> categories;
 
     public Product() {
