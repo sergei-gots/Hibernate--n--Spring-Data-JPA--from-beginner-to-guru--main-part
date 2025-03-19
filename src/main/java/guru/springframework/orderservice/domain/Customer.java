@@ -7,6 +7,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Version;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -35,6 +36,9 @@ public class Customer extends BaseEntity {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private Set<OrderHeader> orderHeaders;
+
+    @Version
+    private Integer version;
 
     public Customer() {
     }
@@ -73,6 +77,10 @@ public class Customer extends BaseEntity {
 
     public Set<OrderHeader> getOrderHeaders() {
         return orderHeaders;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
     @Override
