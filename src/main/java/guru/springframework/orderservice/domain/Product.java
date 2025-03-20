@@ -32,6 +32,8 @@ public class Product extends BaseEntity {
     @Fetch(FetchMode.SUBSELECT)
     private Set<Category> categories;
 
+    private Integer quantityOnHand = 0;
+
     public Product() {
     }
 
@@ -59,6 +61,14 @@ public class Product extends BaseEntity {
         this.categories = categories;
     }
 
+    public Integer getQuantityOnHand() {
+        return quantityOnHand;
+    }
+
+    public void setQuantityOnHand(Integer quantityOnHand) {
+        this.quantityOnHand = quantityOnHand;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -77,6 +87,7 @@ public class Product extends BaseEntity {
         return "Product{" +
                 "description='" + description + '\'' +
                 ", productStatus=" + productStatus +
+                ", quantityOnHand=" + quantityOnHand +
                 ", " + super.toString() +
                 '}';
     }

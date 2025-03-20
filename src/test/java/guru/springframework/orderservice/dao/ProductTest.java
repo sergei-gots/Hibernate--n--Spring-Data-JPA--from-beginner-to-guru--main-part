@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan("guru.springframework.jdbc.dao")
-public class ProductDaoImpTest {
+public class ProductTest {
 
     @Autowired
     ProductRepository productRepository;
@@ -53,6 +53,7 @@ public class ProductDaoImpTest {
 
         Product product2 = new Product();
         product2.setDescription(title);
+        product2.setQuantityOnHand(product1.getQuantityOnHand() + 1);
 
         assertThat(product1).isEqualTo(product2);
     }
@@ -81,6 +82,7 @@ public class ProductDaoImpTest {
         assertThat(saved).isNotNull();
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getDescription()).isEqualTo(product.getDescription());
+        assertEquals(0, saved.getQuantityOnHand());
 
         assertNotNull(saved.getCreatedDate());
         assertNotNull(saved.getLastModifiedDate());
@@ -132,20 +134,22 @@ public class ProductDaoImpTest {
 
         product.setDescription("Description#" + RandomString.make(10));
 
-        Product persisted = productDao.save(product);
+        Product savedProduct = productDao.save(product);
 
-        product.setDescription("Description#2" + RandomString.make(10));
-        product.setProductStatus(ProductStatus.IN_STOCK);
+        savedProduct.setDescription("Description#2" + RandomString.make(10));
+        savedProduct.setProductStatus(ProductStatus.IN_STOCK);
+        savedProduct.setQuantityOnHand(Integer.MAX_VALUE);
 
-        Product updated = productDao.update(persisted);
+        Product updatedProduct = productDao.update(savedProduct);
 
-        assertThat(updated).isNotNull();
-        assertThat(updated).isEqualTo(persisted);
-        assertThat(updated.getProductStatus()).isEqualTo(persisted.getProductStatus());
+        assertThat(updatedProduct).isNotNull();
+        assertThat(updatedProduct).isEqualTo(savedProduct);
+        assertThat(updatedProduct.getProductStatus()).isEqualTo(savedProduct.getProductStatus());
+        assertEquals(Integer.MAX_VALUE, updatedProduct.getQuantityOnHand());
 
-        assertNotNull(updated.getCreatedDate());
-        assertNotNull(updated.getLastModifiedDate());
-        assertThat(updated.getCreatedDate()).isNotEqualTo(updated.getLastModifiedDate());
+        assertNotNull(updatedProduct.getCreatedDate());
+        assertNotNull(updatedProduct.getLastModifiedDate());
+        assertThat(updatedProduct.getCreatedDate()).isNotEqualTo(updatedProduct.getLastModifiedDate());
 
     }
 

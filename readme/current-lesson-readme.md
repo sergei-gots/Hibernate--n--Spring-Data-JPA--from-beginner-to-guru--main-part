@@ -1,9 +1,10 @@
 #### Section 18.
-### Lesson 156. Assignment 21
-##  Hibernate @Version Optimistic Locking Practice
+### Assignment 22
 
-### Assignment - Add Optimistic Locking to Orders
-<li> Add Optimistic Locking to Order Header and Order Line
-<li> Create flyway migration script for version property
-<li> Add Version Property and annotation to entities
-<li> Verify Tests still pass
+### Assignment - Add Quantity On Hand to Product
+<li> Alter the Product entity to include a property for Quantity on Hand (quantityOnHand)
+<li> Use Integer for the property
+<li> Create flyway migration script
+<li> Set existing products to have quantity of 10
+<li> Alter Product Entity for new property
+<li> Write test to set quantity, then update the quantity
