@@ -13,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Version;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -53,6 +54,9 @@ public class OrderHeader extends BaseEntity{
     @OneToOne(mappedBy = "orderHeader", cascade = {CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
     @Fetch(FetchMode.JOIN)
     private OrderApproval orderApproval;
+
+    @Version
+    private Integer version;
 
     public OrderHeader() {
     }
