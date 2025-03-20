@@ -309,6 +309,23 @@ public class OrderHeaderTest {
         });
     }
 
+    /**
+     * From dBeaver (or other client, run the following SQL statement, then test below.)
+     * Once you commit, the test will complete.
+     * If test completes immediately, check autocommit settings in client.
+     *  {@code
+     *      -- Disable auto-commit
+     *      SET AUTOCOMMIT = false;
+     *      -- Check auto-commit
+     *      SELECT @@autocommit;
+     *     -- Start new transaction
+     *     START TRANSACTION;
+     *     -- Lock for updated
+     *     SELECT * FROM order_header WHERE id = 12122 LIMIT 1 FOR UPDATE;
+     *     -- End the transaction and release the lock
+     *     COMMIT;
+     *  }
+     */
     @Test
     public void testUpdate_whenDBLock() {
         OrderHeader orderHeader = orderHeaderDao.getById(12_122L);
