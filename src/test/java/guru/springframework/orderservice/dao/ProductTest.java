@@ -4,6 +4,7 @@ import guru.springframework.orderservice.domain.Category;
 import guru.springframework.orderservice.domain.Product;
 import guru.springframework.orderservice.enumeration.ProductStatus;
 import guru.springframework.orderservice.repository.ProductRepository;
+import guru.springframework.orderservice.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +31,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan("guru.springframework.jdbc.dao")
+@ComponentScan(
+        basePackages = {"guru.springframework.jdbc.dao"},
+        basePackageClasses = { ProductService.class }
+)
 public class ProductTest {
+
+    private final int TEST_QUANTITY_ON_HAND = 25;
+
+    @Autowired
+    ProductService productService;
 
     @Autowired
     ProductRepository productRepository;
@@ -130,26 +139,44 @@ public class ProductTest {
     @Test
     public void testUpdate() {
         Product product = new Product();
-        product.setDescription("Description#1" + RandomString.make(10));
+        product.setDescription("Product Description #1");
 
-        product.setDescription("Description#" + RandomString.make(10));
+        product.setDescription("Product Description #2");
 
         Product savedProduct = productDao.save(product);
 
-        savedProduct.setDescription("Description#2" + RandomString.make(10));
+        savedProduct.setDescription("Product Description #3");
         savedProduct.setProductStatus(ProductStatus.IN_STOCK);
-        savedProduct.setQuantityOnHand(Integer.MAX_VALUE);
+
+        savedProduct.setQuantityOnHand(TEST_QUANTITY_ON_HAND);
 
         Product updatedProduct = productDao.update(savedProduct);
 
         assertThat(updatedProduct).isNotNull();
         assertThat(updatedProduct).isEqualTo(savedProduct);
         assertThat(updatedProduct.getProductStatus()).isEqualTo(savedProduct.getProductStatus());
-        assertEquals(Integer.MAX_VALUE, updatedProduct.getQuantityOnHand());
+        assertEquals(TEST_QUANTITY_ON_HAND, updatedProduct.getQuantityOnHand());
 
         assertNotNull(updatedProduct.getCreatedDate());
         assertNotNull(updatedProduct.getLastModifiedDate());
         assertThat(updatedProduct.getCreatedDate()).isNotEqualTo(updatedProduct.getLastModifiedDate());
+
+    }
+
+    @Test
+    public void testUpdateQuantityOnHand() {
+        Product product = new Product();
+        product.setDescription("Product Description #1");
+        product.setProductStatus(ProductStatus.IN_STOCK);
+
+        Product savedProduct = productService.saveProduct(product);
+
+        Product updatedProduct = productService.updateQuantityOnHand(savedProduct.getId(), TEST_QUANTITY_ON_HAND);
+
+        assertThat(updatedProduct).isNotNull();
+        assertThat(updatedProduct).isEqualTo(savedProduct);
+        assertThat(updatedProduct.getProductStatus()).isEqualTo(savedProduct.getProductStatus());
+        assertEquals(TEST_QUANTITY_ON_HAND, updatedProduct.getQuantityOnHand());
 
     }
 
