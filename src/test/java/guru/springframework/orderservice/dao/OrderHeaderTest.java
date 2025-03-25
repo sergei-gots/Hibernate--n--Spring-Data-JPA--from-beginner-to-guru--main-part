@@ -137,11 +137,8 @@ public class OrderHeaderTest {
         Address address = createTestAddress();
 
         OrderHeader orderHeader = new OrderHeader();
-        customer.setCustomerName(RandomString.make(50));
-        customer.setPhone(RandomString.make(20));
 
         Address customerAddress = createTestAddress();
-        customerAddress.setZipCode(RandomString.make(30));
         customer.setAddress(customerAddress);
 
         orderHeader.setCustomer(customer);
@@ -197,16 +194,61 @@ public class OrderHeaderTest {
     }
 
     @Test
+    public void testSave_fillCustomerPropertiesMaxLength() {
+
+        Address address = createTestAddress();
+
+        OrderHeader orderHeader = new OrderHeader();
+
+        String customerName = RandomString.make(50);
+        String phone = RandomString.make(20);
+        String email = "test-customer456782012345678301234567840@a.dot.com";
+        String zip_code = RandomString.make(10);
+        String state = RandomString.make(10);
+        String city = RandomString.make(50);
+        String addressLine = RandomString.make(50);
+
+        customer.setCustomerName(customerName);
+        customer.setPhone(phone);
+        customer.setEmail(email);
+
+        Address customerAddress = createTestAddress();
+        customerAddress.setZipCode(zip_code);
+        customerAddress.setCity(city);
+        customerAddress.setAddress(addressLine);
+        customerAddress.setState(state);
+        customer.setAddress(customerAddress);
+
+        orderHeader.setCustomer(customer);
+
+        orderHeader.setShippingAddress(address);
+        orderHeader.setBillingAddress(address);
+
+        OrderHeader savedOrderHeader = orderHeaderDao.save(orderHeader);
+        Customer savedCustomer = savedOrderHeader.getCustomer();
+
+        assertNotNull(savedCustomer);
+        assertEquals(customerName, savedCustomer.getCustomerName());
+        assertEquals(phone, savedCustomer.getPhone());
+        assertEquals(email, savedCustomer.getEmail());
+        assertEquals(customerAddress, savedCustomer.getAddress());
+    }
+
+    @Test
     public void testSave_throw_whenPropertiesAreTooLong() {
 
         Address address = createTestAddress();
 
         OrderHeader orderHeader = new OrderHeader();
         customer.setCustomerName(RandomString.make(51));
+        customer.setEmail(RandomString.make(51));
         customer.setPhone(RandomString.make(21));
 
         Address customerAddress = createTestAddress();
-        customerAddress.setZipCode(RandomString.make(31));
+        customerAddress.setZipCode(RandomString.make(11));
+        customerAddress.setState(RandomString.make(31));
+        customerAddress.setCity(RandomString.make(51));
+        customerAddress.setAddress(RandomString.make(51));
         customer.setAddress(customerAddress);
 
         orderHeader.setCustomer(customer);
@@ -217,7 +259,7 @@ public class OrderHeaderTest {
         ConstraintViolationException exception =
                 assertThrows(ConstraintViolationException.class, () -> orderHeaderDao.save(orderHeader));
 
-        assertEquals(3, exception.getConstraintViolations().size());
+        assertEquals(8, exception.getConstraintViolations().size());
     }
 
 

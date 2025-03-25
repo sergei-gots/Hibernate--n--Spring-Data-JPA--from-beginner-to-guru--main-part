@@ -1,7 +1,7 @@
 package guru.springframework.orderservice.domain;
 
 import jakarta.persistence.Embeddable;
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 
@@ -11,16 +11,16 @@ import java.util.Objects;
 @Embeddable
 public class Address {
 
-    @Length(max = 50)
+    @Size(max = 50)
     private String address;
 
-    @Length(max = 50)
+    @Size(max = 50)
     private String city;
 
-    @Length(max = 30)
+    @Size(max = 30)
     private String state;
 
-    @Length(max = 10)
+    @Size(max = 10)
     private String zipCode;
 
     public String getAddress() {

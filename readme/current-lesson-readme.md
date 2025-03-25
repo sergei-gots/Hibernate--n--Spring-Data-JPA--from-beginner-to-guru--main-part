@@ -1,7 +1,7 @@
 #### Section 19.
-### Lesson 162. Validation. Applying to Customer
+### Assignment 24. Completing Customer Validation
 
-We apply <code>@Length</code> to the properties of the class <code>Customer</code>.
-For <code>@Embedded</code> we also need to add <code>@Valid</code> annotation.
-Also we will make test to check for jakarta.persistence.<code>ConstraintViolationException</code>
-and its content if we have values for some properties too long.
+<li>Refactor using <code>@org.hibernate.validator.constraints.Length</code> to 
+<code>@jakarta.validation.constraints.Size</code> for all the properties of the class <code>Customer</code>
+<li>Use also <code>@jakarta.validation.constraints.Email</code>
+<li>Cover all the validation with tests
