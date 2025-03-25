@@ -1,4 +1,9 @@
-#### Section 18.
-### Assignment 23
+#### Section 19.
+### Lesson 161. Validation
 
-### Assignment - Fix Pessimistic Locking Error
+### Maven Dependency
+
+    <dependency>
+		<groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
