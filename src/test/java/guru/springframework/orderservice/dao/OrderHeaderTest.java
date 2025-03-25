@@ -14,6 +14,7 @@ import guru.springframework.orderservice.repository.OrderApprovalRepository;
 import guru.springframework.orderservice.repository.OrderHeaderRepository;
 import guru.springframework.orderservice.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import net.bytebuddy.utility.RandomString;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
@@ -136,6 +137,13 @@ public class OrderHeaderTest {
         Address address = createTestAddress();
 
         OrderHeader orderHeader = new OrderHeader();
+        customer.setCustomerName(RandomString.make(50));
+        customer.setPhone(RandomString.make(20));
+
+        Address customerAddress = createTestAddress();
+        customerAddress.setZipCode(RandomString.make(30));
+        customer.setAddress(customerAddress);
+
         orderHeader.setCustomer(customer);
 
         orderHeader.setShippingAddress(address);
@@ -187,6 +195,31 @@ public class OrderHeaderTest {
         assertEquals(product, orderLine1.getProduct());
 
     }
+
+    @Test
+    public void testSave_throw_whenPropertiesAreTooLong() {
+
+        Address address = createTestAddress();
+
+        OrderHeader orderHeader = new OrderHeader();
+        customer.setCustomerName(RandomString.make(51));
+        customer.setPhone(RandomString.make(21));
+
+        Address customerAddress = createTestAddress();
+        customerAddress.setZipCode(RandomString.make(31));
+        customer.setAddress(customerAddress);
+
+        orderHeader.setCustomer(customer);
+
+        orderHeader.setShippingAddress(address);
+        orderHeader.setBillingAddress(address);
+
+        ConstraintViolationException exception =
+                assertThrows(ConstraintViolationException.class, () -> orderHeaderDao.save(orderHeader));
+
+        assertEquals(3, exception.getConstraintViolations().size());
+    }
+
 
     @Test
     public void testGetById() {

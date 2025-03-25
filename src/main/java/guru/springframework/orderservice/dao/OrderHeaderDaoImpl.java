@@ -24,7 +24,7 @@ public class OrderHeaderDaoImpl implements OrderHeaderDao {
     @Override
     public OrderHeader save(OrderHeader orderHeader) {
 
-        return orderHeaderRepository.save(orderHeader);
+        return orderHeaderRepository.saveAndFlush(orderHeader);
     }
 
     @Override
