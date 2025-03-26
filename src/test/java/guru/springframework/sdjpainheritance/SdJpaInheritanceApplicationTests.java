@@ -1,10 +1,10 @@
-package guru.springframework.orderservice;
+package guru.springframework.sdjpainheritance;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringBootOrderServiceApplicationTests {
+class SdJpaInheritanceApplicationTests {
 
 	@Test
 	void contextLoads() {

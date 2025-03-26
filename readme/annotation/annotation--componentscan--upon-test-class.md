@@ -2,7 +2,7 @@
 
 The annotation:
 
-    @ComponentScan("guru.springframework.orderservice.dao")
+    @ComponentScan("guru.springframework.sdjpainheritance.dao")
     on a test class is redundant if the test itself is already in the same package (but under the test source set).
 
 Why is it unnecessary?
@@ -18,4 +18,4 @@ If you're testing a limited part of the application (e.g., using
 and need to manually specify beans).
 <br>
 
-✅ So, if the test class is already in guru.springframework.orderservice.dao, remove @ComponentScan—it's unnecessary.
+✅ So, if the test class is already in guru.springframework.sdjpainheritance.dao, remove @ComponentScan—it's unnecessary.

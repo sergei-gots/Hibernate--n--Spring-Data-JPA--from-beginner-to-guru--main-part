@@ -1,13 +1,13 @@
-package guru.springframework.orderservice;
+package guru.springframework.sdjpainheritance;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootOrderServiceApplication {
+public class SdJpaInheritance {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootOrderServiceApplication.class, args);
+		SpringApplication.run(SdJpaInheritance.class, args);
 	}
 
 }
