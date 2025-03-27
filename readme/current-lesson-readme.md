@@ -1,2 +1,7 @@
 #### Section 20.
-### Lesson 168. @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+### Lesson 169. @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+
+#### Over annotations
+
+<li>@DiscriminatorValue</li>
+<li>@DiscriminatorColumn</li>
