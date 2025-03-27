@@ -8,7 +8,7 @@
 		<version>3.4.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>org.springframework.boot</groupId>
+	<groupId>org.springframework.guru</groupId>
 	<artifactId>spring-data-jpa-inheritance</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-data-jpa-inheritance</name>
