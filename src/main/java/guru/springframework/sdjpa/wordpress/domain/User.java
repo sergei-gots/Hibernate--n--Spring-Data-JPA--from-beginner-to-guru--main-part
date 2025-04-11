@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +23,13 @@ import java.sql.Timestamp;
  * Created by sergei on 11/04/2025
  */
 @Entity
-@Table(name = "wp_users")
+@Table(name = "wp_users",
+    indexes = {
+    //we use index names here as it defined in /resources/db/migration/V1__create_wordpress_db.sql
+    @Index(name = "user_login_key1", columnList = "user_login"),
+    @Index(name = "user_nicename", columnList = "user_nicename"),
+    @Index(name = "user_email", columnList = "user_email")
+    })
 public class User {
 
     @Id
