@@ -23,6 +23,7 @@ public class UserMeta {
 
     private Long userId;
 
+    @Column(length = 255)
     @Size(max = 255)
     private String metaKey;
 
