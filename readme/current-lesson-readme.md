@@ -1,7 +1,10 @@
 #### Section 20. Legacy Database Mapping
-### Lesson 179. @Basic annotation
+### Assignment 25. Add Validation
 
 
-<code>@Basic(optional = false)</code>
-equals to
-<code>@Column(nullable = false)</code>
+Assignment - Add Validation
+<li> Add validation to User and UserMeta
+<li> Add validation annotations to match database constraints
+<li> Add email and URL validation
+
+https://www.baeldung.com/hibernate-validator-constraints

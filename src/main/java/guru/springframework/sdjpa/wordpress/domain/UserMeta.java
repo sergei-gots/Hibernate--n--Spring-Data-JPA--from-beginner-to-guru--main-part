@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 /**
  * Created by sergei on 11/04/2025
@@ -15,7 +16,6 @@ import jakarta.persistence.Table;
 @Table(name = "wp_usermeta")
 public class UserMeta {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "umeta_id")
@@ -23,6 +23,7 @@ public class UserMeta {
 
     private Long userId;
 
+    @Size(max = 255)
     private String metaKey;
 
     @Lob
