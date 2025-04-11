@@ -1,2 +1,2 @@
-#### Section 20.
-### Lesson 170. @Inheritance(strategy = InheritanceType.JOINED)
+#### Section 20. Legacy Database Mapping
+### Lesson 177. Table-n-Column naming. Reverse engineering
