@@ -12,7 +12,7 @@ import jakarta.persistence.InheritanceType;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//by default name of the @DiscriminatorColumn is 'dtype')
+//by default name of the @DiscriminatorColumn is 'dtype'
 //@DiscriminatorColumn(name = "vehicle_type")
 public abstract class Vehicle {
 
