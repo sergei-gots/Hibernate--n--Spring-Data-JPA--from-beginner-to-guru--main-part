@@ -1,5 +1,6 @@
 package guru.springframework.sdjpa.wordpress.domain;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,16 +21,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_pass")
+    @Column(name = "user_pass", nullable = false)
     private String password;
 
-    @Column(name = "user_nicename")
+    @Column(name = "user_nicename", nullable = false)
     private String niceName;
 
-    @Column(name = "user_email")
+    @Column(name = "user_email", nullable = false)
     private String eMail;
 
-    @Column(name = "user_url")
+    @Column(name = "user_url", nullable = false)
     private String url;
 
     @Column(name = "user_registered")
@@ -41,5 +42,6 @@ public class User {
     @Column(name = "user_status")
     private Integer status;
 
+    @Basic(optional = false)
     private String displayName;
 }

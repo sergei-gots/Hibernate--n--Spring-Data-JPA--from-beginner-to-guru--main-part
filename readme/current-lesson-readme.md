@@ -1,5 +1,7 @@
 #### Section 20. Legacy Database Mapping
-### Lesson 178. @Lob Columns
+### Lesson 179. @Basic annotation
 
 
-@Lob allows to put into the database objects up to 4 Gigs.
+<code>@Basic(optional = false)</code>
+equals to
+<code>@Column(nullable = false)</code>
