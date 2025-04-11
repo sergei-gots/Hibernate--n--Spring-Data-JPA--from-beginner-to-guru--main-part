@@ -1,13 +1,13 @@
-package guru.springframework.sdjpainheritance;
+package guru.springframework.sdjpa.wordpress;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SdJpaInheritance {
+public class SdJpaWordPress {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SdJpaInheritance.class, args);
+		SpringApplication.run(SdJpaWordPress.class, args);
 	}
 
 }

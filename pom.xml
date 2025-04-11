@@ -11,8 +11,8 @@
 	<groupId>org.springframework.guru</groupId>
 	<artifactId>spring-data-jpa-inheritance</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-data-jpa-inheritance</name>
-	<description>Spring Data JPA. Inheritance</description>
+	<name>spring-data-jpa-wordpress</name>
+	<description>Spring Data JPA. Wordpress</description>
 	<url/>
 
 	<properties>
@@ -31,9 +31,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
 		<dependency>
