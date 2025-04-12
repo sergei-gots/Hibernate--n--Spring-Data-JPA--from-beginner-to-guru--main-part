@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -12,15 +13,17 @@ import jakarta.persistence.Table;
  * Created by sergei on 11/04/2025
  */
 @Entity
-@Table(name = "wp_usermeta")
-public class UserMeta extends Meta {
+@Table(name = "wp_commentmeta")
+public class CommentMeta extends Meta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "umeta_id")
+    @Column(name = "meta_id")
     private Long id;
 
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+    //private Long commentId;
 
 }
