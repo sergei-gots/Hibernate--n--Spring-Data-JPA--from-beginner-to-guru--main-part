@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +20,7 @@ import org.hibernate.validator.constraints.URL;
 
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * Created by sergei on 11/04/2025
@@ -25,8 +28,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "wp_users",
     indexes = {
-    //we use index names here as it defined in /resources/db/migration/V1__create_wordpress_db.sql
-    @Index(name = "user_login_key1", columnList = "user_login"),
+    //we use index names here as it is defined in /resources/db/migration/V1__create_wordpress_db.sql
+    @Index(name = "user_login_key", columnList = "user_login"),
     @Index(name = "user_nicename", columnList = "user_nicename"),
     @Index(name = "user_email", columnList = "user_email")
     })
@@ -78,4 +81,8 @@ public class User {
     @NotNull
     @CodePointLength(max = 250)
     private String displayName;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    Set<UserMeta> userMetaSet;
 }
