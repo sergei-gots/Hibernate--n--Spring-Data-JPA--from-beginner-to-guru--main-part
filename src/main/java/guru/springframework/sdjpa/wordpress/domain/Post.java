@@ -29,7 +29,6 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "post_author")
     private User author;
-    //private Long authorId;
 
     @Column(name = "post_date")
     private Timestamp createdDate;

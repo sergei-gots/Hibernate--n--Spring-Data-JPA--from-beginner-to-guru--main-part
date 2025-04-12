@@ -84,5 +84,10 @@ public class User {
 
     @OneToMany
     @JoinColumn(name = "user_id")
-    Set<UserMeta> userMetaSet;
+    private Set<UserMeta> userMetaSet;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private Set<Comment> comments;
+
 }

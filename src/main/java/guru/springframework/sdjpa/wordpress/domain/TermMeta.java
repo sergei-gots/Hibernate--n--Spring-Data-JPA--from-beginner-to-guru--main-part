@@ -24,6 +24,5 @@ public class TermMeta extends Meta {
     @ManyToOne
     @JoinColumn(name = "term_id")
     private Term term;
-    //private Long termId;
 
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,7 +22,15 @@ import java.sql.Timestamp;
  * Created by sergei on 12/04/2025
  */
 @Entity
-@Table(name = "wp_comments")
+@Table(name = "wp_comments",
+        indexes = {
+                @Index(name = "comment_post_ID", columnList = "comment_post_ID"),
+                @Index(name = "comment_approved_date_gmt", columnList = "comment_approved, comment_approved_date_gmt"),
+                @Index(name = "comment_parent", columnList = "comment_parent"),
+                @Index(name = "comment_author_email", columnList = "comment_author_email")
+
+        }
+)
 public class Comment {
 
     @Id
@@ -29,7 +38,7 @@ public class Comment {
     @Column(name = "comment_id")
     private Long id;
 
-    @Column(name = "comment_author", length = 255, nullable = false)
+    @Column(name = "comment_author", nullable = false)
     @NotBlank
     @CodePointLength(min = 1, max = 255)
     private String author;
@@ -83,10 +92,8 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "comment_parent")
     private Comment parent;
-    //private Long parentId;
 
     @ManyToOne
     private User user;
-    //private Long user Id;
 
 }

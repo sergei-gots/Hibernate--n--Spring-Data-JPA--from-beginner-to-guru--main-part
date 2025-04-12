@@ -63,7 +63,6 @@ public class Link {
     @ManyToOne
     @JoinColumn(name = "link_owner", nullable = false)
     private User owner;
-    //private Long linkOwnerId;
 
     @Column(name = "link_rating", nullable = false)
     private Integer rating = 0;
