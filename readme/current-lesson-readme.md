@@ -1,2 +1,2 @@
-#### Section 20. Legacy Database Mapping
-### Assignment. Deconstruction of Associations
+#### Lesson 186. Credit Card Project
+### Initial State. Code Review

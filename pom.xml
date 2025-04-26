@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.springframework.guru</groupId>
-	<artifactId>spring-data-jpa-wordpress</artifactId>
+	<artifactId>spring-data-jpa-credit-card</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-data-jpa-wordpress</name>
-	<description>Spring Data JPA. Wordpress</description>
+	<name>spring-data-jpa-credit-card</name>
+	<description>Spring Data JPA. Credit Card Project</description>
 	<url/>
 
 	<properties>
@@ -31,6 +31,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
@@ -43,23 +48,8 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.validation</groupId>
-			<artifactId>jakarta.validation-api</artifactId>
 		</dependency>
 
 	</dependencies>
