@@ -1,2 +1,2 @@
-#### Lesson 186. Credit Card Project
-### Initial State. Code Review
+#### Lesson 187. testSaveAndStoreCreditCard
+### @DataJpaTest
