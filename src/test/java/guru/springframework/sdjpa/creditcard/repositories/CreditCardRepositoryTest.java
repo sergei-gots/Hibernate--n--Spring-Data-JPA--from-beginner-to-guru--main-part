@@ -8,9 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
@@ -27,33 +31,46 @@ class CreditCardRepositoryTest {
     @Autowired
     EncryptionService encryptionService;
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @Test
     public void testSaveAndStoreCreditCard() {
 
-        CreditCard cC = new CreditCard();
+        CreditCard cc = new CreditCard();
 
-        System.out.println("CREDIT_CARD_NUMBER: " + CREDIT_CARD_NUMBER);
+        cc.setCreditCardNumber(CREDIT_CARD_NUMBER);
+        cc.setCvv("123");
+        cc.setExpirationDate("12/2029");
 
-        String encryptedCcNumber = encryptionService.encrypt(CREDIT_CARD_NUMBER);
+        CreditCard savedCc = creditCardRepository.saveAndFlush(cc);
 
-        System.out.println("encryptedCcNumber : " + encryptedCcNumber);
+        System.out.println("Created CC: " + cc.getCreditCardNumber());
+        System.out.println("Encrypted CC: " + encryptionService.encrypt(cc.getCreditCardNumber()));
 
-
-        cC.setCreditCardNumber(encryptedCcNumber);
-        cC.setCvv("123");
-        cC.setExpirationDate("12/2029");
-
-        System.out.println("Save and Store the CreditCard to the database");
-        CreditCard savedCc = creditCardRepository.saveAndFlush(cC);
-
+        System.out.println("CC At Rest:");
         System.out.println("Fetch the CreditCard from the database");
+
+        Map<String, Object> dbRow = jdbcTemplate.queryForMap(
+                //For a test it's however ok to use 'directly' ('nod bound') passed parameters:
+                "SELECT * FROM credit_card WHERE id = " + savedCc.getId()
+        );
+
+        String dbCcNumberValue = (String) dbRow.get("credit_card_number");
+
+        //These two assertions will fail now:
+        assertNotEquals(savedCc.getCreditCardNumber(), dbCcNumberValue);
+        assertEquals(dbCcNumberValue, encryptionService.encrypt(CREDIT_CARD_NUMBER));
+
+
         CreditCard fetchedCc = creditCardRepository.getReferenceById(savedCc.getId());
 
         assertNotNull(fetchedCc);
+        assertEquals(savedCc.getCreditCardNumber(), fetchedCc.getCreditCardNumber());
 
-        String decryptedCcNumber = encryptionService.decrypt(fetchedCc.getCreditCardNumber());
 
-        assertEquals(CREDIT_CARD_NUMBER, decryptedCcNumber);
+        assertNotEquals(fetchedCc.getCreditCardNumber(), encryptionService.encrypt(CREDIT_CARD_NUMBER));
+        assertEquals(savedCc.getCreditCardNumber(), fetchedCc.getCreditCardNumber());
     }
 
 

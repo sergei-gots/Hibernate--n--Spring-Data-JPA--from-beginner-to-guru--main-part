@@ -1,1 +1,1 @@
-#### Lesson 188. mimicking EncryptionService
+#### Lesson 189. Verify Data at Rest
