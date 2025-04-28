@@ -5,6 +5,7 @@ import guru.springframework.sdjpa.creditcard.domain.CreditCard;
 import guru.springframework.sdjpa.creditcard.interceptors.EncryptionInterceptor;
 import guru.springframework.sdjpa.creditcard.services.EncryptionService;
 import guru.springframework.sdjpa.creditcard.services.EncryptionServiceMimickingImpl;
+import org.hibernate.proxy.HibernateProxy;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -51,10 +52,10 @@ class CreditCardRepositoryTest {
 
         CreditCard savedCc = creditCardRepository.saveAndFlush(cc);
 
-        System.out.println("Created CC: " + cc.getCreditCardNumber());
-        System.out.println("Encrypted CC: " + encryptionService.encrypt(cc.getCreditCardNumber()));
+        System.out.println("Created CC-Number: " + cc.getCreditCardNumber());
+        System.out.println("Encrypted CC-Number: " + encryptionService.encrypt(cc.getCreditCardNumber()));
 
-        System.out.println("CC At Rest:");
+        System.out.println("CC At Rest");
         System.out.println("Fetch the CreditCard from the database");
 
         Map<String, Object> dbRow = jdbcTemplate.queryForMap(
@@ -64,12 +65,18 @@ class CreditCardRepositoryTest {
 
         String dbCcNumberValue = (String) dbRow.get("credit_card_number");
 
-        //These two assertions will fail now:
-        assertNotEquals(savedCc.getCreditCardNumber(), dbCcNumberValue);
+        CreditCard loadedCc = creditCardRepository.findById(savedCc.getId()).orElseThrow();
+
+        System.out.println(loadedCc.getClass());
+        System.out.println(loadedCc instanceof HibernateProxy);
+
+        //Still will fail: Hibernate does not support Interceptor.onLoad more.
+        //By opinion of Hibernate developers this is not a good practice to use Interceptors more
+        assertNotEquals(savedCc.getCreditCardNumber(), loadedCc.getCreditCardNumber());
         assertEquals(dbCcNumberValue, encryptionService.encrypt(CREDIT_CARD_NUMBER));
 
 
-        CreditCard fetchedCc = creditCardRepository.getReferenceById(savedCc.getId());
+        CreditCard fetchedCc = creditCardRepository.findById(savedCc.getId()).orElseThrow();
 
         assertNotNull(fetchedCc);
         assertEquals(savedCc.getCreditCardNumber(), fetchedCc.getCreditCardNumber());
