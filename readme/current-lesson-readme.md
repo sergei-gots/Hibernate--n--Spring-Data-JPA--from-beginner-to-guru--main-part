@@ -1,1 +1,2 @@
-#### Lesson 190. Create -n- Register Hibernate Interceptor
+#### Lesson 191. Custom @EncryptedString Annotation
+
