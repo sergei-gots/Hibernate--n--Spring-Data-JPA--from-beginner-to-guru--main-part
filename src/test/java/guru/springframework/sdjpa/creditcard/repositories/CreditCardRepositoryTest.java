@@ -1,6 +1,8 @@
 package guru.springframework.sdjpa.creditcard.repositories;
 
+import guru.springframework.sdjpa.creditcard.config.InterceptorRegistration;
 import guru.springframework.sdjpa.creditcard.domain.CreditCard;
+import guru.springframework.sdjpa.creditcard.interceptors.EncryptionInterceptor;
 import guru.springframework.sdjpa.creditcard.services.EncryptionService;
 import guru.springframework.sdjpa.creditcard.services.EncryptionServiceMimickingImpl;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 @ActiveProfiles("local")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(EncryptionServiceMimickingImpl.class)
+@Import( {
+        EncryptionServiceMimickingImpl.class,
+        InterceptorRegistration.class,
+        EncryptionInterceptor.class
+} )
 class CreditCardRepositoryTest {
 
     final String CREDIT_CARD_NUMBER = "123456789000";

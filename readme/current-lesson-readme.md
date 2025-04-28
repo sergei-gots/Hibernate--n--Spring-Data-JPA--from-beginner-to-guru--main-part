@@ -1,1 +1,1 @@
-#### Lesson 189. Verify Data at Rest
+#### Lesson 190. Create -n- Register Hibernate Interceptor
