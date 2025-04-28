@@ -1,2 +1,1 @@
-#### Lesson 187. testSaveAndStoreCreditCard
-### @DataJpaTest
+#### Lesson 188. mimicking EncryptionService
