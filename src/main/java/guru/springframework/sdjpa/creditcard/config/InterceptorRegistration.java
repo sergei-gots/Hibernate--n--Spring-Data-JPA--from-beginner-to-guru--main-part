@@ -10,10 +10,10 @@ import java.util.Map;
 /**
  * Created by sergei on 28/04/2025
  */
-@Configuration
+//@Configuration
 public class InterceptorRegistration implements HibernatePropertiesCustomizer {
 
-    @Autowired
+    //@Autowired
     EncryptionInterceptor encryptionInterceptor;
 
     @Override
