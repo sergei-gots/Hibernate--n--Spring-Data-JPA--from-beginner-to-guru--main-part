@@ -1,4 +1,4 @@
-package guru.springframework.sdjpa.creditcard.interceptors;
+package guru.springframework.sdjpa.creditcard.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

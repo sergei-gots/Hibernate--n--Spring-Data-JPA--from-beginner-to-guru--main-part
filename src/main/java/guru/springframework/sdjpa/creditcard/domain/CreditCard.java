@@ -1,6 +1,6 @@
 package guru.springframework.sdjpa.creditcard.domain;
 
-import guru.springframework.sdjpa.creditcard.interceptors.EncryptedString;
+import guru.springframework.sdjpa.creditcard.annotations.EncryptedString;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

@@ -1,8 +1,11 @@
 package guru.springframework.sdjpa.creditcard.repositories;
 
-import guru.springframework.sdjpa.creditcard.config.InterceptorRegistration;
+import guru.springframework.sdjpa.creditcard.config.HibernatePropertiesAppender;
+import guru.springframework.sdjpa.creditcard.config.HibernateEventListenerRegistration;
 import guru.springframework.sdjpa.creditcard.domain.CreditCard;
-import guru.springframework.sdjpa.creditcard.interceptors.EncryptionInterceptor;
+import guru.springframework.sdjpa.creditcard.listeners.LoadListener;
+import guru.springframework.sdjpa.creditcard.listeners.PreInsertListener;
+import guru.springframework.sdjpa.creditcard.listeners.PreUpdateListener;
 import guru.springframework.sdjpa.creditcard.services.EncryptionService;
 import guru.springframework.sdjpa.creditcard.services.EncryptionServiceMimickingImpl;
 import org.hibernate.proxy.HibernateProxy;
@@ -25,8 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import( {
         EncryptionServiceMimickingImpl.class,
-        InterceptorRegistration.class,
-        EncryptionInterceptor.class
+        HibernateEventListenerRegistration.class,
+        PreInsertListener.class,
+        PreUpdateListener.class,
+        LoadListener.class,
+        HibernatePropertiesAppender.class
 } )
 class CreditCardRepositoryTest {
 

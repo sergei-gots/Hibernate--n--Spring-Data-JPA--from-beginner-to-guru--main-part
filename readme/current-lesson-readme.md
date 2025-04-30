@@ -1,1 +1,1 @@
-#### Lesson 195. Create Hibernate Listeners
+#### Lesson 196. Register Hibernate Listeners
