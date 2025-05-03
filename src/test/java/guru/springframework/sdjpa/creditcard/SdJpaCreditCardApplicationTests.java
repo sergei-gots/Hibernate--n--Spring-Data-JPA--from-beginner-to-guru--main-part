@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("local")
-class SdJpaWordPressApplicationTests {
+class SdJpaCreditCardApplicationTests {
 
 	@Test
 	void contextLoads() {

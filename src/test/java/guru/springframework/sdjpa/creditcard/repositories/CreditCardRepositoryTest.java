@@ -73,8 +73,12 @@ class CreditCardRepositoryTest {
 
         CreditCard loadedCc = creditCardRepository.findById(savedCc.getId()).orElseThrow();
 
-        System.out.println(loadedCc.getClass());
-        System.out.println(loadedCc instanceof HibernateProxy);
+        System.out.println("Loaded cc class: " + loadedCc.getClass());
+        System.out.println("Loaded cc class is HibernateProxy: " + (loadedCc instanceof HibernateProxy));
+        System.out.println("createdCc=" + cc);
+        System.out.println("savedCc=" + savedCc);
+        System.out.println("fetched dbRow.dbCcNumberValue=" + dbCcNumberValue);
+        System.out.println("loadedCc=" + loadedCc);
 
         //Still will fail: Hibernate does not support Interceptor.onLoad more.
         //By opinion of Hibernate developers this is not a good practice to use Interceptors more
