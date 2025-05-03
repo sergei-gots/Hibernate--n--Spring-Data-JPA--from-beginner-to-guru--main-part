@@ -3,6 +3,7 @@ package guru.springframework.sdjpa.creditcard.domain;
 import guru.springframework.sdjpa.creditcard.converters.EncryptionConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,6 +19,7 @@ import java.util.Objects;
  * Created by sergei on 26/04/2025
  */
 @Entity
+@EntityListeners(CreditCardJpaCallbackListener.class)
 public class CreditCard {
 
     @Id
