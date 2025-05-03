@@ -1,5 +1,7 @@
 package guru.springframework.sdjpa.creditcard.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -11,13 +13,18 @@ import java.util.Base64;
 @Service
 public class EncryptionServiceMimickingImpl implements EncryptionService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EncryptionServiceMimickingImpl.class);
+
     @Override
-    public String encrypt(String freeText) {
-        return Base64.getEncoder().encodeToString(freeText.getBytes(StandardCharsets.UTF_8));
+    public String encrypt(String plainText) {
+
+        logger.trace("encrypt(String plainText)");
+        return Base64.getEncoder().encodeToString(plainText.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
     public String decrypt(String encryptedText) {
+        logger.trace("decrypt(String encryptedText)");
         return new String(Base64.getDecoder().decode(encryptedText));
     }
 

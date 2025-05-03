@@ -1,4 +1,4 @@
-package converters;
+package guru.springframework.sdjpa.creditcard.converters;
 
 import guru.springframework.sdjpa.creditcard.services.EncryptionService;
 import jakarta.persistence.AttributeConverter;

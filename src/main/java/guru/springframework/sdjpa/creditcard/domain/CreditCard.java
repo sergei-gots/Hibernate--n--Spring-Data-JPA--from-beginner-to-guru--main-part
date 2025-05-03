@@ -1,6 +1,6 @@
 package guru.springframework.sdjpa.creditcard.domain;
 
-import converters.EncryptionConverter;
+import guru.springframework.sdjpa.creditcard.converters.EncryptionConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
