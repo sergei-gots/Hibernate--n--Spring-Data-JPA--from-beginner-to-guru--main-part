@@ -1,11 +1,7 @@
 package guru.springframework.sdjpa.creditcard.repositories;
 
 import guru.springframework.sdjpa.creditcard.config.HibernatePropertiesAppender;
-import guru.springframework.sdjpa.creditcard.config.HibernateEventListenerRegistration;
 import guru.springframework.sdjpa.creditcard.domain.CreditCard;
-import guru.springframework.sdjpa.creditcard.listeners.LoadListener;
-import guru.springframework.sdjpa.creditcard.listeners.PreInsertListener;
-import guru.springframework.sdjpa.creditcard.listeners.PreUpdateListener;
 import guru.springframework.sdjpa.creditcard.services.EncryptionService;
 import guru.springframework.sdjpa.creditcard.services.EncryptionServiceMimickingImpl;
 import org.hibernate.proxy.HibernateProxy;
@@ -20,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
@@ -28,10 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import( {
         EncryptionServiceMimickingImpl.class,
-        HibernateEventListenerRegistration.class,
-        PreInsertListener.class,
-        PreUpdateListener.class,
-        LoadListener.class,
         HibernatePropertiesAppender.class
 } )
 class CreditCardRepositoryTest {
@@ -64,36 +55,30 @@ class CreditCardRepositoryTest {
         System.out.println("CC At Rest");
         System.out.println("Fetch the CreditCard from the database");
 
-        Map<String, Object> dbRow = jdbcTemplate.queryForMap(
-                //For a test it's however ok to use 'directly' ('nod bound') passed parameters:
+        Map<String, Object> dbRowQueriedWithJdbcTemplate = jdbcTemplate.queryForMap(
                 "SELECT * FROM credit_card WHERE id = " + savedCc.getId()
         );
 
-        String dbCcNumberValue = (String) dbRow.get("credit_card_number");
+        String dbCcNumberValueQueriedWithJdbcTemplate = (String) dbRowQueriedWithJdbcTemplate.get("credit_card_number");
 
         CreditCard loadedCc = creditCardRepository.findById(savedCc.getId()).orElseThrow();
+        CreditCard fetchedCc = creditCardRepository.findById(savedCc.getId()).orElseThrow();
 
+        System.out.println("CreatedCc=" + cc);
+        System.out.println("SavedCc=" + savedCc);
+        System.out.println("loadedCc=" + loadedCc);
+        System.out.println("fetched dbRowQueriedWithJdbcTemplate.dbCcNumberValueQueriedWithJdbcTemplate=" + dbCcNumberValueQueriedWithJdbcTemplate);
         System.out.println("Loaded cc class: " + loadedCc.getClass());
         System.out.println("Loaded cc class is HibernateProxy: " + (loadedCc instanceof HibernateProxy));
-        System.out.println("createdCc=" + cc);
-        System.out.println("savedCc=" + savedCc);
-        System.out.println("fetched dbRow.dbCcNumberValue=" + dbCcNumberValue);
-        System.out.println("loadedCc=" + loadedCc);
 
-        //Still will fail: Hibernate does not support Interceptor.onLoad more.
-        //By opinion of Hibernate developers this is not a good practice to use Interceptors more
-        assertNotEquals(savedCc.getCreditCardNumber(), loadedCc.getCreditCardNumber());
-        assertEquals(dbCcNumberValue, encryptionService.encrypt(CREDIT_CARD_NUMBER));
+        assertEquals(savedCc.getCreditCardNumber(), loadedCc.getCreditCardNumber());
 
-
-        CreditCard fetchedCc = creditCardRepository.findById(savedCc.getId()).orElseThrow();
+        assertEquals(dbCcNumberValueQueriedWithJdbcTemplate, encryptionService.encrypt(CREDIT_CARD_NUMBER));
 
         assertNotNull(fetchedCc);
         assertEquals(savedCc.getCreditCardNumber(), fetchedCc.getCreditCardNumber());
 
 
-        assertNotEquals(fetchedCc.getCreditCardNumber(), encryptionService.encrypt(CREDIT_CARD_NUMBER));
-        assertEquals(savedCc.getCreditCardNumber(), fetchedCc.getCreditCardNumber());
     }
 
 

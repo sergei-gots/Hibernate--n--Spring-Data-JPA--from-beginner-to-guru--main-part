@@ -1,6 +1,7 @@
 package guru.springframework.sdjpa.creditcard.domain;
 
-import guru.springframework.sdjpa.creditcard.annotations.EncryptedString;
+import converters.EncryptionConverter;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,10 +19,10 @@ public class CreditCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @EncryptedString
+    @Convert(converter = EncryptionConverter.class)
     private String creditCardNumber;
 
-    @EncryptedString
+    @Convert(converter = EncryptionConverter.class)
     private String cvv;
 
     private String expirationDate;

@@ -1,4 +1,5 @@
-#### Lesson 197. Implement Hibernate Encryption Listeners
+#### Lesson 197-*. Using @Converter -n- @Convert as clear way to fix the problems of fields converting  
 
-This will still fail.
-Next commit will fix this problem
+
+    import jakarta.persistence.Converter;
+    import jakarta.persistence.Convert;
