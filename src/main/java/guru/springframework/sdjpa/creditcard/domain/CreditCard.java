@@ -26,10 +26,12 @@ public class CreditCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Convert(converter = EncryptionConverter.class)
+    //In this section of course we will use the class under the @EntityListeners-annotation
+    //@Convert(converter = EncryptionConverter.class)
     private String creditCardNumber;
 
-    @Convert(converter = EncryptionConverter.class)
+    //In this section of course we will use the class under the @EntityListeners-annotation
+    //@Convert(converter = EncryptionConverter.class)
     private String cvv;
 
     private String expirationDate;
