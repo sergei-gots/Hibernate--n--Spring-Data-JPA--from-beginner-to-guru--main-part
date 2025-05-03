@@ -6,6 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostUpdate;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PreUpdate;
 
 import java.util.Objects;
 
@@ -78,5 +83,22 @@ public class CreditCard {
                 ", cvv='" + cvv + '\'' +
                 ", expirationDate='" + expirationDate + '\'' +
                 '}';
+    }
+
+    @PrePersist
+    public void onPrePersist() {
+        System.out.println("CreditCard.onPrePersist. id = " + id);
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        System.out.println("CreditCard.onPrePersist. id = " + id);
+    }
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    public void onPostLoad() {
+        System.out.println("CreditCard.onPostLoad/PostPersist. id = " + id);
     }
 }
