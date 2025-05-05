@@ -1,9 +1,11 @@
 ## Section XXV
 # Multiple Data Sources
-### Lessons 209 - 211
-## Get Data Source @ConfigurationProperties, Data Source instances and Entity Manager Factory Beans to work with Data Sources
+### Lessons 209 - 212
+## Configuring Multiple Data Sources with @Configuration class
 
-Our application.properties will include three sets of properties like e.g. that:
+### ✅ 0. application.properties
+
+<code>application.properites</code> will include three sets of properties like e.g. that:
 
     spring.pan.datasource.username=panuser
     spring.pan.datasource.password=password
@@ -11,10 +13,15 @@ Our application.properties will include three sets of properties like e.g. that:
     spring.pan.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 
-Correspondingly, we will have three <code>@Configuration</code> classes
-returning <code>@ConfigurationProperties</code>. One of the method returning
-<code>DataSourceProperties</code> in one of the classes must be marked
-as <code>@Primary</code>:
+### ✅ 1. @ConfigurationProperties
+
+We will have three <code>@Configuration</code> classes
+that have methods which return <code>@ConfigurationProperties</code>.
+One of the method returning <code>DataSourceProperties</code> in one of the classes must be marked
+as <code>@Primary</code>. Annotation <code>@Primary</code> will be set upon all the methods of one
+of the <code>@Configuration</code> classes.
+It will prevent throwing <code>NonUniqueBeanDefinitionException</code>
+See https://www.baeldung.com/spring-primary for details.
 
     @Configuration
     public class PanDatabaseConfigruation {
@@ -26,6 +33,8 @@ as <code>@Primary</code>:
             return new DataSourceProperties();
         }
     }
+
+### ✅ 2. Building DataSources
 
 The next step we will take is to add methods to the @Configuration classes that return <code>DataSource</code>.
 These method will get as an argument a qualified with <code>@Qualifier("<method-name>")</code> <code>DataSourceProperties</code> :
@@ -41,10 +50,13 @@ These method will get as an argument a qualified with <code>@Qualifier("<method-
             .build();
     }
 
+### ✅ 3. Building EntityManagerFactories
+
 Then we will create methods that build up <code>EntityManagerFactoryBean</code>s needed
 to create <b>Entity Manager</b> to work with DataSources we got:
 
     @Bean
+    @Primary
     public LocalContainerEntityManagerFactoryBean panEntityManagerFactory(
         @Qualifier("panDataSource") DataSource panDataSource,
         org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder emfBuilder
@@ -55,3 +67,18 @@ to create <b>Entity Manager</b> to work with DataSources we got:
             .persistenceUnit("pan")
             .build();
     }
+
+### ✅ 4. Creating TransactionManagers
+
+    @Bean
+    @Primary
+    public PlatformTransactionManager panTransactionManager(
+        @Qualifier("panEntityManagerFactory") LoadContainerEntityManagerFactoryBean panEntityManagerFactory
+    ) {
+        EntityManagerFactory panEntityManagerFactoryObject = panEntityManagerFactory.getObject();
+        Objects.requireNotNull(panEntityManagerFactoryObject);
+        return new JpaTransactionManager(panEntityManagerFactoryObject);
+
+    }
+    
+    
