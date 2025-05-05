@@ -1,7 +1,7 @@
 ## Section XXV
 # Multiple Data Sources
-### Lesson 209
-## Data Source @ConfigurationProperties
+### Lessons 209 -n- 210
+## Get Data Source @ConfigurationProperties and Data Source instances 
 
 Our application.properties will include three sets of properties like e.g. that:
 
@@ -25,4 +25,18 @@ as <code>@Primary</code>:
         public DataSourceProperties panDataSourceProperties() {
             return new DataSourceProperties();
         }
+    }
+
+The next step we will take is to add methods to the @Configuration classes that return <code>DataSource</code>.
+These method will get as an argument a qualified with <code>@Qualifier("<method-name>")</code> <code>DataSourceProperties</code> :
+
+    @Bean
+    @Primary //one of these must be primary
+    pulbic DataSource panDataSource(
+        @Qualifier("panDatSourceProperties") DataSourceProperties panDataSourceProperties 
+    ) {
+        return panDataSourceProperties
+            .initializeDataSourceBuilder()
+            .type(HikariDataSource.class)
+            .build();
     }
