@@ -1,7 +1,7 @@
 ## Section XXV
 # Multiple Data Sources
 ### Lessons 209 - 211
-## Get Data Source @ConfigurationProperties, Data Source instances and Entity Manager Factory Beans to work with Data Sources 
+## Get Data Source @ConfigurationProperties, Data Source instances and Entity Manager Factory Beans to work with Data Sources
 
 Our application.properties will include three sets of properties like e.g. that:
 
@@ -41,8 +41,8 @@ These method will get as an argument a qualified with <code>@Qualifier("<method-
             .build();
     }
 
-Then we will create methods that build up <code>EntityManagerFactoryBean</code>s needed 
-to create <b>Entity Manager</b> to work with DataSources we got: 
+Then we will create methods that build up <code>EntityManagerFactoryBean</code>s needed
+to create <b>Entity Manager</b> to work with DataSources we got:
 
     @Bean
     public LocalContainerEntityManagerFactoryBean panEntityManagerFactory(

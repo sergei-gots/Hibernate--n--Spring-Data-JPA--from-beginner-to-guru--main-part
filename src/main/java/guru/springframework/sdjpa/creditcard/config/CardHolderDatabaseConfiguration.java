@@ -1,11 +1,14 @@
 package guru.springframework.sdjpa.creditcard.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import guru.springframework.sdjpa.creditcard.domain.cardholder.CreditCardHolder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
 
@@ -31,4 +34,15 @@ public class CardHolderDatabaseConfiguration {
                 .build();
     }
 
+    @Bean
+    public LocalContainerEntityManagerFactoryBean cardHolderEntityManagerFactory(
+            @Qualifier("cardHolderDataSource") DataSource cardHolderDataSource,
+            EntityManagerFactoryBuilder emfBuilder
+    ) {
+        return emfBuilder
+                .dataSource(cardHolderDataSource)
+                .packages(CreditCardHolder.class)
+                .persistenceUnit("cardholder")
+                .build();
+    }
 }
