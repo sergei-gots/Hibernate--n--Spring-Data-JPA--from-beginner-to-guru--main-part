@@ -1,6 +1,6 @@
 ## Section XXV
 # Multiple Data Sources
-### Lessons 209 - 212
+### Lessons 209 - 213
 ## Configuring Multiple Data Sources with @Configuration class
 
 ### ✅ 0. application.properties
@@ -78,7 +78,18 @@ to create <b>Entity Manager</b> to work with DataSources we got:
         EntityManagerFactory panEntityManagerFactoryObject = panEntityManagerFactory.getObject();
         Objects.requireNotNull(panEntityManagerFactoryObject);
         return new JpaTransactionManager(panEntityManagerFactoryObject);
-
     }
-    
+
+### ✅ 5 @EnableJpaRepositories
+
+We need also to add to the configuration class declaration the annotation <code>@EnableJpaRepositories</code>
+in order to specify which JpaRepositories will be used together with specified in the configuration class
+<b>entityManagerFactory</b> and <b>transactionManager</b>:
+
+    @EnableJpaRepositories(
+        basePackages = "guru.springframework.sdjpa.creditcard.repositories.pan",
+        entityManagerFactoryRef = "panEntityManagerFactory",
+        transactionManagerRef = "panTransactionManager"
+    )
+
     

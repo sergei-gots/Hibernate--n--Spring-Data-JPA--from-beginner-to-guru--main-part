@@ -1,6 +1,7 @@
 package guru.springframework.sdjpa.creditcard.repositories;
 
 import guru.springframework.sdjpa.creditcard.domain.creditcard.CreditCard;
+import guru.springframework.sdjpa.creditcard.repositories.creditcard.CreditCardRepository;
 import guru.springframework.sdjpa.creditcard.services.EncryptionService;
 import guru.springframework.sdjpa.creditcard.services.EncryptionServiceMimickingImpl;
 import org.hibernate.proxy.HibernateProxy;

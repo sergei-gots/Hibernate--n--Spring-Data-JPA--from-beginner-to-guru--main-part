@@ -1,4 +1,4 @@
-package guru.springframework.sdjpa.creditcard.repositories;
+package guru.springframework.sdjpa.creditcard.repositories.creditcard;
 
 import guru.springframework.sdjpa.creditcard.domain.creditcard.CreditCard;
 import org.springframework.data.jpa.repository.JpaRepository;

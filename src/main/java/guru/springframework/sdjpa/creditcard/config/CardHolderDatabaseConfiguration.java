@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -20,6 +21,11 @@ import java.util.Objects;
  * Created by sergei on 05/05/2025
  */
 @Configuration
+@EnableJpaRepositories(
+        basePackages = "guru.springframework.sdjpa.creditcard.repositories.cardholder",
+        entityManagerFactoryRef = "cardHolderEntityManagerFactory",
+        transactionManagerRef = "cardHolderTransactionManager"
+)
 public class CardHolderDatabaseConfiguration {
 
     @Bean
