@@ -13,7 +13,7 @@ import lombok.ToString;
 /**
  * Created by sergei on 05/05/2025
  */
-@Entity
+@Entity(name = "card_holder")
 @Getter
 @Setter
 @EqualsAndHashCode

@@ -16,6 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.Objects;
+import java.util.Properties;
 
 /**
  * Created by sergei on 05/05/2025
@@ -50,11 +51,19 @@ public class CardHolderDatabaseConfiguration {
             @Qualifier("cardHolderDataSource") DataSource cardHolderDataSource,
             EntityManagerFactoryBuilder emfBuilder
     ) {
-        return emfBuilder
+
+        Properties jpaProperties = new Properties();
+        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "validate");
+
+        LocalContainerEntityManagerFactoryBean emf= emfBuilder
                 .dataSource(cardHolderDataSource)
                 .packages(CreditCardHolder.class)
                 .persistenceUnit("cardholder")
                 .build();
+
+        emf.setJpaProperties(jpaProperties);
+
+        return emf;
     }
 
     @Bean
