@@ -13,3 +13,7 @@ in the method that builds that <b>EntityManagerFactory</b>:
     entityManagerFactory.setJpaProperties(jpaProperties);
 
 <b>hbm2ddl</b> means <b>Hibernate Mapping To create schema DDL</b>.    
+
+Another might be useful <b>hibernate</b> property example:
+
+    hiberante.physical_naming_strategy=org.hibernate.boot.naming.CamelCaseToUnderscoresNamingStrategy
