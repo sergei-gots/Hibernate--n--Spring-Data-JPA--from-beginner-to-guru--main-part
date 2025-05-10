@@ -1,34 +1,29 @@
 package guru.springframework.sdjpa.creditcard.repositories;
 
+import guru.springframework.sdjpa.creditcard.converters.EncryptionConverter;
+import guru.springframework.sdjpa.creditcard.domain.AbstractCreditCardTest;
 import guru.springframework.sdjpa.creditcard.domain.creditcard.CreditCard;
 import guru.springframework.sdjpa.creditcard.services.CreditCardService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-class CreditCardServiceTest {
-
-    final String TEST_CREDIT_CARD_NUMBER = "123456789000";
-    final String TEST_CVV = "123";
-    final String TEST_EXPIRATION_DATE = "09/29";
+class CreditCardServiceTest extends AbstractCreditCardTest {
 
     @Autowired
     CreditCardService creditCardService;
 
+    @Mock
+    private EncryptionConverter encryptionConverter;
+
     @Test
     public void testSaveAndFindByIdCreditCard() {
 
-        CreditCard cc = CreditCard.builder()
-                .creditCardNumber(TEST_CREDIT_CARD_NUMBER)
-                .cvv(TEST_CVV)
-                .expirationDate(TEST_EXPIRATION_DATE)
-                .firstName("Sergei")
-                .lastName("Gots")
-                .zipCode("10785")
-            .build();
+        CreditCard cc = buildTestCreditCard();
 
         CreditCard savedCc = creditCardService.saveCreditCard(cc);
 

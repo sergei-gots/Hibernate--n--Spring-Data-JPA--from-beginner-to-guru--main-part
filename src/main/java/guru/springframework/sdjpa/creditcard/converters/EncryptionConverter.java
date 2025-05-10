@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Converter
 public class EncryptionConverter implements AttributeConverter<String, String> {
 
-    @Autowired
-    EncryptionService encryptionService;
+   @Autowired
+   EncryptionService encryptionService;
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
@@ -23,4 +23,5 @@ public class EncryptionConverter implements AttributeConverter<String, String> {
     public String convertToEntityAttribute(String dbData) {
         return encryptionService.decrypt(dbData);
     }
+
 }
