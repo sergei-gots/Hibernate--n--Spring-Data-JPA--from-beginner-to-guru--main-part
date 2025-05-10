@@ -9,7 +9,4 @@ public interface EncryptionService {
 
     String decrypt(String encryptedText);
 
-    void resetEncryptionInvocationCounter();
-
-    long getEncryptionInvocationCounter();
 }
