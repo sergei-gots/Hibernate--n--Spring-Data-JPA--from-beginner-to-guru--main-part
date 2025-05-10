@@ -25,8 +25,8 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Autowired
     CardHolderRepository cardHolderRepository;
 
-    @Override
     @Transactional
+    @Override
     public CreditCard saveCreditCard(CreditCard cc) {
 
         CreditCard savedCc = creditCardRepository.save(cc);
@@ -38,7 +38,7 @@ public class CreditCardServiceImpl implements CreditCardService {
         CreditCardPan pan = CreditCardPan.builder()
                 .creditCardId(savedCc.getId())
                 .creditCardNumber(cc.getCreditCardNumber())
-            .build();
+                .build();
         panRepository.save(pan);
 
         CreditCardHolder cardHolder = CreditCardHolder.builder()
@@ -46,12 +46,13 @@ public class CreditCardServiceImpl implements CreditCardService {
                 .firstName(savedCc.getFirstName())
                 .lastName(savedCc.getFirstName())
                 .zipCode(savedCc.getZipCode())
-            .build();
+                .build();
         cardHolderRepository.save(cardHolder);
 
         return savedCc;
     }
 
+    @Transactional
     @Override
     public CreditCard getCreditCardById(Long ccId) {
 
