@@ -18,7 +18,7 @@ public class EncryptionServiceMimickingImpl implements EncryptionService {
     @Override
     public String encrypt(String plainText) {
 
-        logger.warn("encrypt(String plainText)");
+        logger.trace("encrypt(String plainText)");
         return Base64.getEncoder().encodeToString(plainText.getBytes(StandardCharsets.UTF_8));
     }
 
