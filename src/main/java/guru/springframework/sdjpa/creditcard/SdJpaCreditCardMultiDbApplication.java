@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SdJpaCreditCardApplication {
+public class SdJpaCreditCardMultiDbApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SdJpaCreditCardApplication.class, args);
+		SpringApplication.run(SdJpaCreditCardMultiDbApplication.class, args);
 	}
 
 }
