@@ -26,4 +26,6 @@ public class CreditCardPan {
     @Convert(converter = EncryptionConverter.class)
     private String creditCardNumber;
 
+    private Long creditCardId;
+
 }
