@@ -1,5 +1,5 @@
 ## Section XXVI
-# Intro to Spring Data REST
+# <span style="color:gray">Intro to </span><span style="color:green">Spring Data REST</span>
 ### Lesson 228
 ## spring-boot-starter-data-rest 
 
