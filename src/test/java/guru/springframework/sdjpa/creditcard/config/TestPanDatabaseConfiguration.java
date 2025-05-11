@@ -10,6 +10,7 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -28,6 +29,7 @@ import java.util.Objects;
         entityManagerFactoryRef = "testPanEntityManagerFactory",
         transactionManagerRef = "testPanTransactionManager"
 )
+@Profile("test")
 @EntityScan(basePackages = "guru.springframework.sdjpa.pan.domain")
 public class TestPanDatabaseConfiguration {
 
