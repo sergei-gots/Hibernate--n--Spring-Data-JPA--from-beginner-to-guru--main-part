@@ -87,7 +87,7 @@ in order to specify which JpaRepositories will be used together with specified i
 <b>entityManagerFactory</b> and <b>transactionManager</b>:
 
     @EnableJpaRepositories(
-        basePackages = "guru.springframework.sdjpa.creditcard.repositories.pan",
+        basePackages = "guru.springframework.sdjpa.beer.repositories.pan",
         entityManagerFactoryRef = "panEntityManagerFactory",
         transactionManagerRef = "panTransactionManager"
     )
