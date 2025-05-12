@@ -1,66 +1,82 @@
 ## Section XXVI
-# Intro to Spring Data REST
-### Lesson 228
-## spring-boot-starter-data-rest 
+# <span style="color:gray">Intro to </span><span style="color:green">Spring Data REST</span>
+### Lesson 229
+## Exploring http://localhost:8080/beers
 
-#### Links to explore additionally
+The <code>org.springframework.boot:spring-boot-starter-data-rest</code> generate some http-API for us.
+Let's explore the generated end-point 'beers'.
 
-https://docs.spring.io/spring-data/rest/reference/data-commons/dependencies.html#dependencies.spring-boot
+To do that we can use <span style="color:orange">Postman</span> or even the command line <code>curl</code>
 
-https://calver.org/
+    curl http://localhost:8080/beers
 
-### spring-boot-starter-data-rest dependency
+As a result we will get a page of by default 20 beers and links to get a beer separately and
+some other useful links:
 
-The <code>spring-boot-starter-data-rest</code> dependency is used when you want 
-to automatically expose your Spring Data JPA repositories as <b>RESTful web services</b> — 
-without writing explicit controller classes.
+        "_embedded": {
+            "beers": [
+                     {
+                     "beerName": "Mango Bobs",
+                     "beerStyle": "ALE",
+                     "upc": "0631234200036",
+                     "quantityOnHand": 4730,
+                     "price": 23.25,
+                     "createdDate": "2025-05-12T09:45:11.538+00:00",
+                     "lastModifiedData": "2025-05-12T09:45:11.538+00:00",
+                     "_links": {
+                         "self": {
+                             "href": "http://localhost:8080/beers/30f94992-5ce7-4577-b4d0-53541ccadf31"
+                         },
+                         "beer": {
+                             "href": "http://localhost:8080/beers/30f94992-5ce7-4577-b4d0-53541ccadf31"
+                         }
+                     }
+                },
+            ...
+                {
+                    "beerName": "Java Jill",
+                    "beerStyle": "LAGER",
+                    "upc": "4006016803570",
+                    "quantityOnHand": 4575,
+                    "price": 88.43,
+                    "createdDate": "2025-05-12T09:45:11.635+00:00",
+                    "lastModifiedData": "2025-05-12T09:45:11.635+00:00",
+                    "_links": {
+                        "self": {
+                            "href": "http://localhost:8080/beers/f721d958-e100-40c7-af0d-2ac66c7edd00"
+                        },
+                        "beer": {
+                            "href": "http://localhost:8080/beers/f721d958-e100-40c7-af0d-2ac66c7edd00"
+                        }
+                    }
+                }
+            ]
+        },
+        "_links": {
+            "first": {
+                "href": "http://localhost:8080/beers?page=0&size=20"
+            },
+            "self": {
+                "href": "http://localhost:8080/beers?page=0&size=20"
+            },
+            "next": {
+                "href": "http://localhost:8080/beers?page=1&size=20"
+            },
+            "last": {
+                "href": "http://localhost:8080/beers?page=1&size=20"
+            },
+            "profile": {
+                "href": "http://localhost:8080/profile/beers"
+            },
+            "search": {
+                "href": "http://localhost:8080/beers/search"
+            }
+        },
+        "page": {
+            "size": 20,
+            "totalElements": 30,
+            "totalPages": 2,
+            "number": 0
+        }
+    }
 
-### What it does:
-
-Exposes CRUD operations over HTTP endpoints automatically.
-
-For example, if you have a <code>JpaRepository<User, Long></code>, 
-it will automatically create endpoints like:
-<li> GET /users
-<li> GET /users/{id}
-<li> POST /users
-<li> PUT /users/{id}
-<li> DELETE /users/{id}
-
-### <span style="color:green">When you might need it:</span>
-
-<li> Rapid prototyping: to quickly expose data for testing or frontend integration.
-<li> Admin/backoffice tools: for basic CRUD interfaces.
-<li> Microservices: if you're building a lightweight data-exposing service without complex business logic.
-
-### <span style="color:red">When not to use it</span>:
-
-<li> If your API requires custom behavior, validation, authentication, or logic beyond simple CRUD.
-<li>When you want full control over endpoint structure, request/response formats, or business rules.
-
-### How to add it:
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-data-rest</artifactId>
-    </dependency>
-
-### Dependencies tree it addds
-
-To view the dependency tree 
-
-    mvn dependency:tree 
-
-List of dependencies added with <code>spring-boot-starter-data-rest</code>:
-
-    [INFO] +- org.springframework.boot:spring-boot-starter-data-rest:jar:3.4.4:compile
-    [INFO] |  \- org.springframework.data:spring-data-rest-webmvc:jar:4.4.4:compile
-    [INFO] |     +- org.springframework.data:spring-data-rest-core:jar:4.4.4:compile
-    [INFO] |     |  +- org.springframework.hateoas:spring-hateoas:jar:2.4.1:compile
-    [INFO] |     |  +- org.springframework.plugin:spring-plugin-core:jar:3.0.0:compile
-    [INFO] |     |  \- org.atteo:evo-inflector:jar:1.3:compile
-    [INFO] |     \- com.fasterxml.jackson.core:jackson-annotations:jar:2.18.3:compile
-
-To view the full list of dependencies included in <code>spring-boot-starter-data-rest</code>
-use the <span style="color:cyan">maven</span> tool window: some dependencies in the list shown above are omitted because
-they were already added with other spring-boot-starters. 
