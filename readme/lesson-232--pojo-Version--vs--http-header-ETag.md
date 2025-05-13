@@ -43,3 +43,21 @@ will return
     }
 
 and the HTTP-Status will be <code>200: OK</code>  
+
+### curl -i
+
+Applying <code>-i</code> will explicitly show the returned HTTP-Status
+e.g.:
+
+command:
+
+    curl -i -H 'If-None-Match: "0"'  http://localhost:8080/api/v1/beer/b6209d26-3138-4588-8e6a-ed21b5406e4f
+
+response:
+
+    HTTP/1.1 304
+    Vary: Origin
+    Vary: Access-Control-Request-Method
+    Vary: Access-Control-Request-Headers
+    ETag: "0"
+    Date: Tue, 13 May 2025 14:58:29 GMT
