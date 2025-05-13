@@ -1,7 +1,7 @@
 ## Section XXVI
 # <span style="color:gray">Intro to </span><span style="color:green">Spring Data REST</span>
 ### Lesson 230
-## Changing Base Path 
+## Changing Base Path <code>spring.data.rest.base-path</code>
 
 In this lesson we will change the base path of application http://localhost:8080/beers to be
 http://localhost:8080/api/v1/beers according to - air quotes - our API specifications on
