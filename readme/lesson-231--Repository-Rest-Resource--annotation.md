@@ -10,7 +10,7 @@ to be <code>beer[]</code> instead of <code>beers[]</code>
 - air quotes - our API specifications on
 https://sfg-beer-works.github.io/brewery-api/#tag/Beer-Service/operation/listBeers
 
-To do that we set use <code>@RepositoryRestResource</code> on <code>BeerRepository</code>
+To do that we set use <b>org.springframework.data.rest.core.annotation.</b><code>@RepositoryRestResource</code> on <code>BeerRepository</code>
 
     @RepositoryRestResource(path = "beer", collectionResourceRel = "beer")
     public interface BeerRepository extends JpaRepository<Beer, UUID> {
