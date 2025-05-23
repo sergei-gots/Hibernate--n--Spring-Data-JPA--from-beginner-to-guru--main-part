@@ -1,6 +1,6 @@
-package guru.springframework.sdjpa.beer.domain;
+package guru.springframework.beer.domain;
 
-import guru.springframework.sdjpa.beer.enums.BeerStyle;
+import guru.springframework.beer.enums.BeerStyle;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,8 +1,8 @@
-package guru.springframework.sdjpa.beer.bootstrap;
+package guru.springframework.beer.bootstrap;
 
-import guru.springframework.sdjpa.beer.domain.Beer;
-import guru.springframework.sdjpa.beer.enums.BeerStyle;
-import guru.springframework.sdjpa.beer.repositories.BeerRepository;
+import guru.springframework.beer.domain.Beer;
+import guru.springframework.beer.enums.BeerStyle;
+import guru.springframework.beer.repositories.BeerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

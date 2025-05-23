@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("local")
-class SfgRestfulBeerApplicationTests {
+class BeerK8sApplicationTests {
 
 	@Test
 	void contextLoads() {

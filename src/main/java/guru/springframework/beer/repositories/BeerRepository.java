@@ -1,7 +1,7 @@
-package guru.springframework.sdjpa.beer.repositories;
+package guru.springframework.beer.repositories;
 
-import guru.springframework.sdjpa.beer.domain.Beer;
-import guru.springframework.sdjpa.beer.enums.BeerStyle;
+import guru.springframework.beer.domain.Beer;
+import guru.springframework.beer.enums.BeerStyle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

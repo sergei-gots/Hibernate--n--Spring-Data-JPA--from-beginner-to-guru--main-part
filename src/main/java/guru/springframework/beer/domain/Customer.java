@@ -1,4 +1,4 @@
-package guru.springframework.sdjpa.beer.domain;
+package guru.springframework.beer.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package guru.springframework.sdjpa.beer.enums;
+package guru.springframework.beer.enums;
 
 public enum BeerStyle {
     LAGER,
