@@ -41,7 +41,7 @@ public class CustomerLoader implements CommandLineRunner {
         customerRepository.save(buildCustomer("Madeline", "Westen"));
         customerRepository.save(buildCustomer("Sam", "Axe"));
 
-        log.info("Beer Records loaded: {}", customerRepository.count());
+        log.info("Customer Records loaded: {}", customerRepository.count());
     }
 
     private Customer buildCustomer(String firstname, String lastname) {
