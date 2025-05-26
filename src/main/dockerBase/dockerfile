@@ -2,6 +2,8 @@ FROM openjdk:17-jre-slim
 
 ENV JAVA_OPTS " -Xms512m -Xmx512m -Djava.security.egd=file:/dev/./urandom"
 
-WORKDIR application
+WORKDIR app
 
-COPY ../../../target/
+COPY ../../../target/kbe-rest-beer-0.0.1-SNAPSHOT.jar ./beer-app.jar
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar beer-app.jar"]
