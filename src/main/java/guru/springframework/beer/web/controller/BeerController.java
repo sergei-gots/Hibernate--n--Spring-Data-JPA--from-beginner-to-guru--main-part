@@ -40,7 +40,7 @@ public class BeerController {
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(value = "beerName", required = false) String beerName,
-            @RequestParam(value = "beerStyle", required = false) BeerStyle beerStyle,
+            @RequestParam(value = "beerStyle", required = false) BeerStyle[] beerStyle,
             @RequestParam(value = "showInventoryOnHand", required = false) Boolean showInventoryOnHand
             ) {
 

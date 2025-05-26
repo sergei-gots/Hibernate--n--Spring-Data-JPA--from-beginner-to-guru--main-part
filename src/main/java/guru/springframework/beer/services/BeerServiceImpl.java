@@ -7,12 +7,16 @@ import guru.springframework.beer.exceptions.NotFoundException;
 import guru.springframework.beer.web.mappers.BeerMapper;
 import guru.springframework.beer.web.model.BeerDto;
 import guru.springframework.beer.web.model.BeerPagedList;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by sergei on 24/05/2025
@@ -30,9 +34,51 @@ public class BeerServiceImpl implements BeerService {
         this.beerMapper = beerMapper;
     }
 
+    @Cacheable(cacheNames = "beerListCache", condition = "#showInventoryOnHand == false")
     @Override
-    public BeerPagedList listBeers(String beerName, BeerStyle beerStyle, PageRequest pageRequest, Boolean showInventoryOnHand) {
-        return null;
+    public BeerPagedList listBeers(String beerName, BeerStyle[] beerStyles, Pageable pageable, Boolean showInventoryOnHand) {
+
+        BeerPagedList beerPagedList;
+        Page<Beer> beerPage;
+
+        if (!StringUtils.isEmpty(beerName) && beerStyles != null) {
+            beerPage = beerRepository.findAllByBeerNameAndBeerStyleIn(beerName, beerStyles, pageable);
+        }
+        else if (!StringUtils.isEmpty(beerName) && beerStyles == null) {
+            beerPage = beerRepository.findAllByBeerName(beerName, pageable);
+        }
+        else if (StringUtils.isEmpty(beerName) && beerStyles != null) {
+            beerPage = beerRepository.findAllByBeerStyleIn(beerStyles, pageable);
+        }
+        else {
+            beerPage = beerRepository.findAll(pageable);
+        }
+
+        Pageable beerPageable = beerPage.getPageable();
+        if (showInventoryOnHand) {
+            beerPagedList = new BeerPagedList(
+                    beerPage
+                            .getContent()
+                            .stream()
+                            .map(beerMapper::beerToBeerDtoWithInventory)
+                            .collect(Collectors.toList()),
+                    PageRequest.of(beerPageable.getPageNumber(), beerPageable.getPageSize()),
+                    beerPage.getTotalElements()
+            );
+        }
+        else {
+            beerPagedList = new BeerPagedList(
+                    beerPage
+                            .getContent()
+                            .stream()
+                            .map(beerMapper::beerToBeerDto)
+                            .collect(Collectors.toList()),
+                    PageRequest.of(beerPageable.getPageNumber(), beerPageable.getPageSize()),
+                    beerPage.getTotalElements()
+            );
+        }
+
+        return beerPagedList;
     }
 
     @Cacheable(cacheNames = "beerCache", key = "#beerId", condition = "#showInventoryOnHand == false")

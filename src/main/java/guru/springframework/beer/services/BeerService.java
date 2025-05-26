@@ -3,7 +3,7 @@ package guru.springframework.beer.services;
 import guru.springframework.beer.enums.BeerStyle;
 import guru.springframework.beer.web.model.BeerDto;
 import guru.springframework.beer.web.model.BeerPagedList;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public interface BeerService {
 
-    BeerPagedList listBeers(String beerName, BeerStyle beerStyle, PageRequest pageRequest, Boolean showInventoryOnHand);
+    BeerPagedList listBeers(String beerName, BeerStyle[] beerStyles, Pageable pageable, Boolean showInventoryOnHand);
 
     BeerDto getById(UUID beerId, Boolean showInventoryOnHand);
 
