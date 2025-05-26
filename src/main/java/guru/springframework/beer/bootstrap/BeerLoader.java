@@ -57,15 +57,15 @@ public class BeerLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadBeerObject();
+        loadBeerObjects();
     }
 
-    private synchronized void loadBeerObject() {
+    private synchronized void loadBeerObjects() {
 
-        log.debug("Loading initial data. Count is:{}", beerRepository.count());
+        log.info("Loading initial data. The current database records count = {}", beerRepository.count());
 
         if (beerRepository.count() > 0) {
-            log.debug("Beer Records are already presented in the database");
+            log.info("Beer Records are already presented in the database");
             return;
         }
 
@@ -100,7 +100,7 @@ public class BeerLoader implements CommandLineRunner {
         beerRepository.save(buildBeer("Floating Dock", BeerStyle.SAISON, BEER_29_UPC));
         beerRepository.save(buildBeer("El Hefe", BeerStyle.WHEAT, BEER_30_UPC));
 
-        log.debug("Beer Records loaded: {}", beerRepository.count());
+        log.info("Beer Records loaded: {}", beerRepository.count());
     }
 
     private Beer buildBeer(String beerName, BeerStyle beerStyle, String upc) {

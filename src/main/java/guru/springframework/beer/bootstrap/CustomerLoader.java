@@ -23,15 +23,15 @@ public class CustomerLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadBeerObject();
+        loadCustomerObjects();
     }
 
-    private synchronized void loadBeerObject() {
+    private synchronized void loadCustomerObjects() {
 
-        log.debug("Loading initial customer data. Count is:{}", customerRepository.count());
+        log.info("Loading initial customer data. The current database records count = {}", customerRepository.count());
 
         if (customerRepository.count() > 0) {
-            log.debug("Customer Records are already presented in the database");
+            log.info("Customer Records are already presented in the database");
             return;
         }
 
@@ -41,7 +41,7 @@ public class CustomerLoader implements CommandLineRunner {
         customerRepository.save(buildCustomer("Madeline", "Westen"));
         customerRepository.save(buildCustomer("Sam", "Axe"));
 
-        log.debug("Beer Records loaded: {}", customerRepository.count());
+        log.info("Beer Records loaded: {}", customerRepository.count());
     }
 
     private Customer buildCustomer(String firstname, String lastname) {
