@@ -25,8 +25,8 @@ public class MvcExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> notFountExceptionHandler(NotFoundException e) {
         return Map.of (
-                "error", "entity not found",
-                "message", e.getMessage()
+                "message", e.getMessage(),
+                "status", HttpStatus.NOT_FOUND.toString()
         );
     }
 

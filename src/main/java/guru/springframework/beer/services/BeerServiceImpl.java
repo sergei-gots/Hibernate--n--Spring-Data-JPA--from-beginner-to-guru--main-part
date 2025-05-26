@@ -41,11 +41,11 @@ public class BeerServiceImpl implements BeerService {
 
         if (showInventoryOnHand) {
             return beerMapper.beerToBeerDtoWithInventory(
-                    beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
+                    beerRepository.findByIdOrElseThrowNotFoundException(beerId)
             );
         } else {
             return  beerMapper.beerToBeerDto(
-                    beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
+                    beerRepository.findByIdOrElseThrowNotFoundException(beerId)
             );
         }
     }
@@ -58,7 +58,7 @@ public class BeerServiceImpl implements BeerService {
     @Override
     public BeerDto updateBeer(UUID beerId, BeerDto beerDto) {
 
-        Beer beer = beerRepository.findById(beerId).orElseThrow(NotFoundException::new);
+        Beer beer = beerRepository.findByIdOrElseThrowNotFoundException(beerId);
 
         beer.setBeerName(beerDto.getBeerName());
         beer.setBeerStyle(BeerStyle.valueOf(beerDto.getBeerStyle()));
@@ -72,11 +72,14 @@ public class BeerServiceImpl implements BeerService {
     @Cacheable(cacheNames = "beerUpcCache")
     @Override
     public BeerDto getByUpc(String upc) {
-        return beerMapper.beerToBeerDto(beerRepository.findByUpc(upc));
+
+        return beerMapper.beerToBeerDto(
+                beerRepository.findByUpc(upc).orElseThrow(() -> new  NotFoundException(Beer.class, "upc", upc))
+        );
     }
 
     @Override
     public void deleteBeerById(UUID beerId)  {
-        beerRepository.delete(beerRepository.findById(beerId).orElseThrow(NotFoundException::new));
+        beerRepository.delete(beerRepository.findByIdOrElseThrowNotFoundException(beerId));
     }
 }

@@ -1,7 +1,6 @@
 package guru.springframework.beer.services;
 
 import guru.springframework.beer.domain.Customer;
-import guru.springframework.beer.exceptions.NotFoundException;
 import guru.springframework.beer.repositories.CustomerRepository;
 import guru.springframework.beer.web.mappers.CustomerMapper;
 import guru.springframework.beer.web.model.CustomerDto;
@@ -23,7 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto getCustomerById(UUID customerId) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(NotFoundException::new);
+        Customer customer = customerRepository.findByIdOrElseThrowNotFoundException(customerId);
         return customerMapper.customerToCustomerDto(customer);
     }
 
@@ -37,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void updateCustomer(UUID customerId, CustomerDto customerDto) {
 
-        Customer customerToUpdate = customerRepository.findById(customerId).orElseThrow(NotFoundException::new);
+        Customer customerToUpdate = customerRepository.findByIdOrElseThrowNotFoundException(customerId);
         customerMapper.updateCustomer(customerToUpdate, customerDto);
         customerRepository.save(customerToUpdate);
     }
@@ -45,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteCustomer(UUID customerId) {
 
-        Customer customerToDelete = customerRepository.findById(customerId).orElseThrow(NotFoundException::new);
+        Customer customerToDelete = customerRepository.findByIdOrElseThrowNotFoundException(customerId);
         customerRepository.delete(customerToDelete);
     }
 
