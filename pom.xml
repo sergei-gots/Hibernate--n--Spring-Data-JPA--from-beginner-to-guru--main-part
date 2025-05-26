@@ -100,8 +100,10 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<groupId>org.projectlombok</groupId>
-						<artifactId>lombok</artifactId>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -123,7 +125,7 @@
 						</path>
 						<path>
 							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok-mapstruct</artifactId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
 							<version>0.2.0</version>
 						</path>
 					</annotationProcessorPaths>
