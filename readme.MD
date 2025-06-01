@@ -19,7 +19,7 @@ https://github.com/sergei-gots/Hibernate-n-Spring-Data-JPA-from-beginner-to-Guru
 
 ### Commands
 
-```mvn package```
+```mvn clean package```
 
 builds <code>/target/< artifactId >.jar</code> files.
 
@@ -27,6 +27,27 @@ builds <code>/target/< artifactId >.jar</code> files.
 
 builds docker image of the <code>kbe-rest-beer</code> application (<code>Lesson 247</code>).
 
+```docker build -f ./src/main/dockerBase/dockerfile -t kbe-rest-beer .```
+
+builds a layered docker image. 
+<p>To work with <b>docker layers</b>
+pom <code>plugin</code> section for <b>spring-boot-maven-plugin</b>plugin
+must include in <code>configuration</code> section 
+
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+		    			<layers>
+			    			<enabled>true</enabled>
+				    		<includeLayerTools>true</includeLayerTools>
+					    </layers>
+                        ...
+
+<p>And the command
+
 ```docker run --rm -p 8080:8080 -d kbe-rest-beer```
 
-launches <code>kbe-res-beer</code>-image as a docker container.
+launches <code>kbe-res-beer</code>-image as a docker container. 
