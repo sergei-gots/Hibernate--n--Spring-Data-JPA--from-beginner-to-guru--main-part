@@ -124,6 +124,10 @@
                             <build>
                                 <!--dockerFile>${project.basedir}/src/main/docker/dockerfile</dockerFile-->
                                 <contextDir>${project.basedir}</contextDir>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                    <tag>latest</tag>
+                                </tags>
                             </build>
                         </image>
                     </images>
